@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+.fondo_bk {
+  background: linear-gradient(180deg, #ffffff 0%, #c7c7c7 39%, #ffdddd 100%);
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+}
+
+.actonica-font {
+  font-family: 'Actonica', sans-serif;
+}
