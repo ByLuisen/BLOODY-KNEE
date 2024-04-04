@@ -1,0 +1,7 @@
+<div class="ms-96" *ngIf="auth.user$ | async as user">
+  <img class="rounded-full" [src]="user.picture" alt="Profile Image" routerLink="/profile">
+  <ul *ngIf="auth.user$ | async as user">
+    <li>{{ user.name }}</li>
+    <li>{{ user.email }}</li>
+  </ul>
+</div>

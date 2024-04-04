@@ -9,6 +9,7 @@ import { MenuMovileComponent } from './components/menu-movile/menu-movile.compon
 import { DietsComponent } from './components/diets/diets.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { provideAuth0 } from '@auth0/auth0-angular';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { provideAuth0 } from '@auth0/auth0-angular';
     MenuMovileComponent,
     DietsComponent,
     MenuComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,
