@@ -18,13 +18,13 @@ import { provideAuth0 } from '@auth0/auth0-angular';
     RegisterComponent,
     NotFoundComponent,
     DietsComponent,
-    MenuComponent
+    MenuComponent,
+    AuthButtonComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
-    AuthButtonComponent
+    FormsModule
   ],
   providers: [
     provideAuth0({
