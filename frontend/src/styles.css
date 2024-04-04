@@ -4,13 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  width: 100%;
-  height: 100%;
-  /* Asegura que no haya desbordamiento */
-  overflow: hidden;
-}
 
 .fondo_bk {
   background: linear-gradient(180deg, #ffffff 0%, #c7c7c7 39%, #ffdddd 100%);
@@ -21,4 +14,8 @@ body {
 
 .aclonica-font {
   font-family: "Aclonica", sans-serif;
+}
+
+.movile_logo{
+  width: 75px;
 }
