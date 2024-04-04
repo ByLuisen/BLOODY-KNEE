@@ -16,7 +16,6 @@ import { provideAuth0 } from '@auth0/auth0-angular';
     HomeComponent,
     NotFoundComponent,
     MenuMovileComponent,
-    AuthButtonComponent,
     DietsComponent,
     MenuComponent,
   ],
