@@ -8,6 +8,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { DietsComponent } from './components/diets/diets.component';
 import { MenuComponent } from './components/menu/menu.component';
+import { AuthButtonComponent } from './components/auth-button/auth-button.component';
+import { provideAuth0 } from '@auth0/auth0-angular';
 
 @NgModule({
   declarations: [
@@ -21,9 +23,18 @@ import { MenuComponent } from './components/menu/menu.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    AuthButtonComponent
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    provideAuth0({
+      domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',
+      clientId: 'QOiV3m6kyD74336XSGU49LOcfiktUp2T',
+      authorizationParams: {
+        redirect_uri: window.location.origin,
+      },
+    }),
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
