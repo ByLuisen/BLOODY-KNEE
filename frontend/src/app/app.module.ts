@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { MenuMovileComponent } from './components/menu-movile/menu-movile.component';
 import { DietsComponent } from './components/diets/diets.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { provideAuth0 } from '@auth0/auth0-angular';
@@ -14,6 +15,8 @@ import { provideAuth0 } from '@auth0/auth0-angular';
     AppComponent,
     HomeComponent,
     NotFoundComponent,
+    MenuMovileComponent,
+    AuthButtonComponent,
     DietsComponent,
     MenuComponent,
   ],
