@@ -30,7 +30,7 @@ export class DietsComponent {
       // Lógica para detener el parpadeo después de unos segundos
       setTimeout(() => {
         this.flashingIndex = null;
-      }, 2000);
+      }, 2500);
     }
 }
 }
