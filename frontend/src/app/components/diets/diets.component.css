@@ -1,0 +1,16 @@
+h1{
+    font-size: 100px;
+    color: white;
+}
+
+.fondo_bk {
+    background: linear-gradient(180deg, #888888 0%, #979797 39%, #888888  100%);
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+  }
+
+.calcular{
+    border-radius: 20px;
+    color: white;
+}  
