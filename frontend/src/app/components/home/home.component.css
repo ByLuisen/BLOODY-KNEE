@@ -1,21 +1,31 @@
-/* Cuadrado gris para quisom */
+.content-container {
+  position: relative;
+}
+
 .gray-square {
+  position: relative;
   width: 178px;
   height: 155px;
-  background-color: #BFBFBF;
-  ;
+
+  background: #bfbfbf;
   border-radius: 41px;
 }
 
 .red-square {
+  position: relative;
   width: 185px;
   height: 161px;
+
+  background: #dc2e2e;
   border-radius: 41px;
-  background-color: #dc2e2e;
-  ;
 }
 
-/* Fondo para el título */
+.square-container {
+  display: relative;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
 .background-title {
   background-color: #dc2e2e;
   height: 35px;
@@ -24,7 +34,6 @@
   text-align: center;
 }
 
-/* Video destacado */
 .featured_video {
   height: 187px;
   width: 270px;
