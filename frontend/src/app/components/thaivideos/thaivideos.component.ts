@@ -1,20 +1,13 @@
-import { Component, AfterViewInit } from '@angular/core';
-import Swiper from 'swiper';
+import { Component } from '@angular/core';
+
 
 @Component({
   selector: 'app-thaivideos',
   templateUrl: './thaivideos.component.html',
   styleUrls: ['./thaivideos.component.css']
 })
-export class ThaivideosComponent implements AfterViewInit {
-  ngAfterViewInit() {
-    const swiper = new Swiper('.swiper-container', {
-      // Opciones de Swiper.js
-      pagination: {
-        el: '.swiper-pagination',
-      },
-    });
-  }
+export class ThaivideosComponent {
+
   items = [
     { image: '../../../assets/img/saco.png', title: 'Entreno con saco #1.' },
     { image: '../../../assets/img/saco.png', title: 'Entreno con saco #2.' },

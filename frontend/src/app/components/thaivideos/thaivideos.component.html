@@ -9,23 +9,25 @@
     </div>
 
     <h2 class="sm:text-start text-center sm:px-96 sm:mt-15">ENTRENOS CON SACO</h2>
-<div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify">
-    <div *ngFor="let item of items">
-        <div class="group relative">
-            <div class="flex items-center justify-center sm:justify-start">
-                <img src="{{ item.image }}" class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify">
+        <div *ngFor="let item of items">
+            <div class="group relative">
+                <div class="flex items-center justify-center sm:justify-start">
+                    <img src="{{ item.image }}"
+                        class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+                </div>
+                <h3 class="text-lg font-bold sm:mt-4">{{ item.title }}</h3>
             </div>
-            <h3 class="text-lg font-bold sm:mt-4">{{ item.title }}</h3>
         </div>
     </div>
-</div>
 
     <h2 class="sm:text-start text-center sm:px-96 sm:mt-15">ENTRENOS CON PAREJA</h2>
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify">
         <div *ngFor="let item of items2">
             <div class="group relative">
                 <div class="flex items-center justify-center sm:justify-start">
-                    <img src="{{ item.image }}" class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+                    <img src="{{ item.image }}"
+                        class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
                 </div>
                 <h3 class="text-lg font-bold sm:mt-4">{{ item.title }}</h3>
             </div>
@@ -37,7 +39,8 @@
         <div *ngFor="let item of items3">
             <div class="group relative">
                 <div class="flex items-center justify-center sm:justify-start">
-                    <img src="{{ item.image }}" class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+                    <img src="{{ item.image }}"
+                        class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
                 </div>
                 <h3 class="text-lg font-bold sm:mt-4">{{ item.title }}</h3>
             </div>
@@ -49,11 +52,11 @@
         <div *ngFor="let item of items4">
             <div class="group relative">
                 <div class="flex items-center justify-center sm:justify-start">
-                    <img src="{{ item.image }}" class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+                    <img src="{{ item.image }}"
+                        class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
                 </div>
                 <h3 class="text-lg font-bold sm:mt-4">{{ item.title }}</h3>
             </div>
         </div>
     </div>
 </div>
-
