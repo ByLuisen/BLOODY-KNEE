@@ -7,5 +7,7 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent {
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService) {
+
+  }
 }

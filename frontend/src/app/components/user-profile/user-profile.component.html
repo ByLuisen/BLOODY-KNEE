@@ -1,7 +1,17 @@
-<div class="ms-96" *ngIf="auth.user$ | async as user">
-  <img class="rounded-full" [src]="user.picture" alt="Profile Image" routerLink="/profile">
+<!-- <div class="ms-96" *ngIf="auth.user$ | async as user">
   <ul *ngIf="auth.user$ | async as user">
     <li>{{ user.name }}</li>
     <li>{{ user.email }}</li>
   </ul>
+</div> -->
+<div class="content_container aclonica-font">
+  <div class="background_profile " *ngIf="auth.user$ | async as user">
+    <div class="content_profile_firstInfo">
+
+      <img class="rounded-full background_profile_img" [src]="user.picture" alt="Profile Image" routerLink="/profile">
+      <span class="user_nickname ">{{user.name}}</span>
+      <span class="user_name">{{user.nickname}}</span>
+    </div>
+    
+  </div>
 </div>
