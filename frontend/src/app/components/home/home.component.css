@@ -83,3 +83,24 @@
   font: bold;
   font-size: 25px;
 }
+
+h1.bk_title {
+  font-size: 100px; /* Tamaño más pequeño para pantallas pequeñas */
+}
+
+@media (max-width: 600px) {
+  h1.bk_title {
+    font-size: 50px; /* Tamaño más pequeño para pantallas pequeñas */
+  }
+
+
+  .featured_video {
+    height: 250px;
+    width: 375px;   
+  }
+
+  .square-container, .flex {
+    flex-direction: column; /* Cambiar la dirección a columna */
+    align-items: center;
+  }
+}
