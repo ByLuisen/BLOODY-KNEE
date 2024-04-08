@@ -10,6 +10,8 @@ import { DietsComponent } from './components/diets/diets.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { provideAuth0 } from '@auth0/auth0-angular';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ThaivideosComponent } from './components/thaivideos/thaivideos.component';
+
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     DietsComponent,
     MenuComponent,
     UserProfileComponent,
+    ThaivideosComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [

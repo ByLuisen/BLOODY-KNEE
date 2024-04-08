@@ -6,8 +6,10 @@
       </a>
     </div>
     <div class="sidebar-section my-5 hover:opacity-40 cursor-pointer">
+      <a routerLink="/thaivideos">
       <img src="../../../assets/img/icons8_boxer_512.png" alt="Muay Thai Image" class="sidebar-img">
       <p class="hidden lg:block">Thai</p>
+      </a>
     </div>
     <div class="sidebar-section my-5 hover:opacity-40 cursor-pointer">
       <img src="../../../assets/img/boxeo1.png" alt="Boxing Image" class="sidebar-img">
@@ -27,25 +29,22 @@
       <img src="../../../assets/img/eccommerce1.png" alt="Shop Image" class="sidebar-img">
       <p class="hidden lg:block">Tienda</p>
     </div>
-    <div class="sidebar-section hover:opacity-40 cursor-pointer" *ngIf="auth.user$ | async as user">
+    <div class="sidebar-section my-5 hover:opacity-40 cursor-pointer" *ngIf="auth.user$ | async as user">
       <img class="rounded-full" [src]="user.picture" alt="Profile Image" routerLink="/profile">
       <p class="hidden lg:block text-center">Perfil</p>
     </div>
     <div class="sidebar-section my-5 hover:opacity-40 cursor-pointer">
+      <a (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })">
       <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="w-6 h-6">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-        </svg>
-        <button (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })">
-          Log out
-        </button>
+        <img src="../../../assets/img/logout.png" alt="Logout Image" class="sidebar-img">
+        <p class="hidden lg:block text-center">Logout</p>
       </ng-container>
+    </a>
       <ng-template #loggedOut>
-        <img src="../../../assets/img/login1.png" alt="Profile Image" class="sidebar-img"
-          (click)="auth.loginWithRedirect()">
+        <a (click)="auth.loginWithRedirect()">
+        <img src="../../../assets/img/login1.png" alt="Profile Image" class="sidebar-img">
         <p class="hidden lg:block">Login</p>
+        </a>
       </ng-template>
     </div>
   </div>
