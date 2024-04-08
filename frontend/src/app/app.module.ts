@@ -11,6 +11,8 @@ import { MenuComponent } from './components/menu/menu.component';
 import { provideAuth0 } from '@auth0/auth0-angular';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ThaivideosComponent } from './components/thaivideos/thaivideos.component';
+import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
+import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
 
 
 @NgModule({
@@ -23,6 +25,8 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
     MenuComponent,
     UserProfileComponent,
     ThaivideosComponent,
+    BoxingvideosComponent,
+    FitnessvideoComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [
