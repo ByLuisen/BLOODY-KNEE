@@ -24,12 +24,7 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
     UserProfileComponent,
     ThaivideosComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-  
-  ],
+  imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [
     provideAuth0({
       domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',
