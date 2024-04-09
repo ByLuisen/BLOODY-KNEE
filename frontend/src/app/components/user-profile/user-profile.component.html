@@ -1,9 +1,5 @@
-<!-- <div class="ms-96" *ngIf="auth.user$ | async as user">
-  <ul *ngIf="auth.user$ | async as user">
-    <li>{{ user.name }}</li>
-    <li>{{ user.email }}</li>
-  </ul>
-</div> -->
+<app-perfile-menu class="fixed h-screen "></app-perfile-menu>
+
 <div class="content_container aclonica-font">
   <div class="background_profile" *ngIf="auth.user$ | async as user">
     <div class="content_profile_firstInfo">
@@ -13,3 +9,8 @@
     </div>
   </div>
 </div>
+<div class="sm:text-center aclonica-font fondo_bk overflow-auto">
+
+</div>
+
+
