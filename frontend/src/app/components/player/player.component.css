@@ -15,5 +15,5 @@ h2 {
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    @apply text-white rounded-lg sm:w-full md:w-4/5 lg:w-3/5 xl:w-2/5 mr-2 ml-2 sm:mx-auto p-4 sm:p-8;
+    @apply text-black rounded-lg sm:w-full md:w-4/5 lg:w-4/5 xl:w-3/5 mr-2 ml-2 sm:mx-auto p-4 sm:p-8;
 }
