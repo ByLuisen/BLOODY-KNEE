@@ -8,6 +8,8 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { ThaivideosComponent } from './components/thaivideos/thaivideos.component';
 import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
 import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
+import { PlayerComponent } from './components/player/player.component';
+
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'diets', component: DietsComponent },
@@ -15,7 +17,8 @@ const routes: Routes = [
   { path: 'profile', component: UserProfileComponent },
   { path: 'thaivideos', component: ThaivideosComponent },
   { path: 'boxingvideos', component: BoxingvideosComponent },
-  {path: 'fitnessvideos',component:FitnessvideoComponent},
+  { path: 'fitnessvideos', component: FitnessvideoComponent },
+  { path: 'player', component: PlayerComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];

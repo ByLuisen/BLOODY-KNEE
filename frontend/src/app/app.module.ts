@@ -13,6 +13,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { ThaivideosComponent } from './components/thaivideos/thaivideos.component';
 import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
 import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
+import { PlayerComponent } from './components/player/player.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.co
     ThaivideosComponent,
     BoxingvideosComponent,
     FitnessvideoComponent,
+    PlayerComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [
