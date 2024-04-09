@@ -21,7 +21,12 @@
     margin-top: 10px;
     margin-left: 10px;
   }
-
+  .profile-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+  }
   .background_profile_img {
     border-radius: 100px;
     height: 100px;
