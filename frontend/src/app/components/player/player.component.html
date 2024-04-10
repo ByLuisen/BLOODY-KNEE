@@ -11,7 +11,7 @@
             <div class="video_section text-white sm:px-6 w-px mt-5">
                 <div class="grid grid-cols-1 sm:grid-cols-2 pt-2">
                     <h2 class="text-start pb-2 pl-2">Entreno con Saco #1</h2>
-                    <p class="text-start sm:pl-20 pb-2 pl-2 sm:pt-2">30:00 minutos</p>
+                    <p class="text-start sm:pl-20 pb-2 pl-2 sm:pt-2">Descripción</p>
                     <p class="text-justify pb-2 pl-2 sm:pt-2 ">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Aliquam risus arcu, hendrerit vitae nibh at, maximus sollicitudin erat.
                         Aenean eget tincidunt velit. Nullam eu convallis purus. Pellentesque finibus
@@ -20,14 +20,15 @@
                         eu tempus ante. Duis quam est, scelerisque a nisi nec, consectetur convallis nisl.
                         Suspendisse eget dui urna. Praesent quis est convallis, elementum metus sed, varius ipsum.</p>
                     <div class="text-start sm:pl-20 pb-2 pl-2">
-                        <p>Entrenador: Julian Ortega</p>
+                        <p class="text-start">30:00 minutos</p>
+                        <p>Entrenador: Juanjo Ortega</p>
                         <div class="flex items-center">
                             <div class="w-18 h-7 flex bg-white rounded-lg items-center">
                                 <img src="../../../assets/img/disgusto4.png" class="w-18 h-5 px-2">
                                 <img src="../../../assets/img/disgusto3.png" class="w-18 h-5 px-2">
                             </div>
-                            <div class="pl-4 ml-20">
-                                <button class="bg-white hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-lg">
+                            <div class="pl-4 ml-20 w-18 h-7">
+                                <button class="bg-white hover:bg-gray-400 text-black font-bold px-4 w-18 h-7 rounded-lg">
                                     Guardar
                                 </button>
                             </div>
@@ -36,38 +37,34 @@
                 </div>
             </div>
             <div class="sm:px-6 w-px mt-5">
-                <h3>Comentarios</h3>
-                <div class="border-b-4 color">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum lectus sit
-                      amet
-                      libero dictum,
-                      quis semper lectus consectetur.
-                      Nulla vel elementum mauris, eget ultrices tortor. Morbi quis mi quis mi hendrerit placerat et in
-                      tortor.
-                      Vestibulum ac tristique metus. </p>
-                    <div class="text-end mb-8">
-                      <button class=" text-red-600 rounded-lg px-4 py-2">Responder</button>
+                <div class="flex">
+                <p>343 comentarios</p>
+                <div class="px-6 flex">
+                <img src="../../../assets/img/ordenarrojo1.png">
+                <p>Ordenar Por</p>
+                </div>
+                </div>
+                <div *ngFor="let comentario of comentarios" class="border-b-4 color mb-4">
+                    <div class="flex items-center">
+                        <img src="../../../assets/img/login1rojo2.png" class="w-8 h-8">
+                        <p class="text-red-600 px-2">nombre usuario</p>
                     </div>
-                  </div>
-                  <div class="border-b-4 color">
-                   
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum lectus sit
-                      amet
-                      libero dictum,
-                      quis semper lectus consectetur.
-                      Nulla vel elementum mauris, eget ultrices tortor. Morbi quis mi quis mi hendrerit placerat et in
-                      tortor.
-                      Vestibulum ac tristique metus. </p>
-                    <div class="text-end mb-8">
-                      <button class=" text-red-600 rounded-lg px-4 py-2">Responder</button>
+                    <p>{{comentario.texto}}</p>
+                    <div class="mb-2 flex items-center">
+                        <div class="w-18 h-7 flex rounded-lg items-center">
+                            <img src="../../../assets/img/disgusto4.png" class="w-18 h-5 px-2">
+                            <img src="../../../assets/img/disgusto3.png" class="w-18 h-5 px-2">
+                        </div>
+                        <div class="px-6">
+                            <button class=" text-red-600 rounded-lg py-2">Responder</button>
+                        </div>
                     </div>
-                  </div>
+                </div>
+                
             </div>
         </div>
-
         <div class="pl-96">
-            <h3>Videos destacados</h3>
-            <div *ngFor="let item of allItems">
+            <div *ngFor="let item of items">
                 <img [src]="item.image" alt="{{ item.title }}" class="w-30 h-30">
                 <p class="font-bold pb-4">{{ item.title }}</p>
             </div>
