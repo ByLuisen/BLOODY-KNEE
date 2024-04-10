@@ -29,3 +29,144 @@ iframe {
 .color{
     border-color: red;
 }
+
+.hands {
+  width: 26px;
+  height: 25px;
+  background-size: 100% auto !important;
+  background-position: center !important;
+  margin: 15px;
+  display: inline-block;
+  filter: grayscale(100%) brightness(0.8);
+  transition: filter 0.8s ease-out;
+  cursor: pointer;
+}
+
+.hands:hover {
+  filter: grayscale(0) brightness(1);
+}
+
+.like {
+  background: url(https://upload.wikimedia.org/wikipedia/commons/1/13/Facebook_like_thumb.png) no-repeat;
+  animation: like 2.4s infinite forwards;
+  transform-origin: bottom left;
+}
+
+.dislike {
+  background: url(http://pngimg.com/uploads/dislike/dislike_PNG2.png) no-repeat;
+  animation: dislike 2.4s infinite forwards 1.2s;
+  transform-origin: top right;
+}
+
+@keyframes like {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(-4deg) scale(1.12);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes dislike {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(-4deg) scale(1.12);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+.like-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.like-button.animated {
+  -webkit-animation: pop 0.9s both;
+  animation: pop 0.9s both;
+
+}
+.like-button svg {
+  opacity: 1;
+
+}
+.like-button svg path {
+  fill: #272626;
+  transition: fill 0.4s ease-out;
+
+}
+.like-button.active svg path {
+  fill: #dd0000;
+}
+
+@-webkit-keyframes pop {
+  0% {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+  30% {
+    -webkit-transform: scale3d(1.25, 0.75, 1);
+    transform: scale3d(1.25, 0.75, 1);
+  }
+  40% {
+    -webkit-transform: scale3d(0.75, 1.25, 1);
+    transform: scale3d(0.75, 1.25, 1);
+  }
+  50% {
+    -webkit-transform: scale3d(1.15, 0.85, 1);
+    transform: scale3d(1.15, 0.85, 1);
+  }
+  65% {
+    -webkit-transform: scale3d(0.95, 1.05, 1);
+    transform: scale3d(0.95, 1.05, 1);
+  }
+  75% {
+    -webkit-transform: scale3d(1.05, 0.95, 1);
+    transform: scale3d(1.05, 0.95, 1);
+  }
+  100% {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes pop {
+  0% {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+  30% {
+    -webkit-transform: scale3d(1.25, 0.75, 1);
+    transform: scale3d(1.25, 0.75, 1);
+  }
+  40% {
+    -webkit-transform: scale3d(0.75, 1.25, 1);
+    transform: scale3d(0.75, 1.25, 1);
+  }
+  50% {
+    -webkit-transform: scale3d(1.15, 0.85, 1);
+    transform: scale3d(1.15, 0.85, 1);
+  }
+  65% {
+    -webkit-transform: scale3d(0.95, 1.05, 1);
+    transform: scale3d(0.95, 1.05, 1);
+  }
+  75% {
+    -webkit-transform: scale3d(1.05, 0.95, 1);
+    transform: scale3d(1.05, 0.95, 1);
+  }
+  100% {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+
+

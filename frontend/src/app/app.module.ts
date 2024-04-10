@@ -16,6 +16,9 @@ import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.co
 import { PlayerComponent } from './components/player/player.component';
 
 
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
