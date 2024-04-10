@@ -1,9 +1,78 @@
 <div class="aclonica-font fondo_bk overflow-auto">
-  <h2 class="px-5 sm:px-96 pt-5">Bloody<span class="text-red-600"> Knee </span></h2>
-  <div class="grid grid-cols-1 sm:px-96 pb-5 ">
-    <iframe  width="1145" height="720" src="https://www.youtube.com/embed/yTRg9r6q8k0?start=476&showinfo=0&modestbranding=1" frameborder="0" allowfullscreen></iframe>
-  </div>
-  <div class="video_section flex justify-center items-center">
-    <!-- Contenido del div aquí -->
-  </div>
+
+    <h1 class="px-5 sm:px-56 pt-5 text-2xl sm:text-4xl">Bloody<span class="text-red-600"> Knee </span></h1>
+    <div class="grid grid-cols-2 sm:px-56 pb-5 mt-3">
+        <div>
+            <div>
+                <iframe src="https://www.youtube.com/embed/yTRg9r6q8k0?start=476&showinfo=0&modestbranding=1"
+                    frameborder="0" allowfullscreen>
+                </iframe>
+            </div>
+            <div class="video_section text-white sm:px-6 w-px mt-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 pt-2">
+                    <h2 class="text-start pb-2 pl-2">Entreno con Saco #1</h2>
+                    <p class="text-start sm:pl-20 pb-2 pl-2 sm:pt-2">30:00 minutos</p>
+                    <p class="text-justify pb-2 pl-2 sm:pt-2 ">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Aliquam risus arcu, hendrerit vitae nibh at, maximus sollicitudin erat.
+                        Aenean eget tincidunt velit. Nullam eu convallis purus. Pellentesque finibus
+                        ex ut tincidunt fringilla. Praesent maximus ultrices erat pretium egestas.
+                        In pharetra sem dolor, nec imperdiet orci commodo at. Donec non hendrerit lectus,
+                        eu tempus ante. Duis quam est, scelerisque a nisi nec, consectetur convallis nisl.
+                        Suspendisse eget dui urna. Praesent quis est convallis, elementum metus sed, varius ipsum.</p>
+                    <div class="text-start sm:pl-20 pb-2 pl-2">
+                        <p>Entrenador: Julian Ortega</p>
+                        <div class="flex items-center">
+                            <div class="w-18 h-7 flex bg-white rounded-lg items-center">
+                                <img src="../../../assets/img/disgusto4.png" class="w-18 h-5 px-2">
+                                <img src="../../../assets/img/disgusto3.png" class="w-18 h-5 px-2">
+                            </div>
+                            <div class="pl-4 ml-20">
+                                <button class="bg-white hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-lg">
+                                    Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sm:px-6 w-px mt-5">
+                <h3>Comentarios</h3>
+                <div class="border-b-4 color">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum lectus sit
+                      amet
+                      libero dictum,
+                      quis semper lectus consectetur.
+                      Nulla vel elementum mauris, eget ultrices tortor. Morbi quis mi quis mi hendrerit placerat et in
+                      tortor.
+                      Vestibulum ac tristique metus. </p>
+                    <div class="text-end mb-8">
+                      <button class=" text-red-600 rounded-lg px-4 py-2">Responder</button>
+                    </div>
+                  </div>
+                  <div class="border-b-4 color">
+                   
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum lectus sit
+                      amet
+                      libero dictum,
+                      quis semper lectus consectetur.
+                      Nulla vel elementum mauris, eget ultrices tortor. Morbi quis mi quis mi hendrerit placerat et in
+                      tortor.
+                      Vestibulum ac tristique metus. </p>
+                    <div class="text-end mb-8">
+                      <button class=" text-red-600 rounded-lg px-4 py-2">Responder</button>
+                    </div>
+                  </div>
+            </div>
+        </div>
+
+        <div class="pl-96">
+            <h3>Videos destacados</h3>
+            <div *ngFor="let item of allItems">
+                <img [src]="item.image" alt="{{ item.title }}" class="w-30 h-30">
+                <p class="font-bold pb-4">{{ item.title }}</p>
+            </div>
+        </div>
+
+    </div>
+
 </div>
