@@ -8,8 +8,23 @@ h2 {
     color: rgb(255, 255, 255);
 }
 
-.w-px {
+/* Para dispositivos de escritorio */
+@media (min-width: 768px) {
+  .w-px {
+      width: 1080px; /* Define el ancho para dispositivos de escritorio */
+  }
+  .w-px2{
     width: 1080px;
+  }
+}
+@media(max-width:768px){
+  .w-px{
+   width: auto;/* Define el ancho para dispositivos de escritorio */
+}
+.w-px2{
+  width: 420px;
+  height: 250px;
+}
 }
 
 iframe {
@@ -20,8 +35,7 @@ iframe {
 
 .video_section {
     background: rgb(201, 0, 0);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
@@ -98,12 +112,37 @@ iframe {
 
 }
 .like-button svg path {
-  fill: #272626;
+  fill: #ffffff;
   transition: fill 0.4s ease-out;
 
 }
 .like-button.active svg path {
-  fill: #dd0000;
+  fill: rgb(43, 43, 43);
+}
+
+.dislike-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+}
+.dislike-button.animated {
+  -webkit-animation: pop 0.9s both;
+  animation: pop 0.9s both;
+
+}
+.dislike-button svg {
+  opacity: 1;
+
+}
+.dislike-button svg path {
+  fill: #ffffff;
+  transition: fill 0.4s ease-out;
+
+}
+.dislike-button.active svg path {
+  fill: rgb(43, 43, 43);
 }
 
 @-webkit-keyframes pop {

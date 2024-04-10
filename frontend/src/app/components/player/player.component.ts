@@ -11,15 +11,25 @@ export class PlayerComponent implements AfterViewInit {
   ngAfterViewInit() {
     const likeButton =
       this.elementRef.nativeElement.querySelector('.like-button');
+      const dislikeButton =
+      this.elementRef.nativeElement.querySelector('.dislike-button');
     if (likeButton) {
       likeButton.addEventListener('click', (e:MouseEvent) => {
         e.preventDefault();
         likeButton.classList.toggle('active');
         likeButton.classList.add('animated');
+        dislikeButton?.classList.remove('active', 'animated');
         this.generateClones(likeButton);
       });
-    } else {
-      console.error('No se encontró ningún botón con la clase ".like-button"');
+    }
+    if (dislikeButton) {
+      dislikeButton.addEventListener('click', (e: MouseEvent) => {
+        e.preventDefault();
+        dislikeButton.classList.toggle('active');
+        dislikeButton.classList.add('animated');
+        likeButton?.classList.remove('active', 'animated');
+        this.generateClones(dislikeButton);
+      });
     }
   }
 
