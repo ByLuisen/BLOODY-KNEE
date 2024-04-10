@@ -18,6 +18,12 @@ h2 {
   }
 }
 @media(max-width:768px){
+  h2{
+    font-size: 20px;
+  }
+  p{
+    font-size: 15px;
+  }
   .w-px{
    width: auto;/* Define el ancho para dispositivos de escritorio */
 }
@@ -42,58 +48,6 @@ iframe {
 }
 .color{
     border-color: red;
-}
-
-.hands {
-  width: 26px;
-  height: 25px;
-  background-size: 100% auto !important;
-  background-position: center !important;
-  margin: 15px;
-  display: inline-block;
-  filter: grayscale(100%) brightness(0.8);
-  transition: filter 0.8s ease-out;
-  cursor: pointer;
-}
-
-.hands:hover {
-  filter: grayscale(0) brightness(1);
-}
-
-.like {
-  background: url(https://upload.wikimedia.org/wikipedia/commons/1/13/Facebook_like_thumb.png) no-repeat;
-  animation: like 2.4s infinite forwards;
-  transform-origin: bottom left;
-}
-
-.dislike {
-  background: url(http://pngimg.com/uploads/dislike/dislike_PNG2.png) no-repeat;
-  animation: dislike 2.4s infinite forwards 1.2s;
-  transform-origin: top right;
-}
-
-@keyframes like {
-  0% {
-    transform: rotate(0deg) scale(1);
-  }
-  50% {
-    transform: rotate(-4deg) scale(1.12);
-  }
-  100% {
-    transform: rotate(0deg) scale(1);
-  }
-}
-
-@keyframes dislike {
-  0% {
-    transform: rotate(0deg) scale(1);
-  }
-  50% {
-    transform: rotate(-4deg) scale(1.12);
-  }
-  100% {
-    transform: rotate(0deg) scale(1);
-  }
 }
 
 .like-button {
@@ -143,6 +97,54 @@ iframe {
 }
 .dislike-button.active svg path {
   fill: rgb(43, 43, 43);
+}
+
+.like-comment{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.like-comment.animated {
+  -webkit-animation: pop 0.9s both;
+  animation: pop 0.9s both;
+
+}
+.like-comment svg {
+  opacity: 1;
+
+}
+.like-comment svg path {
+  fill: #000000;
+  transition: fill 0.4s ease-out;
+
+}
+.like-comment.active svg path {
+  fill: rgb(216, 0, 0);
+}
+
+.dislike-comment{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.dislike-comment.animated {
+  -webkit-animation: pop 0.9s both;
+  animation: pop 0.9s both;
+
+}
+.dislike-comment svg {
+  opacity: 1;
+
+}
+.dislike-comment svg path {
+  fill: #000000;
+  transition: fill 0.4s ease-out;
+
+}
+.dislike-comment.active svg path {
+  fill: rgb(212, 0, 0);
 }
 
 @-webkit-keyframes pop {

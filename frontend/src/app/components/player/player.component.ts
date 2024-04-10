@@ -7,14 +7,19 @@ import { Component, AfterViewInit, ElementRef } from '@angular/core';
 })
 export class PlayerComponent implements AfterViewInit {
   constructor(private elementRef: ElementRef) {}
+  commentsVisible: boolean = true;
 
   ngAfterViewInit() {
-    const likeButton =
-      this.elementRef.nativeElement.querySelector('.like-button');
-      const dislikeButton =
-      this.elementRef.nativeElement.querySelector('.dislike-button');
+    this.setupButtons();
+    this.setupCommentButtons();
+  }
+
+  setupButtons() {
+    const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
+    const dislikeButton = this.elementRef.nativeElement.querySelector('.dislike-button');
+
     if (likeButton) {
-      likeButton.addEventListener('click', (e:MouseEvent) => {
+      likeButton.addEventListener('click', (e: MouseEvent) => {
         e.preventDefault();
         likeButton.classList.toggle('active');
         likeButton.classList.add('animated');
@@ -22,6 +27,7 @@ export class PlayerComponent implements AfterViewInit {
         this.generateClones(likeButton);
       });
     }
+
     if (dislikeButton) {
       dislikeButton.addEventListener('click', (e: MouseEvent) => {
         e.preventDefault();
@@ -31,6 +37,75 @@ export class PlayerComponent implements AfterViewInit {
         this.generateClones(dislikeButton);
       });
     }
+  }
+
+  setupCommentButtons() {
+    const likeComments: NodeListOf<HTMLElement> = this.elementRef.nativeElement.querySelectorAll('.like-comment');
+    const dislikeComments: NodeListOf<HTMLElement> = this.elementRef.nativeElement.querySelectorAll('.dislike-comment');
+
+    likeComments.forEach((likeComment) => {
+      likeComment.addEventListener('click', (e: MouseEvent) => {
+        e.preventDefault();
+        this.toggleLikeState(likeComment);
+      });
+    });
+
+    dislikeComments.forEach((dislikeComment) => {
+      dislikeComment.addEventListener('click', (e: MouseEvent) => {
+        e.preventDefault();
+        this.toggleDislikeState(dislikeComment);
+      });
+    });
+  }
+
+  toggleComments() {
+    this.commentsVisible = !this.commentsVisible;
+    const likeComment = this.elementRef.nativeElement.querySelector('.like-comment');
+    const dislikeComment = this.elementRef.nativeElement.querySelector('.dislike-comment');
+
+    if (likeComment) {
+      this.resetAnimation(likeComment.parentElement);
+    }
+    if (dislikeComment) {
+      this.resetAnimation(dislikeComment.parentElement);
+    }
+
+    // Llamamos a setupButtons y setupCommentButtons de nuevo para configurar los botones después de cambiar el estado de commentsVisible
+    this.setupButtons();
+    this.setupCommentButtons();
+  }
+
+  resetAnimation(button: HTMLElement) {
+    button.querySelectorAll('svg').forEach((svg) => {
+      button.removeChild(svg);
+    });
+    button.classList.remove('animated', 'active');
+  }
+
+  toggleLikeState(comment: HTMLElement) {
+    comment.classList.toggle('active');
+    comment.classList.add('animated');
+    const container = comment.parentElement;
+    if (container) {
+      const dislikeComment = container.querySelector('.dislike-comment');
+      if (dislikeComment) {
+        dislikeComment.classList.remove('active', 'animated');
+      }
+    }
+    this.generateClones(comment);
+  }
+
+  toggleDislikeState(comment: HTMLElement) {
+    comment.classList.toggle('active');
+    comment.classList.add('animated');
+    const container = comment.parentElement;
+    if (container) {
+      const likeComment = container.querySelector('.like-comment');
+      if (likeComment) {
+        likeComment.classList.remove('active', 'animated');
+      }
+    }
+    this.generateClones(comment);
   }
 
   generateClones(button: HTMLElement) {
