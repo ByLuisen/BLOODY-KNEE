@@ -11,7 +11,8 @@ import { MenuComponent } from './components/menus/menu/menu.component';
 import { provideAuth0 } from '@auth0/auth0-angular';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ThaivideosComponent } from './components/thaivideos/thaivideos.component';
-import { PerfileMenuComponent } from './components/menus/perfile-menu/perfile-menu.component';
+import { PerfileMenuComponent } from './components/menus/profile-menu/profile-menu.component';
+import { ProfileMenuService } from './services/profile-menu-service.service';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { PerfileMenuComponent } from './components/menus/perfile-menu/perfile-me
         redirect_uri: window.location.origin,
       },
     }),
+    ProfileMenuService
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
