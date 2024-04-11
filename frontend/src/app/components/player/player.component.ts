@@ -21,7 +21,7 @@ export class PlayerComponent implements AfterViewInit {
     const dislikeButton = this.elementRef.nativeElement.querySelector('.dislike-button');
 
     if (likeButton) {
-      likeButton.addEventListener('click', (e: MouseEvent) => {
+      likeButton.addEventListener('click', (e: PointerEvent) => {
         e.preventDefault();
         likeButton.classList.toggle('active');
         likeButton.classList.add('animated');
@@ -31,7 +31,7 @@ export class PlayerComponent implements AfterViewInit {
     }
 
     if (dislikeButton) {
-      dislikeButton.addEventListener('click', (e: MouseEvent) => {
+      dislikeButton.addEventListener('click', (e: PointerEvent) => {
         e.preventDefault();
         dislikeButton.classList.toggle('active');
         dislikeButton.classList.add('animated');

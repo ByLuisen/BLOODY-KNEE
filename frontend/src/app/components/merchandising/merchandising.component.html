@@ -1,24 +1,51 @@
 <div class="sm:text-center aclonica-font fondo_bk overflow-auto">
     <h1 class="text-center ">MERCHAN<span class="text-red-600">DISING</span></h1>
     <div class="grid grid-cols-4 px-96">
-        <p></p>
+        <div></div>
         <h2>Disponibilidad</h2>
         <h2>Precio</h2>
-        <p></p>
-        <p></p>
-        <div class="flex items-center px-6">
-            <input type="checkbox">
+        <div></div>
+        <div></div>
+        <div class="flex items-center px-6 pt-4">
+            <input type="checkbox" class="w-4 h-4 rounded-lg">
             <p>En Stock (8)</p>
         </div>
-        <p></p>
-        <p></p>
-        <p></p>
+        <input type="range" min="0" max="150" value="0" class="range-input" #priceRangeInput (input)="onPriceChange()">
+        <div></div>
+        <div></div>
         <div class="flex items-center px-6">
-            <input type="checkbox">
+            <input type="checkbox" class="w-4 h-4 rounded-lg">
             <p>Fuera de Stock (6)</p>
         </div>
-        <mat-slider min="0" max="80" step="0.5" value="1.5">
-            <input matSliderThumb>
-        </mat-slider>
+        <div>Rango de precio: $0 - ${{priceRangeInput.value }}</div>
+    </div>
+    <div class="grid grid-cols-1 text-center px-96 pt-4">
+        <select id="ordenarPor" class="mx-auto w-40 rounded-lg bg-white px-2 py-1 ">
+            <option value="mejorVendido">Mejor Vendido</option>
+            <option value="mejorValorado">Mejor Valorado</option>
+        </select>
+    </div>
+    <div class="grid grid-cols-4 px-56 pt-10">
+    <div class="justify-center" class="w-72 h-64">
+        <img src="../../../assets/img/guantes.png">
+        <p>Guantes Buddha</p>
+        <p>15 euros</p>
+    </div>
+    <div class="justify-center" class="w-72 h-64">
+        <img src="../../../assets/img/guantes.png">
+        <p>Guantes Buddha</p>
+        <p>15 euros</p>
+    </div>
+    <div class="justify-center" class="w-72 h-64">
+        <img src="../../../assets/img/guantes.png">
+        <p>Guantes Buddha</p>
+        <p>15 euros</p>
+    </div>
+    <div class="justify-center" class="w-72 h-64">
+        <img src="../../../assets/img/guantes.png">
+        <p>Guantes Buddha</p>
+        <p>15 euros</p>
+    </div>
+        
     </div>
 </div>

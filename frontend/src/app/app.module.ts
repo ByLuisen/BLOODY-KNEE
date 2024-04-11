@@ -16,7 +16,7 @@ import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.co
 import { PlayerComponent } from './components/player/player.component';
 import { MerchandisingComponent } from './components/merchandising/merchandising.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSliderModule } from '@angular/material/slider'; // Importa el módulo MatSliderModule
+
 
 
 
@@ -36,7 +36,7 @@ import { MatSliderModule } from '@angular/material/slider'; // Importa el módul
     PlayerComponent,
     MerchandisingComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule,MatSliderModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule],
   providers: [
     provideAuth0({
       domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',

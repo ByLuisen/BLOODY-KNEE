@@ -7,14 +7,22 @@ h2 {
     font-size: 30px;
     color: rgb(0, 0, 0);
 }
+.range-input {
+    background: transparent;
+}
+.range-input::-webkit-slider-thumb {
+    background-color: red;
+}
 
-  /* Estilo para el indicador de rango de precios */
-  .mat-slider-thumb {
-    background-color: #ff0000; /* Color del indicador de rango de precios */
-  }
-  
-  /* Estilo para la barra de rango de precios */
-  .mat-slider-track-fill {
-    background-color: #000000; /* Color de la parte llena de la barra de rango de precios */
-  }
-  
+.range-input::-moz-range-thumb {
+    background-color: red;
+    border: 0px;
+}
+/* Estilos adicionales para el riel del slider */
+.range-input::-webkit-slider-runnable-track {
+    background-color: rgb(255, 0, 0);
+}
+
+.range-input::-moz-range-track {
+    background-color: rgb(255, 0, 0);
+}
