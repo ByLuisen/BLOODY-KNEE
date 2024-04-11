@@ -9,6 +9,7 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
 import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
 import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
 import { PlayerComponent } from './components/player/player.component';
+import { MerchandisingComponent } from './components/merchandising/merchandising.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'boxingvideos', component: BoxingvideosComponent },
   { path: 'fitnessvideos', component: FitnessvideoComponent },
   { path: 'player', component: PlayerComponent},
+  {path:'merchandising',component:MerchandisingComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];

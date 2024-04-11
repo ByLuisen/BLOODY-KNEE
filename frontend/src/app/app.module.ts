@@ -14,7 +14,9 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
 import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
 import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
 import { PlayerComponent } from './components/player/player.component';
-
+import { MerchandisingComponent } from './components/merchandising/merchandising.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSliderModule } from '@angular/material/slider'; // Importa el módulo MatSliderModule
 
 
 
@@ -32,8 +34,9 @@ import { PlayerComponent } from './components/player/player.component';
     BoxingvideosComponent,
     FitnessvideoComponent,
     PlayerComponent,
+    MerchandisingComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule,MatSliderModule],
   providers: [
     provideAuth0({
       domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',

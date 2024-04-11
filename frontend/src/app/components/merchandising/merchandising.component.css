@@ -1,0 +1,20 @@
+h1 {
+    font-size: 60px;
+    color: black;
+}
+
+h2 {
+    font-size: 30px;
+    color: rgb(0, 0, 0);
+}
+
+  /* Estilo para el indicador de rango de precios */
+  .mat-slider-thumb {
+    background-color: #ff0000; /* Color del indicador de rango de precios */
+  }
+  
+  /* Estilo para la barra de rango de precios */
+  .mat-slider-track-fill {
+    background-color: #000000; /* Color de la parte llena de la barra de rango de precios */
+  }
+  
