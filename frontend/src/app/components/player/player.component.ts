@@ -6,12 +6,14 @@ import { Component, AfterViewInit, ElementRef } from '@angular/core';
   styleUrls: ['./player.component.css'],
 })
 export class PlayerComponent implements AfterViewInit {
-  constructor(private elementRef: ElementRef) {}
+  constructor(private elementRef: ElementRef) { }
   commentsVisible: boolean = true;
-
+  descriptionVisible: boolean = false;
+  toggleDescription() {
+    this.descriptionVisible = !this.descriptionVisible;
+  }
   ngAfterViewInit() {
     this.setupButtons();
-    this.setupCommentButtons();
   }
 
   setupButtons() {
@@ -37,6 +39,8 @@ export class PlayerComponent implements AfterViewInit {
         this.generateClones(dislikeButton);
       });
     }
+
+    this.setupCommentButtons();
   }
 
   setupCommentButtons() {
@@ -60,19 +64,9 @@ export class PlayerComponent implements AfterViewInit {
 
   toggleComments() {
     this.commentsVisible = !this.commentsVisible;
-    const likeComment = this.elementRef.nativeElement.querySelector('.like-comment');
-    const dislikeComment = this.elementRef.nativeElement.querySelector('.dislike-comment');
-
-    if (likeComment) {
-      this.resetAnimation(likeComment.parentElement);
+    if (this.commentsVisible) {
+      this.setupCommentButtons();
     }
-    if (dislikeComment) {
-      this.resetAnimation(dislikeComment.parentElement);
-    }
-
-    // Llamamos a setupButtons y setupCommentButtons de nuevo para configurar los botones después de cambiar el estado de commentsVisible
-    this.setupButtons();
-    this.setupCommentButtons();
   }
 
   resetAnimation(button: HTMLElement) {
