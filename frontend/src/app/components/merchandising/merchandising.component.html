@@ -1,51 +1,37 @@
 <div class="sm:text-center aclonica-font fondo_bk overflow-auto">
     <h1 class="text-center ">MERCHAN<span class="text-red-600">DISING</span></h1>
-    <div class="grid grid-cols-4 px-96">
-        <div></div>
-        <h2>Disponibilidad</h2>
-        <h2>Precio</h2>
-        <div></div>
-        <div></div>
-        <div class="flex items-center px-6 pt-4">
-            <input type="checkbox" class="w-4 h-4 rounded-lg">
-            <p>En Stock (8)</p>
+    <div class="grid grid-cols-2 px-96">
+        <div class="px-6 pt-4">
+            <h2>Disponibilidad</h2>
+            <div class="flex">
+                <input type="checkbox" class="w-4 h-4 rounded-lg">
+                <p>En Stock (8)</p>
+                <input type="checkbox" class="w-4 h-4 rounded-lg">
+                <p>Fuera de Stock (6)</p>
+            </div>
         </div>
-        <input type="range" min="0" max="150" value="0" class="range-input" #priceRangeInput (input)="onPriceChange()">
-        <div></div>
-        <div></div>
-        <div class="flex items-center px-6">
-            <input type="checkbox" class="w-4 h-4 rounded-lg">
-            <p>Fuera de Stock (6)</p>
+
+        <div>
+            <h2>Precio</h2>
+            <input type="range" min="0" max="150" value="0" class="range-input" #priceRangeInput
+                (input)="onPriceChange()">
+           <p>Rango de precio: $0 - ${{priceRangeInput.value }}</p>
         </div>
-        <div>Rango de precio: $0 - ${{priceRangeInput.value }}</div>
     </div>
+
+
     <div class="grid grid-cols-1 text-center px-96 pt-4">
         <select id="ordenarPor" class="mx-auto w-40 rounded-lg bg-white px-2 py-1 ">
             <option value="mejorVendido">Mejor Vendido</option>
             <option value="mejorValorado">Mejor Valorado</option>
         </select>
     </div>
-    <div class="grid grid-cols-4 px-56 pt-10">
-    <div class="justify-center" class="w-72 h-64">
-        <img src="../../../assets/img/guantes.png">
-        <p>Guantes Buddha</p>
-        <p>15 euros</p>
-    </div>
-    <div class="justify-center" class="w-72 h-64">
-        <img src="../../../assets/img/guantes.png">
-        <p>Guantes Buddha</p>
-        <p>15 euros</p>
-    </div>
-    <div class="justify-center" class="w-72 h-64">
-        <img src="../../../assets/img/guantes.png">
-        <p>Guantes Buddha</p>
-        <p>15 euros</p>
-    </div>
-    <div class="justify-center" class="w-72 h-64">
-        <img src="../../../assets/img/guantes.png">
-        <p>Guantes Buddha</p>
-        <p>15 euros</p>
-    </div>
-        
+    <!-- Iterar sobre los productos utilizando *ngFor -->
+    <div class="grid grid-cols-4 px-56 pt-10 gap-32">
+        <div class="justify-center" *ngFor="let producto of productos" class="w-72 h-64">
+            <img [src]="producto.imagen">
+            <p>{{producto.nombre}}</p>
+            <p class="text-red-500">€{{producto.precio}}</p>
+        </div>
     </div>
 </div>
