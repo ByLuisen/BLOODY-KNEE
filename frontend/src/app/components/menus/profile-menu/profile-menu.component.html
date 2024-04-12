@@ -26,9 +26,7 @@
       </a>
     </li>
     <li class="has-subnav">
-      <!-- <a routerLink="/profile" (click)="selectMenuOption('orders')"> -->
-      <a [routerLink]="['/', { outlets: { 'profile': ['orders'] } }]" (click)="selectMenuOption('orders')">
-
+      <a (click)="selectMenuOption('orders')">
         <img class="fa fa-home fa-2x icon" src="../../../../assets/img/svg/bxs-cart.svg" alt="" />
         <span class="nav-text"> Mis pedidos </span>
       </a>

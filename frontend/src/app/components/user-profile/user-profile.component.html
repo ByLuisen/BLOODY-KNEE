@@ -63,76 +63,20 @@
     </div>
   </div>
 
-
   <div *ngIf="selectedOption === 'likedVideos'">
-    <h1>VIDEOS QUE ME HAN GUSTADO</h1>
-    <!-- Swiper -->
-    <div class="swiper-container">
-      <ul class="swiper-wrapper">
-        <li class="swiper-slide">
-          <img src="https://dean2020.edu.vn/wp-content/uploads/2019/03/anh-thien-nhien-dep-18.jpg" />
-        </li>
-        <li class="swiper-slide">
-          <img src="https://dean2020.edu.vn/wp-content/uploads/2019/03/anh-thien-nhien-dep-2.jpeg" />
-        </li>
-        <li class="swiper-slide">
-          <img src="https://dean2020.edu.vn/wp-content/uploads/2019/03/anh-thien-nhien-dep-3.jpeg" />
-        </li>
-        <li class="swiper-slide">
-          <img src="https://dean2020.edu.vn/wp-content/uploads/2019/03/anh-thien-nhien-dep-17.jpg" />
-        </li>
-        <li class="swiper-slide">
-          <img src="https://dean2020.edu.vn/wp-content/uploads/2019/03/anh-thien-nhien-dep-18.jpg" />
-        </li>
-        <li class="swiper-slide">
-          <img src="https://dean2020.edu.vn/wp-content/uploads/2019/03/anh-thien-nhien-dep-2.jpeg" />
-        </li>
-        <li class="swiper-slide">
-          <img src="https://dean2020.edu.vn/wp-content/uploads/2019/03/anh-thien-nhien-dep-3.jpeg" />
-        </li>
-        <li class="swiper-slide">
-          <img src="https://dean2020.edu.vn/wp-content/uploads/2019/03/anh-thien-nhien-dep-17.jpg" />
-        </li>
-      </ul>
-    </div>
-
+    <app-liked-videos></app-liked-videos>
   </div>
+
   <div *ngIf="selectedOption === 'favouriteVideos'">
-    <h1>MIS VIDEOS FAVORITOS</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 justify-center mx-20 md:mx-20 mt-5 mb-10">
-      <div *ngFor="let video of my_videos"
-        class="card bg-white-100 border border-red-600 rounded-lg shadow-md hover:transform hover:scale-105 transition duration-300">
-        <img class="w-full" [src]="video.thumbnail" alt="Miniatura de Video">
-        <div class="p-4">
-          <h2 class="text-lg font-bold mb-2 flex">{{ video.title }}</h2>
-          <div class="flex justify-between">
-            <p class="text-sm mr-2"><b> Autor:</b> </p>
-            <p class="text-sm text-gray-500"> {{ video.author }}</p>
-          </div>
-          <div class="flex justify-between">
-            <p class="text-sm mr-2"><b>Categoría:</b></p>
-            <p class="text-sm text-gray-500">{{ video.category }}</p>
-          </div>
-          <div class="flex justify-between">
-            <p class="text-sm mr-2"><b>Visualizaciones:</b></p>
-            <p class="text-sm text-gray-500">{{ video.views }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-favourite-videos></app-favourite-videos>
   </div>
 
   <div *ngIf="selectedOption === 'diets'">
-    <h1>MIS DIETAS</h1>
-    <div *ngFor="let diet of my_diets">
-      <div
-        class="card text-white bg-red-700 bg-white-100 border border-red-950  mx-44 rounded-lg shadow-md mb-2 p-4 justify-center items-center hover:transform hover:scale-105 transition duration-300 ">
-        <h2 class="text-lg font-bold mb-2">{{diet.nombre}}</h2>
-        <p>{{diet.descripcion}}</p>
-      </div>
-    </div>
+    <app-profile-diets></app-profile-diets>
   </div>
+
   <div *ngIf="selectedOption === 'orders'">
-    <h1> MIS PEDIDOS</h1>
+    <app-profile-orders></app-profile-orders>
   </div>
+
 </div>
