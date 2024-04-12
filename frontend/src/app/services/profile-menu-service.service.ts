@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProfileMenuService {
-  private selectedOptionSubject: BehaviorSubject<string> = new BehaviorSubject<string>('editProfile');
+  private selectedOptionSubject: BehaviorSubject<string> = new BehaviorSubject<string>('favouriteVideos');
   selectedOptionService: Observable<string> = this.selectedOptionSubject.asObservable();
 
   constructor() { }

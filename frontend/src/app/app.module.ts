@@ -27,7 +27,8 @@ import { ProfileMenuService } from './services/profile-menu-service.service';
     ThaivideosComponent,
     PerfileMenuComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule
+  ],
   providers: [
     provideAuth0({
       domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',
@@ -36,7 +37,8 @@ import { ProfileMenuService } from './services/profile-menu-service.service';
         redirect_uri: window.location.origin,
       },
     }),
-    ProfileMenuService
+    ProfileMenuService,
+
   ],
   bootstrap: [AppComponent],
 })
