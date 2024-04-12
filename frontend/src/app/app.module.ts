@@ -21,6 +21,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
+import { PricingComponent } from './components/pricing/pricing.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,8 +39,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FitnessvideoComponent,
     PlayerComponent,
     MerchandisingComponent,
+    PricingComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, HttpClientModule],
+
+
   providers: [
     provideAuth0({
       domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',
@@ -45,7 +52,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         redirect_uri: window.location.origin,
       },
     }),
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
