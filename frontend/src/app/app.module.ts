@@ -14,6 +14,9 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
 import { PerfileMenuComponent } from './components/menus/profile-menu/profile-menu.component';
 import { ProfileMenuService } from './services/profile-menu-service.service';
 
+import { PricingComponent } from './components/pricing/pricing.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -25,10 +28,9 @@ import { ProfileMenuService } from './services/profile-menu-service.service';
     MenuComponent,
     UserProfileComponent,
     ThaivideosComponent,
-    PerfileMenuComponent,
+    PricingComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [
     provideAuth0({
       domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',
@@ -39,6 +41,7 @@ import { ProfileMenuService } from './services/profile-menu-service.service';
     }),
     ProfileMenuService,
 
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
