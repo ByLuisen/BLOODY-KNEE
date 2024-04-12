@@ -24,6 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PricingComponent } from './components/pricing/pricing.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     FitnessvideoComponent,
     PlayerComponent,
     MerchandisingComponent,
-    PricingComponent
+    PricingComponent,
+    ChatbotComponent
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, HttpClientModule],
 

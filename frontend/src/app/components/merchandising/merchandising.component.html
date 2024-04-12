@@ -20,17 +20,17 @@
         </div>
     </div>
     <div class="grid grid-cols-1 text-center px-96 pt-4">
-        <select id="ordenarPor" class="mx-auto w-40 rounded-lg bg-white px-2 py-1 ">
+        <select id="ordenarPor" class="mx-auto w-50 bg-gray-200 px-3 py-2 ">
             <option value="mejorVendido">Mejor Vendido</option>
             <option value="mejorValorado">Mejor Valorado</option>
         </select>
     </div>
     <!-- Iterar sobre los productos utilizando *ngFor -->
     <div class="grid grid-cols-4 px-56 pt-10 gap-32">
-        <div class="justify-center" *ngFor="let producto of productos" class="w-72 h-64">
-            <img [src]="producto.imagen">
+        <div  *ngFor="let producto of productos" class="w-auto h-auto justify-center hover:transform hover:scale-105 cursor-pointer ">
+            <img [src]="producto.imagen" class=" hover:border-4 hover:border-solid hover:border-red-600">
             <p>{{producto.nombre}}</p>
-            <p class="text-red-500">€{{producto.precio}}</p>
+            <p class="text-red-600">€{{producto.precio}}</p>
         </div>
     </div>
 </div>
