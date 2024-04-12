@@ -7,8 +7,8 @@
     </div>
     <div class="sidebar-section my-5 hover:opacity-40 cursor-pointer">
       <a routerLink="/thaivideos">
-      <img src="../../../assets/img/icons8_boxer_512.png" alt="Muay Thai Image" class="sidebar-img">
-      <p class="hidden lg:block">Thai</p>
+        <img src="../../../assets/img/icons8_boxer_512.png" alt="Muay Thai Image" class="sidebar-img">
+        <p class="hidden lg:block">Thai</p>
       </a>
     </div>
     <div class="sidebar-section my-5 hover:opacity-40 cursor-pointer">
@@ -35,15 +35,15 @@
     </div>
     <div class="sidebar-section my-5 hover:opacity-40 cursor-pointer">
       <a (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })">
-      <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
-        <img src="../../../assets/img/logout.png" alt="Logout Image" class="sidebar-img">
-        <p class="hidden lg:block text-center">Logout</p>
-      </ng-container>
-    </a>
+        <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+          <img src="../../../assets/img/logout.png" alt="Logout Image" class="sidebar-img">
+          <p class="hidden lg:block text-center">Logout</p>
+        </ng-container>
+      </a>
       <ng-template #loggedOut>
         <a (click)="auth.loginWithRedirect()">
-        <img src="../../../assets/img/login1.png" alt="Profile Image" class="sidebar-img">
-        <p class="hidden lg:block">Login</p>
+          <img src="../../../assets/img/login1.png" alt="Profile Image" class="sidebar-img">
+          <p class="hidden lg:block">Login</p>
         </a>
       </ng-template>
     </div>

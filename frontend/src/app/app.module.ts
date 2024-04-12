@@ -11,7 +11,9 @@ import { MenuComponent } from './components/menu/menu.component';
 import { provideAuth0 } from '@auth0/auth0-angular';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ThaivideosComponent } from './components/thaivideos/thaivideos.component';
-
+import { PricingComponent } from './components/pricing/pricing.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -23,8 +25,9 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
     MenuComponent,
     UserProfileComponent,
     ThaivideosComponent,
+    PricingComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [
     provideAuth0({
       domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',
@@ -33,6 +36,7 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
         redirect_uri: window.location.origin,
       },
     }),
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
