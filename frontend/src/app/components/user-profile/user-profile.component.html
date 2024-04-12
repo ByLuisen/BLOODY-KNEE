@@ -49,20 +49,20 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 justify-center mx-28 mt-5 mb-5">
       <!-- Correo electronico -->
       <div
-        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300">
+        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300 bg-white">
         <h2 class="text-lg font-bold mb-2">Correo electronico:</h2>
         <input type="text" [(ngModel)]="user.email" placeholder="Correo electrónico"
           class="bg-white border border-gray-300 rounded-md p-2 w-full">
       </div>
       <!-- Foto de perfil -->
       <div
-        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 flex flex-col justify-center items-center hover:transform hover:scale-105 transition duration-300">
+        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 flex flex-col justify-center items-center hover:transform hover:scale-105 transition duration-300 bg-white">
         <h2 class="text-lg font-bold mb-2">Foto de perfil:</h2>
         <img class="rounded-full" width="50px" [src]="user.picture" alt="Profile Image" routerLink="/profile" />
       </div>
     </div>
   </div>
-
+  <!-- VIDEOS QUE HE DADO A LIKE -->
   <div *ngIf="selectedOption === 'likedVideos'">
     <app-liked-videos></app-liked-videos>
   </div>
