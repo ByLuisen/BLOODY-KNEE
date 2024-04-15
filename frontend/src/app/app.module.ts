@@ -16,11 +16,6 @@ import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.co
 import { PlayerComponent } from './components/player/player.component';
 import { MerchandisingComponent } from './components/merchandising/merchandising.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-
-
-
-
 import { PricingComponent } from './components/pricing/pricing.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
