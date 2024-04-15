@@ -15,7 +15,7 @@ class QuoteSeeder extends Seeder
     {
         Quote::create([
             'price' => 0,
-            'description' => 'Plan inicial para poder probar Bloody Knee gratis.',
+            'description' => 'Plan inicial para los usuarios que inician y poder probar Bloody Knee gratis.',
             'advantages' => 'Acceso a videos gratis.;Acceso a dietas gratis.;Comprar productos en nuestra tienda.',
             'type' => 'Basic'
         ]);
