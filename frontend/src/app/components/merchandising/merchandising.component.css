@@ -1,0 +1,28 @@
+h1 {
+    font-size: 60px;
+    color: black;
+}
+
+h2 {
+    font-size: 30px;
+    color: rgb(0, 0, 0);
+}
+.range-input {
+    background: transparent;
+}
+.range-input::-webkit-slider-thumb {
+    background-color: red;
+}
+
+.range-input::-moz-range-thumb {
+    background-color: red;
+    border: 0px;
+}
+/* Estilos adicionales para el riel del slider */
+.range-input::-webkit-slider-runnable-track {
+    background-color: rgb(255, 0, 0);
+}
+
+.range-input::-moz-range-track {
+    background-color: rgb(255, 0, 0);
+}

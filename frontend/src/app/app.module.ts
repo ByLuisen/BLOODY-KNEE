@@ -11,9 +11,15 @@ import { MenuComponent } from './components/menu/menu.component';
 import { provideAuth0 } from '@auth0/auth0-angular';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ThaivideosComponent } from './components/thaivideos/thaivideos.component';
+import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
+import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
+import { PlayerComponent } from './components/player/player.component';
+import { MerchandisingComponent } from './components/merchandising/merchandising.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PricingComponent } from './components/pricing/pricing.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
 @NgModule({
   declarations: [
@@ -25,9 +31,16 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     MenuComponent,
     UserProfileComponent,
     ThaivideosComponent,
+    BoxingvideosComponent,
+    FitnessvideoComponent,
+    PlayerComponent,
+    MerchandisingComponent,
     PricingComponent,
+    ChatbotComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, HttpClientModule],
+
+
   providers: [
     provideAuth0({
       domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',
@@ -40,4 +53,4 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
