@@ -9,11 +9,9 @@
   </div>
 
   <ng-container *ngFor="let category of groupedItems">
-      <!-- Mostrar título solo si es la categoría seleccionada o si se han seleccionado todos -->
       <h2 *ngIf="selectedCategory === category[0].category || selectedCategory === 'todos'"
           class="sm:text-start text-center sm:px-96 sm:mt-15">{{ getTitle(category[0].category) }}</h2>
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify" *ngIf="selectedCategory === category[0].category || selectedCategory === 'todos'">
-          <!-- Filtrar y mostrar solo las imágenes de la categoría actual -->
           <div class="group relative" *ngFor="let item of category">
               <ng-container *ngIf="filteredItems.includes(item)">
                 <a routerLink="/player">
