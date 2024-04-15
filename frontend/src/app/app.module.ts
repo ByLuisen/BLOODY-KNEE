@@ -21,6 +21,7 @@ import { FavouriteVideosComponent } from './components/user-profile-views/favour
 import { LikedVideosComponent} from './components/user-profile-views/liked-videos/liked-videos.component';
 import { ProfileDietsComponent } from './components/user-profile-views/profile-diets/profile-diets.component';
 import { ProfileOrdersComponent } from './components/user-profile-views/profile-orders/profile-orders.component';
+import { DetalleMerchComponent } from './components/detalle-merch/detalle-merch.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ProfileOrdersComponent } from './components/user-profile-views/profile-
     LikedVideosComponent,
     FavouriteVideosComponent,
     ProfileDietsComponent,
-    ProfileOrdersComponent
+    ProfileOrdersComponent,
+    DetalleMerchComponent
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [

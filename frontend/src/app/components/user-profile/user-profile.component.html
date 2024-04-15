@@ -3,17 +3,8 @@
 <div class="content_container aclonica-font">
   <div class="background_profile" *ngIf="auth.user$ | async as user">
     <div class="content_profile_firstInfo">
-      <!-- <div class="profile-img-container editable" (mouseenter)="showUploadButton = true"
-        (mouseleave)="showUploadButton = false">
-        <img class="rounded-full background_profile_img" [src]="user.picture" alt="Profile Image"
-          routerLink="/profile" />
-        <button style="position: absolute;" *ngIf="showUploadButton" (click)="uploadNewProfilePicture()">Edit</button>
-      </div> -->
       <img class="rounded-full background_profile_img editable" [src]="user.picture" alt="Profile Image"
         routerLink="/profile" />
-
-      <!-- <span class="user_name">Paco Sastre Lopez</span> -->
-
       <span class="user_nickname">{{ user.name }}</span>
       <span class="user_name">{{ user.nickname }}</span>
     </div>
