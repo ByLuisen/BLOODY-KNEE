@@ -28,6 +28,7 @@ h1.bk_title {
 .flex {
   display: flex;
   margin-top: 14px;
+
   justify-content: center;
   align-items: center;
 }

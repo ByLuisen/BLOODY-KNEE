@@ -10,7 +10,7 @@ import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.co
 import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
 import { PlayerComponent } from './components/player/player.component';
 import { MerchandisingComponent } from './components/merchandising/merchandising.component';
-
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'diets', component: DietsComponent },
@@ -21,6 +21,7 @@ const routes: Routes = [
   { path: 'fitnessvideos', component: FitnessvideoComponent },
   { path: 'player', component: PlayerComponent},
   {path:'merchandising',component:MerchandisingComponent},
+  {path:'chatbot',component:ChatbotComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];
