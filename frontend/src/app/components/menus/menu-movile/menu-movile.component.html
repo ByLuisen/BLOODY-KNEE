@@ -1,6 +1,6 @@
 <div class="navigation-menu">
     <!-- Contenido del menú de navegación -->
-    <button class="fixed-button" (click)="expandDiv()">Botón</button>
+    <button class="fixed-button" (click)="expandDiv()"></button>
 </div>
 
 <div id="expandibleDiv" class="expandible-div mx-auto aclonica-font text-white">
@@ -41,8 +41,8 @@
         </li>
         <hr>
         <li>
-            <a class="flex" (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })">
-                <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+          <a class="flex" (click)="auth.logout({ logoutParams: { returnTo: getLocationOrigin() } })">
+            <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
                     <img src="../../../assets/img/logout.png" alt="Logout Image" class="icon">
                     <p>Logout</p>
                 </ng-container>
