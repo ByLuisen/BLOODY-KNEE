@@ -23,3 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'api'], function () {
     Route::resource('quotes', QuoteController::class);
 });
+
+Route::post('/engines/curie/completions', [ChatController::class, 'completions']);

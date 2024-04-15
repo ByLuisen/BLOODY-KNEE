@@ -1,1 +1,16 @@
-<p>chatbot works!</p>
+<div class="grid grid-cols-1 px-96">
+<div class="chat-container">
+    <div class="chat-history">
+      <div *ngFor="let message of chatHistory">
+        <p [ngClass]="{'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot'}">
+          {{ message.text }}
+        </p>
+      </div>
+    </div>
+  
+    <div class="chat-input">
+      <input [(ngModel)]="userInput" placeholder="Escribe un mensaje...">
+      <button (click)="sendMessage()">Enviar</button>
+    </div>
+  </div>
+</div>

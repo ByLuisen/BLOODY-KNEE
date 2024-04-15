@@ -1,25 +1,36 @@
 .chat-container {
-    height: 300px;
-    overflow-y: scroll;
-  }
-  
-  .message {
-    margin: 5px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .input-container {
-    margin-top: 10px;
-  }
-  
-  .input-container input {
-    padding: 5px;
-  }
-  
-  .input-container button {
-    padding: 5px 10px;
-    margin-left: 5px;
-  }
-  
+  max-width: 400px;
+  margin: 50px auto;
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.chat-history {
+  height: 300px;
+  overflow-y: scroll;
+  border-bottom: 1px solid #ccc;
+}
+
+.user-message {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+.bot-message {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.chat-input {
+  margin-top: 20px;
+}
+
+.chat-input input {
+  width: 80%;
+  padding: 10px;
+}
+
+.chat-input button {
+  width: 18%;
+  padding: 10px;
+}
