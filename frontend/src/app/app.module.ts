@@ -14,14 +14,20 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
 import { PerfileMenuComponent } from './components/menus/profile-menu/profile-menu.component';
 import { ProfileMenuService } from './services/profile-menu-service.service';
 
-import { PricingComponent } from './components/pricing/pricing.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { FavouriteVideosComponent } from './components/user-profile-views/favourite-videos/favourite-videos.component';
 import { LikedVideosComponent} from './components/user-profile-views/liked-videos/liked-videos.component';
 import { ProfileDietsComponent } from './components/user-profile-views/profile-diets/profile-diets.component';
 import { ProfileOrdersComponent } from './components/user-profile-views/profile-orders/profile-orders.component';
 import { DetalleMerchComponent } from './components/detalle-merch/detalle-merch.component';
+import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
+import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
+import { PlayerComponent } from './components/player/player.component';
+import { MerchandisingComponent } from './components/merchandising/merchandising.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PricingComponent } from './components/pricing/pricing.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +39,10 @@ import { DetalleMerchComponent } from './components/detalle-merch/detalle-merch.
     MenuComponent,
     UserProfileComponent,
     ThaivideosComponent,
+    BoxingvideosComponent,
+    FitnessvideoComponent,
+    PlayerComponent,
+    MerchandisingComponent,
     PricingComponent,
     PerfileMenuComponent,
     LikedVideosComponent,
@@ -41,7 +51,9 @@ import { DetalleMerchComponent } from './components/detalle-merch/detalle-merch.
     ProfileOrdersComponent,
     DetalleMerchComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, HttpClientModule],
+
+
   providers: [
     provideAuth0({
       domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',

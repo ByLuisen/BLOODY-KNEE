@@ -1,0 +1,30 @@
+<div class="sm:text-center aclonica-font fondo_bk overflow-auto">
+  <h1 class="text-center mb-4">FIT<span class="text-red-600">NESS</span></h1>
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-4 sm:px-96 pb-20 px-10">
+      <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filterItems('todos')">Todos</button>
+      <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filterItems('con-equipamiento')">Con Equipamiento</button>
+      <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filterItems('sin-equipamiento')">Sin Equipamiento</button>
+  </div>
+
+  <ng-container *ngFor="let category of groupedItems">
+      <!-- Mostrar título solo si es la categoría seleccionada o si se han seleccionado todos -->
+      <h2 *ngIf="selectedCategory === category[0].category || selectedCategory === 'todos'"
+          class="sm:text-start text-center sm:px-96 sm:mt-15">{{ getTitle(category[0].category) }}</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify" *ngIf="selectedCategory === category[0].category || selectedCategory === 'todos'">
+          <!-- Filtrar y mostrar solo las imágenes de la categoría actual -->
+          <div class="group relative" *ngFor="let item of category">
+              <ng-container *ngIf="filteredItems.includes(item)">
+                <a routerLink="/player">
+                  <div class="flex items-center justify-center sm:justify-start">
+                      <img [src]="item.image"
+                          class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+                  </div>
+                  <h3 class="text-lg font-bold sm:mt-4">{{ item.title }}</h3>
+                </a>
+              </ng-container>
+          </div>
+      </div>
+  </ng-container>
+</div>
+
+

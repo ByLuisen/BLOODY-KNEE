@@ -9,15 +9,23 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./pricing.component.css'],
 })
 export class PricingComponent {
+  loged!: boolean;
   quotes!: Quote[];
   arrayAdvantages!: any;
   constructor(private http: HttpService) {}
 
   ngOnInit(): void {
+    if (localStorage.getItem('token')) {
+      this.loged = true;
+    } else {
+      this.loged = false;
+    }
     this.http.getQuotes().subscribe((quotes: any[]) => {
       this.quotes = quotes;
-      this.arrayAdvantages = this.quotes.map(quote => quote.advantages.split(';'));
-      console.log(this.arrayAdvantages)
+      this.arrayAdvantages = this.quotes.map((quote) =>
+        quote.advantages.split(';')
+      );
+      console.log(this.arrayAdvantages);
     });
   }
 }

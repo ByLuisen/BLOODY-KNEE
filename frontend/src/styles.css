@@ -5,6 +5,7 @@
 @tailwind utilities;
 
 
+
 .fondo_bk {
   background: linear-gradient(180deg, #ffffff 0%, #c7c7c7 39%, #ffdddd 100%);
   background-size: cover;
@@ -15,3 +16,6 @@
 .aclonica-font {
   font-family: "Aclonica", sans-serif;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
