@@ -1,4 +1,58 @@
 <div class="navigation-menu">
     <!-- Contenido del menú de navegación -->
-    <button class="fixed-button">Botón</button>
+    <button class="fixed-button" (click)="expandDiv()">Botón</button>
+</div>
+
+<div id="expandibleDiv" class="expandible-div mx-auto aclonica-font text-white">
+    <ul class="flex justify-center items-center flex-col mt-3">
+        <li>
+            <a role="button" class="flex">
+                <img class="fa fa-home fa-2x icon" src="../../../../assets/img/icons8_boxer_512.png" alt="" />
+                <span class="nav-text">Muay Thai</span>
+            </a>
+        </li>
+        <hr>
+        <li>
+            <a role="button" class="flex">
+                <img class="fa fa-home fa-2x icon" src="../../../../assets/img/boxeo1.png" alt="" />
+                <span class="nav-text"> Boxeo </span>
+            </a>
+        </li>
+        <hr>
+        <li>
+            <a role="button" class="flex">
+                <img class="fa fa-home fa-2x icon" src="../../../../assets/img/icons8_fitness_501.png" alt="" />
+                <span class="nav-text"> Fitness </span>
+            </a>
+        </li>
+        <hr>
+        <li>
+            <a role="button" class="flex">
+                <img class="fa fa-home fa-2x icon" src="../../../../assets/img/dietas1.png" alt="" />
+                <span class="nav-text">Dietas</span>
+            </a>
+        </li>
+        <hr>
+        <li>
+            <a role="button" class="flex">
+                <img class="" src="../../../../assets/img/eccommerce1.png" alt="" />
+                <span class="nav-text">Merchandising</span>
+            </a>
+        </li>
+        <hr>
+        <li>
+            <a class="flex" (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })">
+                <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+                    <img src="../../../assets/img/logout.png" alt="Logout Image" class="icon">
+                    <p>Logout</p>
+                </ng-container>
+            </a>
+            <ng-template #loggedOut>
+                <a class="flex" (click)="auth.loginWithRedirect()">
+                    <img src="../../../assets/img/login1.png" alt="Profile Image" class="icon">
+                    <p>Login</p>
+                </a>
+            </ng-template>
+        </li>
+    </ul>
 </div>
