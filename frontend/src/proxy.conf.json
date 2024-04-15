@@ -1,14 +1,16 @@
 {
-    "/api/engines/curie/completions": {
-      "target": "http://localhost:8000",
-      "secure": false,
-      "changeOrigin": true,
-      "pathRewrite": {
-        "^/api": ""
-      }
-    }
+  "/api/engines/davinci/completions": {
+    "target": "http://localhost:8000",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "timeout": 60000
   }
-  
-  
-  
-  
+}
+
+
+
+
+

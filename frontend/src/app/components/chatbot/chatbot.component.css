@@ -1,25 +1,45 @@
 .chat-container {
-  max-width: 400px;
+  width: 400px; /* Ajusta este valor según tus necesidades */
   margin: 50px auto;
   border: 1px solid #ccc;
   padding: 20px;
+  background: rgb(201, 0, 0);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  color: rgb(255, 255, 255);
 }
+
 
 .chat-history {
   height: 300px;
+  width: auto;
   overflow-y: scroll;
   border-bottom: 1px solid #ccc;
+
+}
+
+.user-message, .bot-message {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  padding: 10px;
+  border-radius: 15px;
+  margin: 5px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .user-message {
-  text-align: right;
-  margin-bottom: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  margin-left: 10px; /* Aplicar el margen directamente aquí */
 }
 
 .bot-message {
-  text-align: left;
-  margin-bottom: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: rgb(255, 255, 255);
+  margin-left: 8px; /* Aplicar el margen directamente aquí */
 }
+
 
 .chat-input {
   margin-top: 20px;
@@ -28,6 +48,7 @@
 .chat-input input {
   width: 80%;
   padding: 10px;
+  border-radius: 15px;
 }
 
 .chat-input button {

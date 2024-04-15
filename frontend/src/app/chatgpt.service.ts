@@ -6,10 +6,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ChatGptService {
-  private apiUrl = '/api/engines/curie/completions';
+  private apiUrl = '/api/engines/davinci/completions';
 
 
-  private apiKey = ''; 
+  private apiKey = '';
 
   constructor(private http: HttpClient) { }
 
