@@ -21,9 +21,9 @@ const routes: Routes = [
   { path: 'merch-detalle', component: DetalleMerchComponent },
   { path: 'boxingvideos', component: BoxingvideosComponent },
   { path: 'fitnessvideos', component: FitnessvideoComponent },
-  { path: 'player', component: PlayerComponent},
-  {path:'merchandising',component:MerchandisingComponent},
-  {path:'chatbot',component:ChatbotComponent},
+  { path: 'player', component: PlayerComponent },
+  { path: 'merchandising', component: MerchandisingComponent },
+  { path: 'chatbot', component: ChatbotComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];
