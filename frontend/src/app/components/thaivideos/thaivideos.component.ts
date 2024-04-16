@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./thaivideos.component.css']
 })
 export class ThaivideosComponent implements OnInit {
+
+  
   searchTerm: string = '';
   items = [
     { image: '../../../assets/img/sacothai.png', title: 'Entreno con saco #1.', category: 'saco' },
