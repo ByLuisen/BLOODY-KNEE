@@ -9,12 +9,18 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./pricing.component.css'],
 })
 export class PricingComponent {
+  paymentLinks!: string[];
   loged!: boolean;
   quotes!: Quote[];
   arrayAdvantages!: any;
   constructor(private http: HttpService) {}
 
   ngOnInit(): void {
+    this.paymentLinks = [
+      '#',
+      'https://buy.stripe.com/test_4gw4gyd336hp3xC5kl',
+      'https://buy.stripe.com/test_8wMaEW9QRgW3b046oq'
+    ]
     if (localStorage.getItem('token')) {
       this.loged = true;
     } else {
