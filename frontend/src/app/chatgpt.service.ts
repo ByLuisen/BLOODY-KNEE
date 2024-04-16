@@ -1,32 +1,36 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatGptService {
-  private apiUrl = '/api/engines/davinci/completions';
 
+  private apiUrl = 'http://localhost:8000/api/sendMessage';
 
-  private apiKey = '';
 
   constructor(private http: HttpClient) { }
 
-  sendMessage(prompt: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.apiKey}`,
-      'Content-Type': 'application/json'
-    });
+  sendMessage(data: any): Observable<any> {
+    return this.http.post(this.apiUrl, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
-    const data = {
-      prompt: prompt,
-      max_tokens: 150
-    };
-
-    console.log('Sending request to:', this.apiUrl);  // Para depuración, muestra la URL a la que se enviará la solicitud
-
-    // Realiza la solicitud a la URL relativa
-    return this.http.post(this.apiUrl, data, { headers: headers });
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      // Error del lado del cliente
+      console.error('An error occurred:', error.error.message);
+    } else {
+      // El backend retornó un código de respuesta de error
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        `body was: ${JSON.stringify(error.error)}`);
+    }
+    // Retorna un observable con un mensaje de error
+    return throwError('Something bad happened; please try again later.');
   }
 }

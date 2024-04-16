@@ -15,8 +15,14 @@ export class ChatbotComponent {
   sendMessage() {
     const userMessage = { text: this.userInput, sender: 'user' };
     this.chatHistory.push(userMessage);
-
-    this.chatService.sendMessage(this.userInput).subscribe(response => {
+  
+    const data = {
+      model: 'code-davinci-002',
+      prompt: this.userInput,
+      max_tokens: 150
+    };
+    
+    this.chatService.sendMessage(data).subscribe(response => {
       // Obtener la respuesta del bot
       const botMessage = { text: response.choices[0].text.trim(), sender: 'bot' };
       this.chatHistory.push(botMessage);
@@ -25,7 +31,8 @@ export class ChatbotComponent {
       const errorMessage = { text: 'Error al enviar el mensaje', sender: 'bot' };
       this.chatHistory.push(errorMessage);
     });
-
-    this.userInput = ''; // Limpiar el campo de entrada después de enviar el mensaje
+  
+    this.userInput = ''; 
   }
+  
 }

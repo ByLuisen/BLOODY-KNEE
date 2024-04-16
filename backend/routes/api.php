@@ -3,7 +3,7 @@
 use App\Http\Controllers\QuoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ChatController;
+use App\Http\Controllers\OpenAIController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,4 +24,10 @@ Route::group(['middleware' => 'api'], function () {
     Route::resource('quotes', QuoteController::class);
     Route::post('/engines/davinci/completions', [ChatController::class, 'completions']);
 });
+
+
+
+Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
+
+
 
