@@ -5,18 +5,19 @@
 }
 
 .fixed-button {
-background-color: #c90000;
-  width: 80px;
-  height: 80px;
+  background-color: #c90000;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background-image: url('../../../../assets/img/svg/movileMenuIcon.svg');
-  background-size: cover; /* Evita la repetición y cubre completamente el fondo */
-  background-position: center; /* Centra la imagen */
+  background-size: cover;
+  /* Evita la repetición y cubre completamente el fondo */
+  background-position: center;
+  /* Centra la imagen */
 }
 
 
 .expandible-div {
-  /* margin-top: 5px; */
   position: fixed;
   bottom: 0;
   left: 0;
@@ -25,30 +26,29 @@ background-color: #c90000;
   background-color: #c90000;
   overflow: hidden;
   transition: height 2s ease;
-  border-top-left-radius: 40px; /* La mitad del ancho del botón */
-  border-top-right-radius: 40px; /* La mitad del ancho del botón */}
+  border-top-left-radius: 40px;
+  /* La mitad del ancho del botón */
+  border-top-right-radius: 40px;
+  /* La mitad del ancho del botón */
+}
 
 ul {
-  margin-top: 30px;
+  margin-top: 10px;
   margin-bottom: 10px;
-  align-items: center;
   font-size: 30px;
-
 }
 
 li {
-  align-content: center;
-  justify-content: center;
-  justify-items: center;
   margin-bottom: 8px;
-  /* margin-top: 4px; */
+  margin-left: 100px;
+  margin-top: 10px;
 }
 
 .icon {
-  margin-right: 4px;
+  margin-right: 10px;
 }
 
-img{
+img {
   width: 35px;
   height: auto;
 }
@@ -56,6 +56,5 @@ img{
 hr {
   color: white;
   width: 400px;
-  height: 15px;
-  justify-content: center;
+  margin: 0 auto; /* Centers the hr horizontally */
 }
