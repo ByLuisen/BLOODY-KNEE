@@ -2,6 +2,7 @@
     'root' => array(
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
+        'reference' => '4f2d9fec1a1c102f51cafc4c1c09a591808541f8',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -373,6 +374,10 @@
         'laravel/framework' => array(
             'pretty_version' => 'v10.48.7',
             'version' => '10.48.7.0',
+<<<<<<< HEAD
+=======
+            'reference' => '118c686992f4b90d4da6deaf0901315c337bbaf9',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/framework',
             'aliases' => array(),
@@ -382,6 +387,10 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
+<<<<<<< HEAD
+=======
+            'reference' => '4f2d9fec1a1c102f51cafc4c1c09a591808541f8',
+>>>>>>> origin/main
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -400,6 +409,10 @@
         'laravel/prompts' => array(
             'pretty_version' => 'v0.1.18',
             'version' => '0.1.18.0',
+<<<<<<< HEAD
+=======
+            'reference' => '3b5e6b03f1f1175574b5a32331d99c9819da9848',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/prompts',
             'aliases' => array(),
@@ -463,6 +476,10 @@
         'league/flysystem' => array(
             'pretty_version' => '3.27.0',
             'version' => '3.27.0.0',
+<<<<<<< HEAD
+=======
+            'reference' => '4729745b1ab737908c7d055148c9a6b3e959832f',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/flysystem',
             'aliases' => array(),
@@ -499,6 +516,10 @@
         'monolog/monolog' => array(
             'pretty_version' => '3.6.0',
             'version' => '3.6.0.0',
+<<<<<<< HEAD
+=======
+            'reference' => '4b18b21a5527a3d5ffdac2fd35d3ab25a9597654',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../monolog/monolog',
             'aliases' => array(),
@@ -1001,6 +1022,10 @@
         'symfony/console' => array(
             'pretty_version' => 'v6.4.6',
             'version' => '6.4.6.0',
+<<<<<<< HEAD
+=======
+            'reference' => 'a2708a5da5c87d1d0d52937bdeac625df659e11f',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/console',
             'aliases' => array(),
@@ -1028,6 +1053,10 @@
         'symfony/error-handler' => array(
             'pretty_version' => 'v6.4.6',
             'version' => '6.4.6.0',
+<<<<<<< HEAD
+=======
+            'reference' => '64db1c1802e3a4557e37ba33031ac39f452ac5d4',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/error-handler',
             'aliases' => array(),
@@ -1046,6 +1075,10 @@
         'symfony/event-dispatcher-contracts' => array(
             'pretty_version' => 'v3.4.2',
             'version' => '3.4.2.0',
+<<<<<<< HEAD
+=======
+            'reference' => '4e64b49bf370ade88e567de29465762e316e4224',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/event-dispatcher-contracts',
             'aliases' => array(),
@@ -1079,6 +1112,10 @@
         'symfony/http-kernel' => array(
             'pretty_version' => 'v6.4.6',
             'version' => '6.4.6.0',
+<<<<<<< HEAD
+=======
+            'reference' => '060038863743fd0cd982be06acecccf246d35653',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/http-kernel',
             'aliases' => array(),
@@ -1088,6 +1125,10 @@
         'symfony/mailer' => array(
             'pretty_version' => 'v6.4.6',
             'version' => '6.4.6.0',
+<<<<<<< HEAD
+=======
+            'reference' => '677f34a6f4b4559e08acf73ae0aec460479e5859',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/mailer',
             'aliases' => array(),
@@ -1097,6 +1138,10 @@
         'symfony/mime' => array(
             'pretty_version' => 'v6.4.6',
             'version' => '6.4.6.0',
+<<<<<<< HEAD
+=======
+            'reference' => '14762b86918823cb42e3558cdcca62e58b5227fe',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/mime',
             'aliases' => array(),
@@ -1196,6 +1241,10 @@
         'symfony/routing' => array(
             'pretty_version' => 'v6.4.6',
             'version' => '6.4.6.0',
+<<<<<<< HEAD
+=======
+            'reference' => 'f2591fd1f8c6e3734656b5d6b3829e8bf81f507c',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/routing',
             'aliases' => array(),
@@ -1205,6 +1254,10 @@
         'symfony/service-contracts' => array(
             'pretty_version' => 'v3.4.2',
             'version' => '3.4.2.0',
+<<<<<<< HEAD
+=======
+            'reference' => '11bbf19a0fb7b36345861e85c5768844c552906e',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/service-contracts',
             'aliases' => array(),
@@ -1232,6 +1285,10 @@
         'symfony/translation-contracts' => array(
             'pretty_version' => 'v3.4.2',
             'version' => '3.4.2.0',
+<<<<<<< HEAD
+=======
+            'reference' => '43810bdb2ddb5400e5c5e778e27b210a0ca83b6b',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/translation-contracts',
             'aliases' => array(),
@@ -1256,6 +1313,10 @@
         'symfony/var-dumper' => array(
             'pretty_version' => 'v6.4.6',
             'version' => '6.4.6.0',
+<<<<<<< HEAD
+=======
+            'reference' => '95bd2706a97fb875185b51ecaa6112ec184233d4',
+>>>>>>> origin/main
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/var-dumper',
             'aliases' => array(),
