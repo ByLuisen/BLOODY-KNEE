@@ -57,4 +57,5 @@ export class HttpService {
       .get<any>(`${this.url}/quotes`)
       .pipe(map((response) => response.data as Quote[]));
   }
+
 }
