@@ -7,3 +7,28 @@ h2 {
     font-size: 30px;
     color: black;
 }
+
+/* Estilos para el contenedor del video y el icono de estrella */
+.video-container {
+  position: relative; /* Establece la posición relativa para que los elementos hijos puedan ser posicionados de manera absoluta */
+}
+
+/* Estilos para el icono de premium */
+.premium-icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  transition: transform 0.3s;
+}
+
+/* Estilos para el icono de estrella */
+.star-icon {
+  width: 35px;
+  height: auto;
+}
+
+/* Estilos para ampliar el icono de estrella en hover */
+.video-container:hover .premium-icon {
+  transform: scale(1.5); /* Amplía el icono de estrella al 150% cuando se pasa el ratón sobre el contenedor del video */
+}
