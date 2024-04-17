@@ -4,6 +4,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -54,12 +55,12 @@ export class HttpService {
 
     return this._http
       .post<any>(
-        `https://dev-yyzuj3kafug18e38.eu.auth0.com/oauth/token`,
+        environment.ATEndpoint,
         {
-          client_id: 'QOiV3m6kyD74336XSGU49LOcfiktUp2T',
+          client_id: environment.MtMClientID,
           client_secret:
-            'S1ZrkhXmapN90vbTN08qTWoTm7XZVWV76QIOb75hdZDCBvIOSaUJSPQ7axfjLEdj',
-          audience: 'https://dev-yyzuj3kafug18e38.eu.auth0.com/api/v2/',
+            environment.MtMClientSecret,
+          audience: environment.audience,
           grant_type: 'client_credentials',
         },
         { headers: headers }
