@@ -11,6 +11,7 @@
             (click)="filterItems('sin-equipamiento')">Sin Equipamiento</button>
         <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
             (click)="filterItems('con-equipamiento')">Con Equipamiento</button>
+
         <div class="max-w-md mx-auto">
             <label for="default-search"
                 class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -27,6 +28,7 @@
                     [(ngModel)]="searchTerm">
             </div>
         </div>
+
     </div>
 
     <ng-container *ngFor="let category of groupedItems">
