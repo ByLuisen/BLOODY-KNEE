@@ -4,7 +4,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/enviroment/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -47,26 +47,26 @@ export class HttpService {
     return null;
   }
 
-  getAccessToken(): Observable<any> {
-    // Crear el encabezado
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+  // getAccessToken(): Observable<any> {
+  //   // Crear el encabezado
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //   });
 
-    return this._http
-      .post<any>(
-        environment.ATEndpoint,
-        {
-          client_id: environment.MtMClientID,
-          client_secret:
-            environment.MtMClientSecret,
-          audience: environment.audience,
-          grant_type: 'client_credentials',
-        },
-        { headers: headers }
-      )
-      .pipe(map((response) => response));
-  }
+  //   return this._http
+  //     .post<any>(
+  //       environment.ATEndpoint,
+  //       {
+  //         client_id: environment.MtMClientID,
+  //         client_secret:
+  //           environment.MtMClientSecret,
+  //         audience: environment.audience,
+  //         grant_type: 'client_credentials',
+  //       },
+  //       { headers: headers }
+  //     )
+  //     .pipe(map((response) => response));
+  // }
 
   // Obtener el estado actual del usuario
   public usuariData(): any {
