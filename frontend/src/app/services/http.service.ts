@@ -82,9 +82,9 @@ export class HttpService {
   }
 
   // Obtener todos los videos
-  getVideos(): Observable<Video[]> {
+  getVideosModality(id: number): Observable<Video[]> {
     return this._http
-      .get<any>(`${this.url}/quotes`)
-      .pipe(map((response) => response.data as Video[]));
+      .get<{ data: Video[] }>(`${this.url}/modalityvideo/${id}`)
+      .pipe(map(response => response.data));
   }
 }

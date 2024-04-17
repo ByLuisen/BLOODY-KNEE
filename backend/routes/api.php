@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Grupo de rutas para controladores con middleware de autenticacion y namespace de controladores
 Route::group(['middleware' => 'api'], function () {
     Route::resource('quotes', QuoteController::class);
+    Route::get('modalityvideo/{id}',[VideoController::class,'modalities']);
     Route::resource('videos', VideoController::class);
 });
 
