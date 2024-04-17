@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { HttpService } from 'src/app/services/http.service';
 @Component({
   selector: 'app-thaivideos',
   templateUrl: './thaivideos.component.html',
@@ -39,12 +39,14 @@ export class ThaivideosComponent implements OnInit {
   // Variable para almacenar la categoría seleccionada
   selectedCategory: string = '';
 
-  constructor() { }
+  constructor(private http: HttpService) { }
 
   ngOnInit(): void {
-    // Llamar a la función de filtrado al inicializar el componente para mostrar todos los elementos por defecto
-    this.filterItems('todos');
-  }
+    this.http.getVideos().subscribe(videos => {
+        this.filteredItems = videos;
+    });
+}
+
 
   // Agrupar elementos por categoría
   get groupedItems() {
