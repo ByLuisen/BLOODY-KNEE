@@ -43,7 +43,7 @@ export class ThaivideosComponent implements OnInit {
   loged: boolean = false;
 
   // Variable para almacenar el rol del usuario
-  role: string = "premium";
+  role: string = "standard";
 
   constructor(private http: HttpService, private router: Router) { }
 
@@ -56,11 +56,11 @@ export class ThaivideosComponent implements OnInit {
     if (token) {
       this.loged = true;
     }
-    // // Si el usuario no está registrado redirige al login
-    // if (!this.loged) {
-    //   // TODO: Redirigir al login pero de verdad
-    //   this.router.navigate(['dev-yyzuj3kafug18e38.eu.auth0.com/u/login/identifier']);
-    // }
+    // Si el usuario no está registrado redirige al login
+    if (!this.loged) {
+      // TODO: Redirigir al login pero de verdad
+      this.router.navigate(['dev-yyzuj3kafug18e38.eu.auth0.com/u/login/identifier']);
+    }
 
     // Obtengo el rol del usuario TODO: descomentar
     // this.role = this.http.getRole();
@@ -70,7 +70,7 @@ export class ThaivideosComponent implements OnInit {
   // Función para manejar la selección de un video
   selectVideo(item: any) {
     // Si el video es premium y el usuario no tiene un rol premium
-    if (item.premium && this.role !== 'premium') {
+    if (item.premium && this.role !== 'premium' || item.premium && this.role !== 'standard') {
       // Redirige al usuario al componente de pricing
       this.router.navigate(['/pricing']);
     } else {

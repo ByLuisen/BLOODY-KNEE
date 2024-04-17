@@ -40,13 +40,15 @@
         </a>
       </li>
       <hr>
-      <li *ngIf="auth.user$ | async as user">
-        <a routerLink="/profile" class="flex">
-          <img class="rounded-full icon" [src]="user.picture" alt="Profile Image">
-          <p>Perfil</p>
-        </a>
-      </li>
-      <hr>
+      <div *ngIf="auth.user$ | async as user">
+        <li>
+          <a routerLink="/profile" class="flex">
+            <img class="rounded-full icon" [src]="user.picture" alt="Profile Image">
+            <p>Perfil</p>
+          </a>
+        </li>
+        <hr>
+      </div>
       <li>
         <a class="flex" (click)="auth.logout({ logoutParams: { returnTo: getLocationOrigin() } })">
           <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
@@ -63,5 +65,4 @@
       </li>
     </ul>
   </div>
-
 </div>
