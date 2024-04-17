@@ -37,7 +37,7 @@
     </div>
     <div class="sidebar-section my-5 hover:opacity-40 cursor-pointer" *ngIf="auth.user$ | async as user">
       <a routerLink="/profile">
-      <img class="rounded-full" [src]="user.picture" alt="Profile Image">
+      <img class="rounded-full size-8 mx-auto" [src]="user.picture" alt="Profile Image">
       <p class="hidden lg:block text-center">Perfil</p>
       </a>
     </div>

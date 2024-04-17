@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OpenAIController;
@@ -22,7 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Grupo de rutas para controladores con middleware de autenticacion y namespace de controladores
 Route::group(['middleware' => 'api'], function () {
     Route::resource('quotes', QuoteController::class);
-    Route::post('/engines/davinci/completions', [ChatController::class, 'completions']);
+    Route::get('modalityvideo/{id}',[VideoController::class,'modalities']);
+    Route::resource('videos', VideoController::class);
 });
 
 

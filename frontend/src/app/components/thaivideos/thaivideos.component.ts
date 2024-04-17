@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpService } from 'src/app/services/http.service';
+import { Video } from 'src/app/models/Video';
 
 @Component({
   selector: 'app-thaivideos',
@@ -7,82 +9,47 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ThaivideosComponent implements OnInit {
 
-  
-  searchTerm: string = '';
-  items = [
-    { image: '../../../assets/img/sacothai.png', title: 'Entreno con saco #1.', category: 'saco' },
-    { image: '../../../assets/img/sacothai.png', title: 'Entreno con saco #2.', category: 'saco' },
-    { image: '../../../assets/img/sacothai.png', title: 'Entreno con saco #3.', category: 'saco' }
-  ];
+  // Arreglo para almacenar los videos
+  videos: Video[] = [];
 
-  items2 = [
-    { image: '../../../assets/img/pareja.png', title: 'Entreno con pareja #1.', category: 'pareja' },
-    { image: '../../../assets/img/pareja.png', title: 'Entreno con pareja #2.', category: 'pareja' },
-    { image: '../../../assets/img/pareja.png', title: 'Entreno con pareja #3.', category: 'pareja' },
-  ];
+  filteredItems: any[] = [];
+  selectedType: string = 'Todos';
 
-  items3 = [
-    { image: '../../../assets/img/conequipamiento.png', title: 'Entreno con equipamiento #1.', category: 'con-equipamiento' },
-    { image: '../../../assets/img/conequipamiento.png', title: 'Entreno con equipamiento #2.', category: 'con-equipamiento' },
-    { image: '../../../assets/img/conequipamiento.png', title: 'Entreno con equipamiento #3.', category: 'con-equipamiento' },
-  ];
-  
-  items4 = [
-    { image: '../../../assets/img/sombrathai.png', title: 'Entreno sin equipamiento #1.', category: 'sin-equipamiento' },
-    { image: '../../../assets/img/sombrathai.png', title: 'Entreno sin equipamiento #2.', category: 'sin-equipamiento' },
-    { image: '../../../assets/img/sombrathai.png', title: 'Entreno sin equipamiento #3.', category: 'sin-equipamiento' },
-  ];
+  constructor(private http: HttpService) { }
 
-  // Variable para almacenar los elementos filtrados
-  filteredItems!: any[];
-
-  // Variable para almacenar la categoría seleccionada
-  selectedCategory: string = '';
-
-  constructor() { }
 
   ngOnInit(): void {
-    // Llamar a la función de filtrado al inicializar el componente para mostrar todos los elementos por defecto
-    this.filterItems('todos');
+    this.http.getVideosModality(2).subscribe(videos => {
+      console.log('Datos recibidos del servicio HTTP:', videos);  
+      this.videos = videos;
+      this.filteredItems = [...this.videos];  // Inicialmente mostramos todos los videos
+      console.log('Videos cargados:', this.videos);  
+    });
   }
+  
 
-  // Agrupar elementos por categoría
-  get groupedItems() {
-    return [
-      this.items,
-      this.items2,
-      this.items3,
-      this.items4
-    ];
-  }
 
-  // Función para obtener el título basado en la categoría
-  getTitle(category: string) {
-    return category.toUpperCase();
+filterVideos(type: number): void {
+  console.log('Tipo seleccionado:', type);
+  console.log('Videos cargados:', this.videos);  // Imprime los videos cargados
+  
+  if (type === 0) {
+    console.log('Mostrando todos los videos');
+    this.filteredItems = [...this.videos];
+  } else {
+    this.filteredItems = this.videos.filter(video => {
+      console.log('Video typeId:', video.typeId);  // Imprime el typeId del video
+      return video.typeId === type;
+    });
   }
-
-  // Implementar la lógica para filtrar los elementos y actualizar la categoría seleccionada
-  filterItems(category: string) {
-    this.selectedCategory = category;
-    switch (category) {
-      case 'todos':
-        this.filteredItems = [...this.items, ...this.items2, ...this.items3, ...this.items4];
-        break;
-      case 'saco':
-        this.filteredItems = this.items;
-        break;
-      case 'pareja':
-        this.filteredItems = this.items2;
-        break;
-      case 'con-equipamiento':
-        this.filteredItems = this.items3;
-        break;
-      case 'sin-equipamiento':
-        this.filteredItems = this.items4;
-        break;
-      default:
-        this.filteredItems = [];
-        break;
-    }
-  }
+  
+  console.log('Videos filtrados:', this.filteredItems);  
 }
+
+
+
+
+
+}
+
+

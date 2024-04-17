@@ -20,5 +20,8 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(RoleSeeder::class);
         $this->call(QuoteSeeder::class);
+        $this->call(TypeSeeder::class);
+        $this->call(ModalitySeeder::class);
+        $this->call(VideoSeeder::class);
     }
 }
