@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +46,27 @@ export class HttpService {
     }
 
     return null;
+  }
+
+  getAccessToken(): Observable<any> {
+    // Crear el encabezado
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    return this._http
+      .post<any>(
+        environment.ATEndpoint,
+        {
+          client_id: environment.MtMClientID,
+          client_secret:
+            environment.MtMClientSecret,
+          audience: environment.audience,
+          grant_type: 'client_credentials',
+        },
+        { headers: headers }
+      )
+      .pipe(map((response) => response));
   }
 
   // Obtener el estado actual del usuario

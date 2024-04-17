@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '@auth0/auth0-angular';
 import { map } from 'rxjs';
 import { Quote } from 'src/app/models/Quote';
 import { HttpService } from 'src/app/services/http.service';
@@ -13,7 +14,7 @@ export class PricingComponent {
   loged!: boolean;
   quotes!: Quote[];
   arrayAdvantages!: any;
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService, public auth: AuthService) {}
 
   ngOnInit(): void {
     this.paymentLinks = [
@@ -31,7 +32,6 @@ export class PricingComponent {
       this.arrayAdvantages = this.quotes.map((quote) =>
         quote.advantages.split(';')
       );
-      console.log(this.arrayAdvantages);
     });
   }
 }
