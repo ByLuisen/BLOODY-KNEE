@@ -28,6 +28,7 @@ import { PricingComponent } from './components/pricing/pricing.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
+import { environment } from 'src/environments/environment.development';
 
 @NgModule({
   declarations: [
@@ -56,8 +57,8 @@ import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
   providers: [
     provideAuth0({
-      domain: 'dev-yyzuj3kafug18e38.eu.auth0.com',
-      clientId: 'QOiV3m6kyD74336XSGU49LOcfiktUp2T',
+      domain: environment.domain,
+      clientId: environment.SPAClientID,
       authorizationParams: {
         redirect_uri: window.location.origin,
       },
