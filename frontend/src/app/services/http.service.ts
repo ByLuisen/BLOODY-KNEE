@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -44,6 +44,27 @@ export class HttpService {
     }
 
     return null;
+  }
+
+  getAccessToken(): Observable<any> {
+    // Crear el encabezado
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    return this._http
+      .post<any>(
+        `https://dev-yyzuj3kafug18e38.eu.auth0.com/oauth/token`,
+        {
+          client_id: 'QOiV3m6kyD74336XSGU49LOcfiktUp2T',
+          client_secret:
+            'S1ZrkhXmapN90vbTN08qTWoTm7XZVWV76QIOb75hdZDCBvIOSaUJSPQ7axfjLEdj',
+          audience: 'https://dev-yyzuj3kafug18e38.eu.auth0.com/api/v2/',
+          grant_type: 'client_credentials',
+        },
+        { headers: headers }
+      )
+      .pipe(map((response) => response));
   }
 
   // Obtener el estado actual del usuario
