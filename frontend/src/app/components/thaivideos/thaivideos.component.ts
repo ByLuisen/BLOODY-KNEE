@@ -42,8 +42,11 @@ export class ThaivideosComponent implements OnInit {
   // Variable para almacenar si el usuario está logueado
   loged: boolean = false;
 
-  // Variable para almacenar el rol del usuario
+  // Variable para almacenar el rol del usuario TODO: quitar por defecto
   role: string = "standard";
+
+  // Variable para controlar el estado del modal
+  modalOpen: boolean = false;
 
   constructor(private http: HttpService, private router: Router) { }
 
@@ -57,27 +60,16 @@ export class ThaivideosComponent implements OnInit {
       this.loged = true;
     }
     // Si el usuario no está registrado redirige al login
-    if (!this.loged) {
-      // TODO: Redirigir al login pero de verdad
-      this.router.navigate(['dev-yyzuj3kafug18e38.eu.auth0.com/u/login/identifier']);
-    }
+    // if (!this.loged) {
+    //   // TODO: Redirigir al login pero de verdad
+    //   this.router.navigate(['dev-yyzuj3kafug18e38.eu.auth0.com/u/login/identifier']);
+    // }
 
     // Obtengo el rol del usuario TODO: descomentar
     // this.role = this.http.getRole();
 
   }
 
-  // Función para manejar la selección de un video
-  selectVideo(item: any) {
-    // Si el video es premium y el usuario no tiene un rol premium
-    if (item.premium && this.role !== 'premium' || item.premium && this.role !== 'standard') {
-      // Redirige al usuario al componente de pricing
-      this.router.navigate(['/pricing']);
-    } else {
-      // Si el usuario tiene permiso para ver el video, navega al componente de reproductor
-      this.router.navigate(['/player']);
-    }
-  }
 
   // Agrupar elementos por categoría
   get groupedItems() {
@@ -118,4 +110,26 @@ export class ThaivideosComponent implements OnInit {
         break;
     }
   }
+
+  // Método para abrir el modal
+  openModal() {
+    this.modalOpen = true;
+    document.body.classList.add('modal-open'); // Agrega una clase para evitar el scroll del body
+  }
+
+  // Método para cerrar el modal
+  closeModal() {
+    this.modalOpen = false;
+    document.body.classList.remove('modal-open'); // Remueve la clase que evita el scroll del body
+  }
+
+  // Función para manejar la selección de un video
+  selectVideo(item: any) {
+    if (item.premium && this.role !== 'premium' || item.premium && this.role !== 'standard') {
+      this.openModal(); // Abre el modal si el video es premium y el usuario no tiene un rol premium
+    } else {
+      this.router.navigate(['/player']); // Navega al componente de reproductor si el usuario tiene permiso para ver el video
+    }
+  }
+
 }
