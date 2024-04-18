@@ -20,7 +20,8 @@ import { PricingComponent } from './components/pricing/pricing.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/enviroment/environment.development';
+
 @NgModule({
   declarations: [
     AppComponent,

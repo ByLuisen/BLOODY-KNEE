@@ -22,6 +22,10 @@ export class MenuComponent {
     //     // Aquí puedes manejar el error si la solicitud falla
     //   }
     // );
+    // this.auth.idTokenClaims$.subscribe(user => {
+    //   console.log(user) // Asignamos el usuario al miembro 'user' cuando esté disponible
+    // });
+
   }
 
 }
