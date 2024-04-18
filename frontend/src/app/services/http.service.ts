@@ -4,7 +4,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
-import { environment } from 'src/enviroment/environment.development';
+import { Video } from '../models/Video';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -52,10 +53,29 @@ export class HttpService {
     return this.usuariSubject.value;
   }
 
-  // Obtener todos los usuarios
+  // Obtener todas los cuotas
   getQuotes(): Observable<Quote[]> {
     return this._http
       .get<any>(`${this.url}/quotes`)
       .pipe(map((response) => response.data as Quote[]));
   }
+
+  getVideosModality(modality_id: number, type_id: number): Observable<Video[]> {
+    return this._http
+      .get<{ data: Video[] }>(`${this.url}/modalityvideo/${modality_id}/${type_id}`)
+      .pipe(map(response => response.data));
+  }
+
+  getVideoById(id: number): Observable<Video[]> {
+    return this._http
+      .get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
+      .pipe(map(response => response.data));
+  }
+   // Obtener todas los cuotas
+   getVideos(): Observable<Video[]> {
+    return this._http
+      .get<any>(`${this.url}/videos`)
+      .pipe(map((response) => response.data as Video[]));
+  }
+
 }

@@ -28,7 +28,7 @@ export class PricingComponent {
       this.loged = false;
     }
     this.http.getQuotes().subscribe((quotes: any[]) => {
-      this.quotes = quotes;
+      this.quotes = quotes; 
       this.arrayAdvantages = this.quotes.map((quote) =>
         quote.advantages.split(';')
       );

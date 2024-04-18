@@ -33,3 +33,29 @@ h1 {
 .flash {
   animation: flash 1s infinite;
 }
+.chatbot-toggle-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgb(204, 0, 0);
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000; /* Asegura que el botón esté por encima del resto del contenido */
+}
+
+.chatbot-toggle-button img {
+  width: 30px;
+  height: 30px;
+}
+
+/* Ajusta el estilo del componente app-chatbot si es necesario */
+app-chatbot {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 30px; /* Ajusta el margen superior según tus necesidades */
+  z-index: 999; /* Asegura que el chatbot esté por debajo del botón */
+  margin-right: 20px;
+}

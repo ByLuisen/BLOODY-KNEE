@@ -1,32 +1,54 @@
 <div class="sm:text-center aclonica-font fondo_bk overflow-auto">
-    <h1 class="text-center mb-4">BO<span class="text-red-600">XEO</span></h1>
-    <div class="grid grid-cols-2 gap-4 sm:grid-cols-5 sm:gap-4 sm:px-96 pb-20 px-10">
-        <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filterItems('todos')">Todos</button>
-        <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filterItems('saco')">Con Saco</button>
-        <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filterItems('pareja')">Con Pareja</button>
-        <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filterItems('sin-equipamiento')">Sin Equipamiento</button>
-        <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filterItems('con-equipamiento')">Con Equipamiento</button>
-    </div>
+  <h1 class="text-center mb-4">MUAY<span class="text-red-600">THAI</span></h1>
 
-    <ng-container *ngFor="let category of groupedItems">
-        <!-- Mostrar título solo si es la categoría seleccionada o si se han seleccionado todos -->
-        <h2 *ngIf="selectedCategory === category[0].category || selectedCategory === 'todos'"
-            class="sm:text-start text-center sm:px-96 sm:mt-15">{{ getTitle(category[0].category) }}</h2>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3  sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify" *ngIf="selectedCategory === category[0].category || selectedCategory === 'todos'">
-            <!-- Filtrar y mostrar solo las imágenes de la categoría actual -->
-            <div class="group relative" *ngFor="let item of category">
-                <ng-container *ngIf="filteredItems.includes(item)">
-                    <a routerLink="/player">
-                    <div class="flex items-center justify-center sm:justify-start">
-                        <img [src]="item.image"
-                            class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
-                    </div>
-                    
-                    <h3 class="text-lg font-bold sm:mt-4">{{ item.title }}</h3>
-                    </a>
-                </ng-container>
+  <!-- Botones de filtro -->
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-5 sm:gap-4 sm:px-96 pb-20 px-10">
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filteredItems = todos">Todos</button>
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filteredItems = videosSaco">Con
+      Saco</button>
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filteredItems = videosPareja">Con
+      Pareja</button>
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
+      (click)="filteredItems = videosConEquipamiento">Con Equipamiento</button>
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
+      (click)="filteredItems = videosSinEquipamiento">Sin Equipamiento</button>
+  </div>
+
+  <!-- Lista de videos filtrados -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify">
+    <div class="group relative" *ngFor="let video of filteredItems" >
+      <ng-container >
+        <a (click)="selectVideo(video)">
+            <div class="premium-icon" *ngIf="video.exclusive">
+              <img src="../../../assets/img/svg/star.svg" alt="Premium" class="star-icon">
             </div>
-        </div>
-    </ng-container>
-</div>
+              <div class="flex items-center justify-center sm:justify-start">
+                <img src="../../../assets/img/boxeopareja.png"
+                  class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+              </div>
+              <h3 class="text-lg font-bold sm:mt-4">{{video.title}}</h3>
 
+        </a>
+      </ng-container>
+      <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
+
+        <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
+
+        <div class="bg-white p-8 rounded-lg z-50">
+
+          <h2 class="text-2xl font-bold mb-4">¡Ups!
+            Contenido Premium</h2>
+
+          <p>Este video es contenido
+            premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
+
+          <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+            (click)="closeModal()">Cerrar</button>
+
+          <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+            routerLink="/pricing">Subscribirse</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
