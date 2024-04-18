@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('type_id');
+            $table->unsignedBigInteger('modality_id');
             $table->string('title');
             $table->string('coach');
             $table->text('description');
@@ -24,6 +26,9 @@ return new class extends Migration
             $table->string('duration');
             $table->boolean('exclusive');
             $table->timestamps();
+
+            $table->foreign('type_id')->references('id')->on('types')->onDelete('cascade');
+            $table->foreign('modality_id')->references('id')->on('modalities')->onDelete('cascade');
         });
     }
 

@@ -11,6 +11,12 @@ export class DietsComponent {
   result: number | null = null;
   flashingIndex: number | null = null; // Variable para controlar el parpadeo
 
+  showChatbot: boolean = false;
+
+  toggleChatbot() {
+    this.showChatbot = !this.showChatbot;
+  }
+
   calculate() {
     if (this.height && this.weight) {
       const heightInMeters = this.height / 100;

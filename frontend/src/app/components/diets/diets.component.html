@@ -104,4 +104,11 @@
       </div>
     </div>
   </div>
+  <div>
+    <button (click)="toggleChatbot()" class="chatbot-toggle-button transition-transform duration-300 transform hover:scale-110">
+      <img src="../../../assets/img/bot4.png"alt="Chatbot Toggle">
+    </button>
+    <app-chatbot *ngIf="showChatbot"></app-chatbot>
+  </div>
+
 </div>

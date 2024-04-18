@@ -11,8 +11,8 @@ import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.co
 import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
 import { PlayerComponent } from './components/player/player.component';
 import { MerchandisingComponent } from './components/merchandising/merchandising.component';
-import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { PricingComponent } from './components/pricing/pricing.component';
+
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'diets', component: DietsComponent },
@@ -22,10 +22,9 @@ const routes: Routes = [
   { path: 'merch-detalle', component: DetalleMerchComponent },
   { path: 'boxingvideos', component: BoxingvideosComponent },
   { path: 'fitnessvideos', component: FitnessvideoComponent },
-  { path: 'player', component: PlayerComponent },
-  { path: 'merchandising', component: MerchandisingComponent },
-  { path: 'chatbot', component: ChatbotComponent },
-  { path: 'pricing', component: PricingComponent },
+  { path: 'player/:videoId', component: PlayerComponent },
+  {path:'pricing',component:PricingComponent},
+  {path:'merchandising',component:MerchandisingComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];
@@ -36,3 +35,4 @@ const routes: Routes = [
 })
 
 export class AppRoutingModule { }
+

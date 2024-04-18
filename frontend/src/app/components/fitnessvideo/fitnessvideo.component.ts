@@ -1,78 +1,57 @@
 import { Component, OnInit} from '@angular/core';
-
+import { HttpService } from 'src/app/services/http.service';
+import { Video } from 'src/app/models/Video';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-fitnessvideo',
   templateUrl: './fitnessvideo.component.html',
   styleUrls: ['./fitnessvideo.component.css']
 })
 export class FitnessvideoComponent implements OnInit {
-  items = [
-    { image: '../../../assets/img/saco.png', title: 'Entreno con saco #1.', category: 'saco' },
-    { image: '../../../assets/img/saco.png', title: 'Entreno con saco #2.', category: 'saco' },
-    { image: '../../../assets/img/saco.png', title: 'Entreno con saco #3.', category: 'saco' },
-  ];
+ // Arreglo para almacenar los videos
+ todos: Video[] = [];
+ videosConEquipamiento: Video[] = [];
+ videosSinEquipamiento: Video[] = [];
+ filteredItems: Video[] = [];
+ selectedType: string = 'Todos';
+ modalOpen: boolean = false;
+ role: string = 'basic';
+ constructor(private http: HttpService,private router: Router) { }
 
-  items2 = [
-    { image: '../../../assets/img/boxeopareja.png', title: 'Entreno con pareja #1.', category: 'pareja' },
-    { image: '../../../assets/img/boxeopareja.png', title: 'Entreno con pareja #2.', category: 'pareja' },
-    { image: '../../../assets/img/boxeopareja.png', title: 'Entreno con pareja #3.', category: 'pareja' },
-  ];
+ ngOnInit(): void {
+   this.http.getVideosModality(3, 3).subscribe(videos => {
+     this.videosConEquipamiento = videos;
+     this.todos = this.todos.concat(videos);
+     this.filteredItems = [...this.todos];
+   });
+   this.http.getVideosModality(3, 4).subscribe(videos => {
+     this.videosSinEquipamiento = videos;
+     this.todos = this.todos.concat(videos);
+     this.filteredItems = [...this.todos];
+   });
 
-  items3 = [
-    { image: '../../../assets/img/boxeoequimapiento.png', title: 'Entreno con equipamiento #1.', category: 'con-equipamiento' },
-    { image: '../../../assets/img/boxeoequimapiento.png', title: 'Entreno con equipamiento #2.', category: 'con-equipamiento' },
-    { image: '../../../assets/img/boxeoequimapiento.png', title: 'Entreno con equipamiento #3.', category: 'con-equipamiento' },
-  ];
+ }
+ openModal() {
+  this.modalOpen = true;
+  document.body.classList.add('modal-open');
+  // Agrega una clase para evitar el scroll del body
+}
 
-  items4 = [
-    { image: '../../../assets/img/sinequipamiento.png', title: 'Entreno sin equipamiento #1.', category: 'sin-equipamiento' },
-    { image: '../../../assets/img/sinequipamiento.png', title: 'Entreno sin equipamiento #2.', category: 'sin-equipamiento' },
-    { image: '../../../assets/img/sinequipamiento.png', title: 'Entreno sin equipamiento #3.', category: 'sin-equipamiento' },
-  ];
+// Método para cerrar el modal
+closeModal() {
+  this.modalOpen = false;
+  document.body.classList.remove('modal-open');
+  // Remueve la clase que evita el scroll del body
+}
 
-  // Variable para almacenar los elementos filtrados
-  filteredItems!: any[];
-
-  // Variable para almacenar la categoría seleccionada
-  selectedCategory: string = '';
-
-  constructor() { }
-
-  ngOnInit(): void {
-    // Llamar a la función de filtrado al inicializar el componente para mostrar todos los elementos por defecto
-    this.filterItems('todos');
+selectVideo(video: Video) {
+  if (video.exclusive && this.role != "standard" && this.role != "premium" ) {
+    this.openModal();
+    // Abre el modal si el video es premium y el usuario no tiene un rol premium
+  } else {
+    this.router.navigate(['/player', video.id]);
+    // Navega al componente de reproductor si el usuario tiene permiso para ver el video
   }
-
-  // Agrupar elementos por categoría
-  get groupedItems() {
-    return [
-      this.items3,
-      this.items4
-    ];
-  }
-
-  // Función para obtener el título basado en la categoría
-  getTitle(category: string) {
-    return category.toUpperCase();
-  }
-
-  // Implementar la lógica para filtrar los elementos y actualizar la categoría seleccionada
-  filterItems(category: string) {
-    this.selectedCategory = category;
-    switch (category) {
-      case 'todos':
-        this.filteredItems = [...this.items3, ...this.items4];
-        break;
-      case 'con-equipamiento':
-        this.filteredItems = this.items3;
-        break;
-      case 'sin-equipamiento':
-        this.filteredItems = this.items4;
-        break;
-      default:
-        this.filteredItems = [];
-        break;
-    }
-  }
+}
 }
 
