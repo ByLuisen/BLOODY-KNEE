@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
-import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -62,20 +61,21 @@ export class HttpService {
 
   getVideosModality(modality_id: number, type_id: number): Observable<Video[]> {
     return this._http
-      .get<{ data: Video[] }>(`${this.url}/modalityvideo/${modality_id}/${type_id}`)
-      .pipe(map(response => response.data));
+      .get<{ data: Video[] }>(
+        `${this.url}/modalityvideo/${modality_id}/${type_id}`
+      )
+      .pipe(map((response) => response.data));
   }
 
   getVideoById(id: number): Observable<Video[]> {
     return this._http
       .get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
-      .pipe(map(response => response.data));
+      .pipe(map((response) => response.data));
   }
-   // Obtener todas los cuotas
-   getVideos(): Observable<Video[]> {
+  // Obtener todas los cuotas
+  getVideos(): Observable<Video[]> {
     return this._http
       .get<any>(`${this.url}/videos`)
       .pipe(map((response) => response.data as Video[]));
   }
-
 }
