@@ -67,4 +67,5 @@ export class ThaivideosComponent implements OnInit {
       // Navega al componente de reproductor si el usuario tiene permiso para ver el video
     }
   }
+
 }
