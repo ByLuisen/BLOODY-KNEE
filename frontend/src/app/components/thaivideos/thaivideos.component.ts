@@ -10,46 +10,40 @@ import { Video } from 'src/app/models/Video';
 export class ThaivideosComponent implements OnInit {
 
   // Arreglo para almacenar los videos
-  videos: Video[] = [];
-
-  filteredItems: any[] = [];
+  todos: Video[] = [];
+  videosSaco: Video[] = [];
+  videosPareja: Video[] = [];
+  videosConEquipamiento: Video[] = [];
+  videosSinEquipamiento: Video[] = [];
+  filteredItems: Video[] = [];
   selectedType: string = 'Todos';
 
   constructor(private http: HttpService) { }
 
 
   ngOnInit(): void {
-    this.http.getVideosModality(2).subscribe(videos => {
-      console.log('Datos recibidos del servicio HTTP:', videos);  
-      this.videos = videos;
-      this.filteredItems = [...this.videos];  // Inicialmente mostramos todos los videos
-      console.log('Videos cargados:', this.videos);  
+    this.http.getVideosModality(2, 1).subscribe(videos => {
+      this.videosSaco = videos;
+      this.todos = this.todos.concat(videos);
+      this.filteredItems = [...this.todos];
     });
-  }
-  
-
-
-filterVideos(type: number): void {
-  console.log('Tipo seleccionado:', type);
-  console.log('Videos cargados:', this.videos);  // Imprime los videos cargados
-  
-  if (type === 0) {
-    console.log('Mostrando todos los videos');
-    this.filteredItems = [...this.videos];
-  } else {
-    this.filteredItems = this.videos.filter(video => {
-      console.log('Video typeId:', video.typeId);  // Imprime el typeId del video
-      return video.typeId === type;
+    this.http.getVideosModality(2, 2).subscribe(videos => {
+      this.videosPareja = videos;
+      this.todos = this.todos.concat(videos);
+      this.filteredItems = [...this.todos];
     });
+    this.http.getVideosModality(2, 3).subscribe(videos => {
+      this.videosConEquipamiento = videos;
+      this.todos = this.todos.concat(videos);
+      this.filteredItems = [...this.todos];
+    });
+    this.http.getVideosModality(2, 4).subscribe(videos => {
+      this.videosSinEquipamiento = videos;
+      this.todos = this.todos.concat(videos);
+      this.filteredItems = [...this.todos];
+    });
+
   }
-  
-  console.log('Videos filtrados:', this.filteredItems);  
-}
-
-
-
-
-
 }
 
 

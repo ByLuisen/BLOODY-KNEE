@@ -1,23 +1,25 @@
 <div class="sm:text-center aclonica-font fondo_bk overflow-auto">
     <h1 class="text-center mb-4">MUAY<span class="text-red-600">THAI</span></h1>
+
+    <!-- Botones de filtro -->
     <div class="grid grid-cols-2 gap-4 sm:grid-cols-5 sm:gap-4 sm:px-96 pb-20 px-10">
         <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-            (click)="filterVideos(0)">Todos</button>
+            (click)="filteredItems = todos">Todos</button>
+        <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filteredItems = videosSaco">Con
+            Saco</button>
+        <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filteredItems = videosPareja">Con
+            Pareja</button>
         <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-            (click)="filterVideos(1)">Con Saco</button>
+            (click)="filteredItems = videosConEquipamiento">Con Equipamiento</button>
         <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-            (click)="filterVideos(2)">Con Pareja</button>
-        <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-            (click)="filterVideos(3)">Sin Equipamiento</button>
-        <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-            (click)="filterVideos(4)">Con Equipamiento</button>
+            (click)="filteredItems = videosSinEquipamiento">Sin Equipamiento</button>
     </div>
 
-
+    <!-- Lista de videos filtrados -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify">
         <div class="group relative" *ngFor="let video of filteredItems">
             <ng-container>
-                <a routerLink="/player">
+                <a [routerLink]="['/player', video.id]">
                     <div class="flex items-center justify-center sm:justify-start">
                         <img src="../../../assets/img/boxeopareja.png"
                             class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
@@ -26,6 +28,5 @@
                 </a>
             </ng-container>
         </div>
-
     </div>
 </div>

@@ -81,10 +81,22 @@ export class HttpService {
       .pipe(map((response) => response.data as Quote[]));
   }
 
-  // Obtener todos los videos
-  getVideosModality(id: number): Observable<Video[]> {
+  getVideosModality(modality_id: number, type_id: number): Observable<Video[]> {
     return this._http
-      .get<{ data: Video[] }>(`${this.url}/modalityvideo/${id}`)
+      .get<{ data: Video[] }>(`${this.url}/modalityvideo/${modality_id}/${type_id}`)
       .pipe(map(response => response.data));
   }
+
+  getVideoById(id: number): Observable<Video[]> {
+    return this._http
+      .get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
+      .pipe(map(response => response.data));
+  }
+   // Obtener todas los cuotas
+   getVideos(): Observable<Video[]> {
+    return this._http
+      .get<any>(`${this.url}/videos`)
+      .pipe(map((response) => response.data as Video[]));
+  }
+  
 }

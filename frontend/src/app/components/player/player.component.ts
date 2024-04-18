@@ -1,4 +1,8 @@
 import { Component, AfterViewInit, ElementRef } from '@angular/core';
+import { HttpService } from 'src/app/services/http.service';
+import { Video } from 'src/app/models/Video';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-player',
@@ -6,20 +10,75 @@ import { Component, AfterViewInit, ElementRef } from '@angular/core';
   styleUrls: ['./player.component.css'],
 })
 export class PlayerComponent implements AfterViewInit {
-  constructor(private elementRef: ElementRef) { }
+
+  constructor(private elementRef: ElementRef, private http: HttpService,public sanitizer: DomSanitizer, private route: ActivatedRoute,) { }
+  videoId!: number; 
+  selectedVideo: Video | null = null;  // Cambiado de Video a Video | null
+  safeUrl: SafeResourceUrl | null = null;
+  videos: Video[]=[];
+  destacados: Video[]=[];
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
+  videosAleatorios: Video[] = [];
+
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;
   }
+
   ngAfterViewInit() {
     this.setupButtons();
+    this.getVideo();
+
+    this.route.params.subscribe(params => {
+      this.videoId = +params['videoId']; 
+      this.getVideo();
+      this.getDestacados();
+    });
+  
   }
 
+  getVideo(): void {
+    this.http.getVideoById(this.videoId).subscribe(
+      (videos) => {
+        console.log("Video obtenido:", videos); 
+        this.videos = videos;
+      },
+      (error) => {
+        console.error("Error al obtener el video:", error);
+      }
+    );
+  }
+  getDestacados(): void {
+    this.http.getVideos().subscribe(
+      (videos) => {
+        console.log("Videos destacados obtenidos:", videos); 
+        this.destacados = videos;
+          // Obtener 5 videos aleatorios
+          this.videosAleatorios = this.getRandomVideos(this.destacados, 7);
+      },
+      (error) => {
+        console.error("Error al obtener los videos destacados:", error);
+      }
+    );
+  }
+  getRandomVideos(array: Video[], count: number): Video[] {
+    const shuffled = array.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
+
+
+  selectVideo(video: Video): void {
+    this.selectedVideo = video;
+    this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedVideo?.url || '');
+  }
+  
+
+  
   setupButtons() {
     const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
     const dislikeButton = this.elementRef.nativeElement.querySelector('.dislike-button');
-
+    
+    console.log(likeButton); // Verifica si el botón de like se selecciona correctamente
     if (likeButton) {
       likeButton.addEventListener('click', (e: PointerEvent) => {
         e.preventDefault();

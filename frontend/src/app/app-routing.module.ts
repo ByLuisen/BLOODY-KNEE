@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'thaivideos', component: ThaivideosComponent },
   { path: 'boxingvideos', component: BoxingvideosComponent },
   { path: 'fitnessvideos', component: FitnessvideoComponent },
-  { path: 'player', component: PlayerComponent},
+  { path: 'player/:videoId', component: PlayerComponent },
   {path:'merchandising',component:MerchandisingComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
@@ -30,3 +30,4 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule { }
+
