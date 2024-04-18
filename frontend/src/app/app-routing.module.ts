@@ -22,10 +22,9 @@ const routes: Routes = [
   { path: 'merch-detalle', component: DetalleMerchComponent },
   { path: 'boxingvideos', component: BoxingvideosComponent },
   { path: 'fitnessvideos', component: FitnessvideoComponent },
-  { path: 'player', component: PlayerComponent },
-  { path: 'merchandising', component: MerchandisingComponent },
-  { path: 'chatbot', component: ChatbotComponent },
+  { path: 'player/:videoId', component: PlayerComponent },
   { path: 'pricing', component: PricingComponent },
+  { path: 'merchandising', component: MerchandisingComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];
@@ -36,3 +35,4 @@ const routes: Routes = [
 })
 
 export class AppRoutingModule { }
+

@@ -4,6 +4,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
+import { Video } from '../models/Video';
 import { environment } from 'src/environments/environment.development';
 
 @Injectable({
@@ -47,37 +48,34 @@ export class HttpService {
     return null;
   }
 
-  getAccessToken(): Observable<any> {
-    // Crear el encabezado
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-
-    return this._http
-      .post<any>(
-        environment.ATEndpoint,
-        {
-          client_id: environment.MtMClientID,
-          client_secret:
-            environment.MtMClientSecret,
-          audience: environment.audience,
-          grant_type: 'client_credentials',
-        },
-        { headers: headers }
-      )
-      .pipe(map((response) => response));
-  }
-
   // Obtener el estado actual del usuario
   public usuariData(): any {
     return this.usuariSubject.value;
   }
 
-  // Obtener todos los usuarios
+  // Obtener todas los cuotas
   getQuotes(): Observable<Quote[]> {
     return this._http
       .get<any>(`${this.url}/quotes`)
       .pipe(map((response) => response.data as Quote[]));
+  }
+
+  getVideosModality(modality_id: number, type_id: number): Observable<Video[]> {
+    return this._http
+      .get<{ data: Video[] }>(`${this.url}/modalityvideo/${modality_id}/${type_id}`)
+      .pipe(map(response => response.data));
+  }
+
+  getVideoById(id: number): Observable<Video[]> {
+    return this._http
+      .get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
+      .pipe(map(response => response.data));
+  }
+   // Obtener todas los cuotas
+   getVideos(): Observable<Video[]> {
+    return this._http
+      .get<any>(`${this.url}/videos`)
+      .pipe(map((response) => response.data as Video[]));
   }
 
 }

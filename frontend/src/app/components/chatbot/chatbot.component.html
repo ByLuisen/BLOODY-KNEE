@@ -1,1 +1,19 @@
-<p>chatbot works!</p>
+<div class="chat-container">
+  <div class="chat-history">
+    <div *ngFor="let message of chatHistory">
+      <div class="flex items-center">
+        <img *ngIf="message.sender === 'bot'" src="../../../assets/img/bot4.png" class="w-8 h-8">
+        <p [ngClass]="{'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot'}">
+          {{ message.text }}
+        </p>
+        <img *ngIf="message.sender === 'user'" src="../../../assets/img/login1.png" class="w-10 h-8 pr-2">
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <input [(ngModel)]="userInput" class="text-black" placeholder="Escribe un mensaje...">
+    <button (click)="sendMessage()">Enviar</button>
+  </div>
+</div>
+

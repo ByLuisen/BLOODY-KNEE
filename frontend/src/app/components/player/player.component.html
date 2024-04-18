@@ -1,19 +1,18 @@
 <div class="aclonica-font fondo_bk overflow-auto">
-
     <h1 class="sm:px-56 pt-5 text-1xl text-center sm:text-start sm:text-4xl">Bloody<span class="text-red-600"> Knee
         </span></h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 sm:px-56 pb-5 mt-3">
-        <div class="sm:pr-6">
+        <div class="sm:pr-6" *ngFor="let video of videos">
             <div class="pb-5 sm:px-0 text-center">
-                <iframe src="https://www.youtube.com/embed/yTRg9r6q8k0?start=476&showinfo=0&modestbranding=1"
+                <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(video.url)"
                     frameborder="0" allowfullscreen class="w-px2 inline-block mx-auto"></iframe>
             </div>
             <div class="video_section text-white w-px">
                 <div class="grid grid-cols-1 sm:grid-cols-2 pt-2">
-                    <h2 class="text-start pb-2 pl-2 sm:pt-2 ">Entreno con Saco #1</h2>
+                    <h2 class="text-start pb-2 pl-2 sm:pt-2 ">{{video.title}}</h2>
                     <div class="text-start sm:pl-20 pb-2 pl-2 sm:pt-2">
-                        <p class="text-start">30:00 minutos</p>
-                        <p>Entrenador: Juanjo Ortega</p>
+                        <p class="text-start">{{video.duration}} minutos</p>
+                        <p>Entrenador:{{video.coach}}</p>
                         <div class="flex items-center">
                             <div class="w-18 h-7 flex  items-center ">
                                 <div class="like-button">
@@ -45,24 +44,9 @@
                 </div>
                 <h2 class="text-start pb-2 pl-2 sm:pt-2"><button class="show" (click)="toggleDescription()">{{
                         descriptionVisible ? 'Mostrar menos' : 'Mostrar más' }}</button></h2>
-                <p class="text-justify pb-2 pl-2 sm:pt-2 pr-2" *ngIf="descriptionVisible">Lorem ipsum dolor sit amet,
-                    consectetur adipiscing
-                    elit.
-                    Aliquam risus arcu, hendrerit vitae nibh at, maximus sollicitudin erat.
-                    Aenean eget tincidunt velit. Nullam eu convallis purus. Pellentesque finibus
-                    ex ut tincidunt fringilla. Praesent maximus ultrices erat pretium egestas.
-                    In pharetra sem dolor, nec imperdiet orci commodo at. Donec non hendrerit lectus,
-                    eu tempus ante. Duis quam est, scelerisque a nisi nec, consectetur convallis nisl.
-                    Suspendisse eget dui urna. Praesent quis est convallis, elementum metus sed, varius ipsum.
-                </p>
+                <p class="text-justify pb-2 pl-2 sm:pt-2 pr-2" *ngIf="descriptionVisible">{{video.description}}</p>
 
             </div>
-            <!-- <div class="d-block d-sm-none">
-                <button (click)="toggleComments()" class="btn btn-primary mt-3 mb-3 mx-auto">
-                    {{ commentsVisible ? 'Ocultar Comentarios' : 'Mostrar Comentarios' }}
-                </button>
-            </div> -->
-            <!-- <div *ngIf="commentsVisible" class="sm:block w-px"> -->
                 <div class="sm:block w-px pt-4">
                 <div class="flex">
                     <p>343 comentarios</p>
@@ -104,10 +88,10 @@
                 </div>
             </div>
         </div>
-        <div class="hidden sm:block sm:pl-96">
-            <div *ngFor="let item of items">
-                <img [src]="item.image" alt="{{ item.title }}" class="w-30 h-30">
-                <p class="font-bold pb-4">{{ item.title }}</p>
+        <div class="hidden sm:block sm:pl-96 ">
+            <div *ngFor="let destacado of videosAleatorios" [routerLink]="['/player', destacado.id]" class="transition-transform duration-300 transform hover:scale-110">
+                <img src="../../../assets/img/conequipamiento.png" alt="{{ destacado.title }}" class="w-30 h-30">
+                <p class="font-bold pb-4">{{ destacado.title }}</p>
             </div>
         </div>
     </div>
