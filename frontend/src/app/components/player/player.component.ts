@@ -3,7 +3,7 @@ import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
@@ -11,14 +11,15 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PlayerComponent implements AfterViewInit {
 
-  constructor(private elementRef: ElementRef, private http: HttpService,public sanitizer: DomSanitizer, private route: ActivatedRoute,) { }
-  videoId!: number; 
-  selectedVideo: Video | null = null;  // Cambiado de Video a Video | null
+  constructor(private elementRef: ElementRef, private http: HttpService,public sanitizer: DomSanitizer, private route: ActivatedRoute,private cdr: ChangeDetectorRef) { }
+  commentsVisible: boolean = true;
+  descriptionVisible: boolean = false;
+
+  videoId!: number;
+  selectedVideo: Video | null = null;
   safeUrl: SafeResourceUrl | null = null;
   videos: Video[]=[];
   destacados: Video[]=[];
-  commentsVisible: boolean = true;
-  descriptionVisible: boolean = false;
   videosAleatorios: Video[] = [];
 
   toggleDescription() {
@@ -30,28 +31,31 @@ export class PlayerComponent implements AfterViewInit {
     this.getVideo();
 
     this.route.params.subscribe(params => {
-      this.videoId = +params['videoId']; 
+      this.videoId = +params['videoId'];
       this.getVideo();
       this.getDestacados();
     });
-  
+
   }
+
 
   getVideo(): void {
     this.http.getVideoById(this.videoId).subscribe(
       (videos) => {
-        console.log("Video obtenido:", videos); 
+        console.log("Video obtenido:", videos);
         this.videos = videos;
+        this.cdr.detectChanges(); // Manually trigger change detection
       },
       (error) => {
         console.error("Error al obtener el video:", error);
       }
     );
   }
+
   getDestacados(): void {
     this.http.getVideos().subscribe(
       (videos) => {
-        console.log("Videos destacados obtenidos:", videos); 
+        console.log("Videos destacados obtenidos:", videos);
         this.destacados = videos;
           // Obtener 5 videos aleatorios
           this.videosAleatorios = this.getRandomVideos(this.destacados, 7);
@@ -71,14 +75,13 @@ export class PlayerComponent implements AfterViewInit {
     this.selectedVideo = video;
     this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedVideo?.url || '');
   }
-  
 
-  
+
+
   setupButtons() {
     const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
     const dislikeButton = this.elementRef.nativeElement.querySelector('.dislike-button');
-    
-    console.log(likeButton); // Verifica si el botón de like se selecciona correctamente
+
     if (likeButton) {
       likeButton.addEventListener('click', (e: PointerEvent) => {
         e.preventDefault();

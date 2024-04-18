@@ -14,6 +14,7 @@ class VideoSeeder extends Seeder
         // Videos de boxeo (modality_id = 1)
         for ($i = 1; $i <= 10; $i++) {
             $type_id = ($i % 4) + 1; // Genera un valor de tipo cíclico entre 1 y 4
+            $isExclusive = (bool)rand(0, 1); // Randomly set exclusive to true or false
             Video::create([
                 'type_id' => (string)$type_id,
                 'modality_id' => '1',
@@ -25,13 +26,14 @@ class VideoSeeder extends Seeder
                 'likes' => '0',
                 'dislikes' => '0',
                 'duration' => '12:00',
-                'exclusive' => false,
+                'exclusive' => $isExclusive, // Set exclusive attribute randomly
             ]);
         }
 
         // Videos de thai (modality_id = 2)
         for ($i = 1; $i <= 10; $i++) {
             $type_id = ($i % 4) + 1; // Genera un valor de tipo cíclico entre 1 y 4
+            $isExclusive = (bool)rand(0, 1); // Randomly set exclusive to true or false
             Video::create([
                 'type_id' => (string)$type_id,
                 'modality_id' => '2',
@@ -43,13 +45,14 @@ class VideoSeeder extends Seeder
                 'likes' => '0',
                 'dislikes' => '0',
                 'duration' => '13:00',
-                'exclusive' => false,
+                'exclusive' => $isExclusive, // Set exclusive attribute randomly
             ]);
         }
 
         // Videos de fitness (modality_id = 3)
         for ($i = 1; $i <= 10; $i++) {
             $type_id = ($i % 4) + 1; // Genera un valor de tipo cíclico entre 1 y 4
+            $isExclusive = (bool)rand(0, 1); // Randomly set exclusive to true or false
             Video::create([
                 'type_id' => (string)$type_id,
                 'modality_id' => '3',
@@ -61,7 +64,7 @@ class VideoSeeder extends Seeder
                 'likes' => '0',
                 'dislikes' => '0',
                 'duration' => '14:00',
-                'exclusive' => false,
+                'exclusive' => $isExclusive, // Set exclusive attribute randomly
             ]);
         }
     }

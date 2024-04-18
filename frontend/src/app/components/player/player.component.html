@@ -47,12 +47,6 @@
                 <p class="text-justify pb-2 pl-2 sm:pt-2 pr-2" *ngIf="descriptionVisible">{{video.description}}</p>
 
             </div>
-            <!-- <div class="d-block d-sm-none">
-                <button (click)="toggleComments()" class="btn btn-primary mt-3 mb-3 mx-auto">
-                    {{ commentsVisible ? 'Ocultar Comentarios' : 'Mostrar Comentarios' }}
-                </button>
-            </div> -->
-            <!-- <div *ngIf="commentsVisible" class="sm:block w-px"> -->
                 <div class="sm:block w-px pt-4">
                 <div class="flex">
                     <p>343 comentarios</p>
@@ -98,7 +92,7 @@
             <div *ngFor="let destacado of videosAleatorios" [routerLink]="['/player', destacado.id]" class="transition-transform duration-300 transform hover:scale-110">
                 <img src="../../../assets/img/conequipamiento.png" alt="{{ destacado.title }}" class="w-30 h-30">
                 <p class="font-bold pb-4">{{ destacado.title }}</p>
-            </div>            
+            </div>
         </div>
     </div>
 </div>
