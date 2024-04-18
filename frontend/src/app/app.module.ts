@@ -47,6 +47,7 @@ import { environment } from 'src/enviroment/environment.development';
     PricingComponent,
     PerfileMenuComponent,
     LikedVideosComponent,
+    ChatbotComponent,
     FavouriteVideosComponent,
     ProfileDietsComponent,
     ProfileOrdersComponent,

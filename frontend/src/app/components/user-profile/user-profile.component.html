@@ -2,16 +2,16 @@
 
 <div class="content_container aclonica-font">
   <div class="background_profile" *ngIf="auth.user$ | async as user">
-    <div class="content_profile_firstInfo">
+    <div class="content_profile_firstInfo items-center content-center">
       <img class="rounded-full background_profile_img editable" [src]="user.picture" alt="Profile Image"
         routerLink="/profile" />
-      <span class="user_nickname">{{ user.name }}</span>
-      <span class="user_name">{{ user.nickname }}</span>
+      <span class="user_nickname w-auto">{{ user.name}}</span>
+      <span class="user_name w-auto">{{user.nickname}}</span>
     </div>
   </div>
 </div>
 
-<div class="sm:text-center text-center aclonica-font overflow-auto mt-10" *ngIf="auth.user$ | async as user">
+<div class="sm:text-center text-center aclonica-font overflow-auto mt-10 fondo_bk" *ngIf="auth.user$ | async as user">
   <div *ngIf="selectedOption === 'editProfile'">
 
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 justify-center mx-28 mt-2">
