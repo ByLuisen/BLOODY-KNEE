@@ -47,27 +47,6 @@ export class HttpService {
     return null;
   }
 
-  // getAccessToken(): Observable<any> {
-  //   // Crear el encabezado
-  //   const headers = new HttpHeaders({
-  //     'Content-Type': 'application/json',
-  //   });
-
-  //   return this._http
-  //     .post<any>(
-  //       environment.ATEndpoint,
-  //       {
-  //         client_id: environment.MtMClientID,
-  //         client_secret:
-  //           environment.MtMClientSecret,
-  //         audience: environment.audience,
-  //         grant_type: 'client_credentials',
-  //       },
-  //       { headers: headers }
-  //     )
-  //     .pipe(map((response) => response));
-  // }
-
   // Obtener el estado actual del usuario
   public usuariData(): any {
     return this.usuariSubject.value;

@@ -12,16 +12,10 @@ export class MenuComponent {
 
   constructor(@Inject(DOCUMENT) public document: Document, public auth: AuthService, private http: HttpService) {
 
-    // this.auth.getAccessTokenSilently().subscribe(
-    //     (token) => {
-    //       console.log('Respuesta:', token);
-    //       // Aquí puedes manejar la respuesta como desees
-    //     },
-    //     (error) => {
-    //       console.error('Error:', error);
-    //       // Aquí puedes manejar el error si la solicitud falla
-    //     }
-    //   );
+    // this.auth.idTokenClaims$.subscribe(user => {
+    //   console.log(user) // Asignamos el usuario al miembro 'user' cuando esté disponible
+    // });
+
   }
 
 }
