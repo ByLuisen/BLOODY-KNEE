@@ -1,17 +1,73 @@
-<!-- <div class="ms-96" *ngIf="auth.user$ | async as user">
-  <ul *ngIf="auth.user$ | async as user">
-    <li>{{ user.name }}</li>
-    <li>{{ user.email }}</li>
-  </ul>
-</div> -->
+<app-profile-menu class="fixed h-screen"></app-profile-menu>
+
 <div class="content_container aclonica-font">
-  <div class="background_profile " *ngIf="auth.user$ | async as user">
-    <div class="content_profile_firstInfo">
-
-      <img class="rounded-full background_profile_img" [src]="user.picture" alt="Profile Image" routerLink="/profile">
-      <span class="user_nickname ">{{user.name}}</span>
-      <span class="user_name">{{user.nickname}}</span>
+  <div class="background_profile" *ngIf="auth.user$ | async as user">
+    <div class="content_profile_firstInfo items-center content-center">
+      <img class="rounded-full background_profile_img editable" [src]="user.picture" alt="Profile Image"
+        routerLink="/profile" />
+      <span class="user_nickname w-auto">{{ user.name}}</span>
+      <span class="user_name w-auto">{{user.nickname}}</span>
     </div>
-
   </div>
+</div>
+
+<div class="sm:text-center text-center aclonica-font overflow-auto mt-10 fondo_bk" *ngIf="auth.user$ | async as user">
+  <div *ngIf="selectedOption === 'editProfile'">
+
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 justify-center mx-28 mt-2">
+      <!-- Nombre de usuario -->
+      <div
+        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300">
+        <h2 class="text-lg font-bold mb-2">Nombre:</h2>
+        <input type="text" [(ngModel)]="user.given_name" placeholder="Nombre"
+          class="bg-white border border-gray-300 rounded-md p-2 w-full">
+      </div>
+      <!-- Apellido -->
+      <div
+        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300">
+        <h2 class="text-lg font-bold mb-2">Apellido:</h2>
+        <input type="text" [(ngModel)]="user.family_name" placeholder="Nombre"
+          class="bg-white border border-gray-300 rounded-md p-2 w-full">
+      </div>
+      <!-- Cambiar nombre de usuario -->
+      <div
+        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300">
+        <h2 class="text-lg font-bold mb-2">Nombre de usuario:</h2>
+        <input type="text" [(ngModel)]="user.nickname" placeholder="Nombre"
+          class="bg-white border border-gray-300 rounded-md p-2 w-full">
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 justify-center mx-28 mt-5 mb-5">
+      <!-- Correo electronico -->
+      <div
+        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300 bg-white">
+        <h2 class="text-lg font-bold mb-2">Correo electronico:</h2>
+        <input type="text" [(ngModel)]="user.email" placeholder="Correo electrónico"
+          class="bg-white border border-gray-300 rounded-md p-2 w-full">
+      </div>
+      <!-- Foto de perfil -->
+      <div
+        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 flex flex-col justify-center items-center hover:transform hover:scale-105 transition duration-300 bg-white">
+        <h2 class="text-lg font-bold mb-2">Foto de perfil:</h2>
+        <img class="rounded-full" width="50px" [src]="user.picture" alt="Profile Image" routerLink="/profile" />
+      </div>
+    </div>
+  </div>
+  <!-- VIDEOS QUE HE DADO A LIKE -->
+  <div *ngIf="selectedOption === 'likedVideos'">
+    <app-liked-videos></app-liked-videos>
+  </div>
+
+  <div *ngIf="selectedOption === 'favouriteVideos'">
+    <app-favourite-videos></app-favourite-videos>
+  </div>
+
+  <div *ngIf="selectedOption === 'diets'">
+    <app-profile-diets></app-profile-diets>
+  </div>
+
+  <div *ngIf="selectedOption === 'orders'">
+    <app-profile-orders></app-profile-orders>
+  </div>
+
 </div>

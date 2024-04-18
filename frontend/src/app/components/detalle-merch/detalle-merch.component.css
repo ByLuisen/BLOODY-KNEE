@@ -1,0 +1,30 @@
+/* styles.css */
+.image-gallery {
+    width: 100%;
+    max-width: 640px; /* ajusta según tus necesidades */
+    margin: auto;
+}
+
+#main-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.thumbnail-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.thumbnail {
+    width: 100px;
+    height: auto;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.thumbnail:hover {
+    opacity: 0.6;
+}
