@@ -18,5 +18,4 @@ export class UserProfileComponent {
       this.selectedOption = option;
     });
   }
-
 }
