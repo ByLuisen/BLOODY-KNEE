@@ -2,22 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-boxingvideos',
   templateUrl: './boxingvideos.component.html',
   styleUrls: ['./boxingvideos.component.css']
 })
 export class BoxingvideosComponent implements OnInit {
-  // Arreglo para almacenar los videos
+  // Array to hold all videos
   todos: Video[] = [];
+  // Arrays to hold videos of different modalities
   videosSaco: Video[] = [];
   videosPareja: Video[] = [];
   videosConEquipamiento: Video[] = [];
   videosSinEquipamiento: Video[] = [];
+  // Array to hold filtered videos
   filteredItems: Video[] = [];
+  // Default selected type
   selectedType: string = 'Todos';
+  // Flag to control modal visibility
   modalOpen: boolean = false;
-  role!: string;
+  role: string = "basic";
   constructor(private http: HttpService,private router: Router) { }
 
   ngOnInit(): void {
@@ -46,30 +51,29 @@ export class BoxingvideosComponent implements OnInit {
       this.todos = this.todos.concat(videos);
       this.filteredItems = [...this.todos];
     });
-
   }
 
+  // Open modal method
   openModal() {
     this.modalOpen = true;
     document.body.classList.add('modal-open');
-    // Agrega una clase para evitar el scroll del body
   }
 
-  // Método para cerrar el modal
+  // Close modal method
   closeModal() {
     this.modalOpen = false;
     document.body.classList.remove('modal-open');
-    // Remueve la clase que evita el scroll del body
   }
 
+  // Method to select a video
   selectVideo(video: Video) {
-    if (video.exclusive && this.role != "standard" && this.role != "premium" ) {
+    // Check if video is exclusive and user role permits access
+    if (video.exclusive && this.role != "standard" && this.role != "premium") {
+      // Open modal if access is restricted
       this.openModal();
-      // Abre el modal si el video es premium y el usuario no tiene un rol premium
     } else {
+      // Navigate to video player if access is permitted
       this.router.navigate(['/player', video.id]);
-      // Navega al componente de reproductor si el usuario tiene permiso para ver el video
     }
   }
 }
-

@@ -15,7 +15,7 @@ export class FitnessvideoComponent implements OnInit {
   filteredItems: Video[] = [];
   selectedType: string = 'Todos';
   modalOpen: boolean = false;
-  role!: string;
+  role: string = "basic";
   constructor(private http: HttpService, private router: Router) {}
 
   ngOnInit(): void {
