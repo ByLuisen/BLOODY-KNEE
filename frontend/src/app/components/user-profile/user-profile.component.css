@@ -1,17 +1,11 @@
 .content_container {
   display: flex;
   justify-content: center;
-  /* height: 100%; */
 }
 
 .background_profile {
-  width: 825px;
-  height: 120px;
-  border-radius: 105.14px;
-  margin-top: 35px;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(90deg, #ff0000 0%, #850000 22.31%);
+ @apply h-14;
+ width: 300px;
 }
 
 .content_profile_firstInfo {
@@ -41,11 +35,12 @@
 }
 
 .user_name {
-  color: rgba(255, 255, 255, 0.377);
-  font-size: 40px;
+  color: rgb(255, 255, 255);
+  font-size: 20px;
   margin-left: 10px;
   margin-top: 25px;
 }
+
 h1 {
   font-size: 40px;
   color: black;
