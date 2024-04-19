@@ -17,13 +17,16 @@ export class ThaivideosComponent implements OnInit {
   videosSinEquipamiento: Video[] = [];
   filteredItems: Video[] = [];
   selectedType: string = 'Todos';
-
   modalOpen: boolean = false;
-  role: string = 'basic';
+  role!: string;
 
   constructor(private http: HttpService, private router: Router) {}
 
   ngOnInit(): void {
+    this.http.getRole().subscribe((data) => {
+      this.role = data[0].name;
+      console.log(this.role)
+    })
     this.http.getVideosModality(2, 1).subscribe((videos) => {
       this.videosSaco = videos;
       this.todos = this.todos.concat(videos);
