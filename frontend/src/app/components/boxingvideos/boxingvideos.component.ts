@@ -22,13 +22,15 @@ export class BoxingvideosComponent implements OnInit {
   selectedType: string = 'Todos';
   // Flag to control modal visibility
   modalOpen: boolean = false;
-  // User role
-  role: string = 'basic';
-
-  constructor(private http: HttpService, private router: Router) { }
+  role!: string;
+  constructor(private http: HttpService,private router: Router) { }
 
   ngOnInit(): void {
-    // Fetch videos for different modalities and populate respective arrays
+    this.http.getRole().subscribe((data) => {
+      this.role = data[0].name;
+      console.log(this.role)
+
+    })
     this.http.getVideosModality(1, 1).subscribe(videos => {
       this.videosSaco = videos;
       this.todos = this.todos.concat(videos);

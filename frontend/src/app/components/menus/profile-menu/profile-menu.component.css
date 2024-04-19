@@ -1,19 +1,23 @@
-.fa-2x {
-  font-size: 1em;
-}
-.fa {
-  position: relative;
-  display: table-cell;
-  height: 25px;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 20px;
-  margin-bottom: 5px;
+.grid {
+  @apply grid-cols-1 sm:grid-cols-5;
 }
 
-.icon {
-  width: 33px;
+.menu-option {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center; 
+  @apply mx-4;
 }
+
+
+.icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 8px; 
+}
+
 .main-menu:hover,
 nav.main-menu.expanded {
   width: 210px;

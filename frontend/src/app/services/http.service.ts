@@ -6,6 +6,8 @@ import { map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
 import { environment } from 'src/environments/environment.development';
+import { AuthService } from '@auth0/auth0-angular';
+import { Role } from '../models/Role';
 
 @Injectable({
   providedIn: 'root',
@@ -14,43 +16,52 @@ export class HttpService {
   private jwtHelper: JwtHelperService = new JwtHelperService(); // Servicio para manejar JWT
   url: string = 'http://localhost:8000/api'; // URL base para las solicitudes HTTP
   // url: string = 'http://49.13.160.230/api'; // URL del servidor
-  private usuariSubject: BehaviorSubject<any>; // Subject para mantener el estado del usuario autenticado
-  public usuario: Observable<any>; // Observable que emite el estado del usuario
 
-  constructor(private _http: HttpClient) {
-    this.usuariSubject = new BehaviorSubject<any>(
-      localStorage.getItem('myToken')
-    ); // Inicializar el subject con el token almacenado en el localStorage
-    this.usuario = this.usuariSubject.asObservable(); // Observable que emite el estado del usuario
+  constructor(private _http: HttpClient, private auth: AuthService) {}
+
+  getAccessToken(): Observable<any> {
+    const url = 'https://dev-yyzuj3kafug18e38.eu.auth0.com/oauth/token';
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = {
+      client_id: 'QOiV3m6kyD74336XSGU49LOcfiktUp2T',
+      client_secret:
+        'S1ZrkhXmapN90vbTN08qTWoTm7XZVWV76QIOb75hdZDCBvIOSaUJSPQ7axfjLEdj',
+      audience: 'https://dev-yyzuj3kafug18e38.eu.auth0.com/api/v2/',
+      grant_type: 'client_credentials',
+    };
+
+    return this._http.post<any>(url, body, { headers: headers });
   }
 
-  // Obtener el nombre del usuario desde el token JWT
-  getUserName(): string | null {
-    const token = localStorage.getItem('myToken');
+  getRole(): Observable<Role[]> {
+    return new Observable<Role[]>((observer) => {
+      this.auth.user$.subscribe((user) => {
+        // Verifica si user?.sub tiene un valor antes de continuar
+        if (user?.sub) {
+          this.getAccessToken().subscribe((data) => {
+            const url = `${environment.audience}users/${user?.sub}/roles`;
+            const headers = new HttpHeaders({
+              Accept: 'application/json',
+              Authorization: `Bearer ${data.access_token}`,
+            });
 
-    if (token) {
-      const decodedToken = this.jwtHelper.decodeToken(token);
-      return decodedToken.name || null;
-    }
-
-    return null;
-  }
-
-  // Obtener el rol del usuario desde el token JWT
-  getRole(): string | null {
-    const token = localStorage.getItem('myToken');
-
-    if (token) {
-      const decodedToken = this.jwtHelper.decodeToken(token);
-      return decodedToken.role || null;
-    }
-
-    return null;
-  }
-
-  // Obtener el estado actual del usuario
-  public usuariData(): any {
-    return this.usuariSubject.value;
+            this._http.get<any>(url, { headers: headers }).subscribe(
+              (response) => {
+                observer.next(response);
+                observer.complete();
+              },
+              (error) => {
+                observer.error(error);
+              }
+            );
+          });
+        } else {
+          observer.error(
+            'No se pudo obtener el rol: el usuario no está autenticado'
+          );
+        }
+      });
+    });
   }
 
   // Obtener todas los cuotas
@@ -62,20 +73,21 @@ export class HttpService {
 
   getVideosModality(modality_id: number, type_id: number): Observable<Video[]> {
     return this._http
-      .get<{ data: Video[] }>(`${this.url}/modalityvideo/${modality_id}/${type_id}`)
-      .pipe(map(response => response.data));
+      .get<{ data: Video[] }>(
+        `${this.url}/modalityvideo/${modality_id}/${type_id}`
+      )
+      .pipe(map((response) => response.data));
   }
 
   getVideoById(id: number): Observable<Video[]> {
     return this._http
       .get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
-      .pipe(map(response => response.data));
+      .pipe(map((response) => response.data));
   }
-   // Obtener todas los cuotas
-   getVideos(): Observable<Video[]> {
+  // Obtener todas los cuotas
+  getVideos(): Observable<Video[]> {
     return this._http
       .get<any>(`${this.url}/videos`)
       .pipe(map((response) => response.data as Video[]));
   }
-
 }

@@ -1,35 +1,29 @@
-<div class="area"></div>
-<nav class="main-menu ">
-  <ul>
-    <li>
-      <a (click)="selectMenuOption('editProfile')">
-        <img class="fa fa-home fa-2x icon" src="../../../../assets/img/svg/bxs-edit.svg" alt="" />
-        <span class="nav-text">Editar perfil</span>
-      </a>
-    </li>
-    <li>
-      <a (click)="selectMenuOption('likedVideos')">
-        <img class="fa fa-home fa-2x icon" src="../../../../assets/img/svg/bxs-like.svg" alt="" />
-        <span class="nav-text"> Videos que me han gustado </span>
-      </a>
-    </li>
-    <li class="has-subnav">
-      <a (click)="selectMenuOption('favouriteVideos')">
-        <img class="fa fa-home fa-2x icon" src="../../../../assets/img/svg/bxs-star.svg" alt="" />
-        <span class="nav-text"> Mis videos favoritos </span>
-      </a>
-    </li>
-    <li class="has-subnav">
-      <a (click)="selectMenuOption('diets')">
-        <img class="fa fa-home fa-2x icon" src="../../../../assets/img/svg/bxs-baguette.svg" alt="" />
-        <span class="nav-text">Mis dietas</span>
-      </a>
-    </li>
-    <li class="has-subnav">
-      <a (click)="selectMenuOption('orders')">
-        <img class="fa fa-home fa-2x icon" src="../../../../assets/img/svg/bxs-cart.svg" alt="" />
-        <span class="nav-text"> Mis pedidos </span>
-      </a>
-    </li>
-  </ul>
-</nav>
+<div class="mx-44 aclonica-font rounded-full flex-items-center justify-start bg-gradient-to-r from-red-500 to-red-900 text-white">
+  <div class="grid">
+  <div class="menu-option" (click)="selectMenuOption('editProfile')">
+    <img class="icon" src="../../../../assets/img/svg/bxs-edit.svg" alt="perfil" />
+    <p>Editar perfil</p>
+  </div>
+
+  <div class="menu-option" (click)="selectMenuOption('likedVideos')">
+    <img class="icon" src="../../../../assets/img/svg/bxs-like.svg" alt="videoslikeados" />
+    <p>Videos que me han gustado</p>
+  </div>
+
+  <div class="menu-option" (click)="selectMenuOption('favouriteVideos')">
+    <img class="icon" src="../../../../assets/img/svg/bxs-star.svg" alt="videosfavoritos" />
+    <p>Mis videos favoritos</p>
+  </div>
+
+  <div class="menu-option" (click)="selectMenuOption('diets')">
+    <img class="icon" src="../../../../assets/img/svg/bxs-baguette.svg" alt="dietas" />
+    <p>Mis dietas</p>
+  </div>
+
+  <div class="menu-option" (click)="selectMenuOption('orders')">
+    <img class="icon" src="../../../../assets/img/svg/bxs-cart.svg" alt="pedidos" />
+    <p>Mis pedidos</p>
+  </div>
+  </div>
+</div>
+
