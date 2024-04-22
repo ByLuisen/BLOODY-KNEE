@@ -17,7 +17,7 @@ export class ChatbotComponent {
     this.chatHistory.push(userMessage);
   
     const data = {
-      model: 'code-davinci-002',
+      model: 'gpt-3.5-turbo',
       prompt: this.userInput,
       max_tokens: 150
     };

@@ -9,7 +9,7 @@ class OpenAIController extends Controller
     public function sendMessage(Request $request)
     {
         $data = $request->all();
-        $apiKey = ''; 
+        $apiKey = env('OPENAI_API_KEY'); 
         $apiUrl = 'https://api.openai.com/v1/completions';
 
         $headers = [
