@@ -6,6 +6,8 @@ use App\Http\Resources\VideoResource; // Corrección en el espacio de nombres
 use App\Http\Responses\ApiResponse;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use App\Models\UserLikeDislikeVideo;
+
 
 class VideoController extends Controller
 {
@@ -49,5 +51,38 @@ class VideoController extends Controller
         }
     
     }
-    
+
+    public function updateLikes(Request $request, $id) {
+        $video = Video::find($id);
+
+        if (!$video) {
+            return response()->json(['error' => 'Video no encontrado'], 404);
+        }
+
+        if ($video->dislikes > 0) {
+            $video->dislikes--;
+        }
+
+        $video->likes++;
+        $video->save();
+
+        return response()->json(['message' => 'Likes actualizados correctamente']);
+    }
+
+    public function updateDislikes(Request $request, $id) {
+        $video = Video::find($id);
+
+        if (!$video) {
+            return response()->json(['error' => 'Video no encontrado'], 404);
+        }
+
+        if ($video->likes > 0) {
+            $video->likes--;
+        }
+
+        $video->dislikes++;
+        $video->save();
+
+        return response()->json(['message' => 'Dislikes actualizados correctamente']);
+    }
 }

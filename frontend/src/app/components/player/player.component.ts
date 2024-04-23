@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ElementRef,OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -9,12 +9,11 @@ import { ChangeDetectorRef } from '@angular/core';
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css'],
 })
-export class PlayerComponent implements AfterViewInit {
+export class PlayerComponent implements OnInit {
 
   constructor(private elementRef: ElementRef, private http: HttpService,public sanitizer: DomSanitizer, private route: ActivatedRoute,private cdr: ChangeDetectorRef) { }
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
-
   videoId!: number;
   selectedVideo: Video | null = null;
   safeUrl: SafeResourceUrl | null = null;
@@ -26,17 +25,41 @@ export class PlayerComponent implements AfterViewInit {
     this.descriptionVisible = !this.descriptionVisible;
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.setupButtons();
-    this.getVideo();
 
     this.route.params.subscribe(params => {
-      this.videoId = +params['videoId'];
-      this.getVideo();
-      this.getDestacados();
+        this.videoId = +params['videoId'];
+        this.getVideo();
+        this.getDestacados();
     });
+}
 
-  }
+
+likeVideo(videoId: number): void {
+  this.http.updateLikes(videoId).subscribe(
+    response => {
+      console.log('Like actualizado correctamente', response);
+    },
+    error => {
+      console.error('Error al actualizar like', error);
+    }
+  );
+}
+
+dislikeVideo(videoId: number): void {
+  this.http.updateDislikes(videoId).subscribe(
+    response => {
+      console.log('Dislike actualizado correctamente', response);
+    },
+    error => {
+      console.error('Error al actualizar dislike', error);
+    }
+  );
+}
+
+
+
 
 
   getVideo(): void {
@@ -65,6 +88,7 @@ export class PlayerComponent implements AfterViewInit {
       }
     );
   }
+
   getRandomVideos(array: Video[], count: number): Video[] {
     const shuffled = array.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
@@ -73,8 +97,10 @@ export class PlayerComponent implements AfterViewInit {
 
   selectVideo(video: Video): void {
     this.selectedVideo = video;
-    this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedVideo?.url || '');
+    const url = this.selectedVideo ? this.selectedVideo.url : '';
+    this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+  
 
 
 
@@ -210,48 +236,6 @@ export class PlayerComponent implements AfterViewInit {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  items = [
-    {
-      image: '../../../assets/img/sacothai.png',
-      title: 'Entreno con saco #1.',
-      category: 'saco',
-    },
-    {
-      image: '../../../assets/img/conequipamiento.png',
-      title: 'Entreno con equipamiento #3.',
-      category: 'con-equipamiento',
-    },
-    {
-      image: '../../../assets/img/pareja.png',
-      title: 'Entreno con pareja #1.',
-      category: 'pareja',
-    },
-    {
-      image: '../../../assets/img/sombrathai.png',
-      title: 'Entreno sin equipamiento #2.',
-      category: 'sin-equipamiento',
-    },
-    {
-      image: '../../../assets/img/saco.png',
-      title: 'Entreno con saco #3.',
-      category: 'saco',
-    },
-    {
-      image: '../../../assets/img/boxeopareja.png',
-      title: 'Entreno con pareja #1.',
-      category: 'pareja',
-    },
-    {
-      image: '../../../assets/img/boxeoequimapiento.png',
-      title: 'Entreno con equipamiento #1.',
-      category: 'con-equipamiento',
-    },
-    {
-      image: '../../../assets/img/sinequipamiento.png',
-      title: 'Entreno sin equipamiento #3.',
-      category: 'sin-equipamiento',
-    },
-  ];
   comentarios = [
     { texto: 'Ay amiga que guapo es el entrenador' },
     { texto: 'Joel te odio mucho nunca te rindas' },

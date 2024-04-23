@@ -2,20 +2,21 @@
     <h1 class="sm:px-56 pt-5 text-1xl text-center sm:text-start sm:text-4xl">Bloody<span class="text-red-600"> Knee
         </span></h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 sm:px-56 pb-5 mt-3">
-        <div class="sm:pr-6" *ngFor="let video of videos">
-            <div class="pb-5 sm:px-0 text-center">
-                <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(video.url)"
-                    frameborder="0" allowfullscreen class="w-px2 inline-block mx-auto"></iframe>
+        <div class="sm:pr-6" >
+            <div class="pb-5 sm:px-0 text-center" >
+                <ng-container *ngFor="let video of videos">
+                <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(video.url)"></iframe>
+                </ng-container>
             </div>
             <div class="video_section text-white w-px">
                 <div class="grid grid-cols-1 sm:grid-cols-2 pt-2">
-                    <h2 class="text-start pb-2 pl-2 sm:pt-2 ">{{video.title}}</h2>
+                    <h2 class="text-start pb-2 pl-2 sm:pt-2 "><ng-container *ngFor="let video of videos">{{video.title}}</ng-container></h2>
                     <div class="text-start sm:pl-20 pb-2 pl-2 sm:pt-2">
-                        <p class="text-start">{{video.duration}} minutos</p>
-                        <p>Entrenador:{{video.coach}}</p>
+                        <p class="text-start"><ng-container *ngFor="let video of videos">{{video.duration}}</ng-container> minutos</p>
+                        <p>Entrenador:<ng-container *ngFor="let video of videos">{{video.coach}}</ng-container></p>
                         <div class="flex items-center">
-                            <div class="w-18 h-7 flex  items-center ">
-                                <div class="like-button">
+                            <div class="w-18 h-7 flex  items-center "> 
+                                <div class="like-button" *ngFor="let video of videos" (click)="likeVideo(video.id)">
                                     <svg class="w-18 h-7" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -24,7 +25,7 @@
                                     </svg>
                                 </div>
                                 <div class="px-4"></div>
-                                <div class="dislike-button">
+                                <div class="dislike-button" *ngFor="let video of videos" (click)="dislikeVideo(video.id)">
                                     <svg class="w-18 h-7" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -44,7 +45,7 @@
                 </div>
                 <h2 class="text-start pb-2 pl-2 sm:pt-2"><button class="show" (click)="toggleDescription()">{{
                         descriptionVisible ? 'Mostrar menos' : 'Mostrar más' }}</button></h2>
-                <p class="text-justify pb-2 pl-2 sm:pt-2 pr-2" *ngIf="descriptionVisible">{{video.description}}</p>
+                <p class="text-justify pb-2 pl-2 sm:pt-2 pr-2" *ngIf="descriptionVisible"><ng-container *ngFor="let video of videos">{{video.description}}</ng-container></p>
 
             </div>
                 <div class="sm:block w-px pt-4">
