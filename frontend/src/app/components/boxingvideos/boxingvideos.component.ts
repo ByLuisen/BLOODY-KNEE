@@ -23,7 +23,7 @@ export class BoxingvideosComponent implements OnInit {
   // Flag to control modal visibility
   modalOpen: boolean = false;
   role: string = "basic";
-  constructor(private http: HttpService,private router: Router) { }
+  constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {
     this.http.getRole().subscribe((data) => {
@@ -75,5 +75,9 @@ export class BoxingvideosComponent implements OnInit {
       // Navigate to video player if access is permitted
       this.router.navigate(['/player', video.id]);
     }
+  }
+  // Método que se ejecutará cuando cambien los elementos filtrados
+  onFilteredItemsChanged(filteredItems: Video[]) {
+    this.filteredItems = filteredItems;
   }
 }

@@ -29,6 +29,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { environment } from 'src/environments/environment.development';
+import { SearchbarComponent } from './components/searchbar/searchbar.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { environment } from 'src/environments/environment.development';
     FavouriteVideosComponent,
     ProfileDietsComponent,
     ProfileOrdersComponent,
-    DetalleMerchComponent
+    DetalleMerchComponent,
+    SearchbarComponent
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, HttpClientModule],
 

@@ -19,8 +19,10 @@ export class ThaivideosComponent implements OnInit {
   selectedType: string = 'Todos';
   modalOpen: boolean = false;
   role: string = "basic";
+  searchTerm: string = '';
 
-  constructor(private http: HttpService, private router: Router) {}
+
+  constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {
     this.http.getRole().subscribe((data) => {
@@ -51,18 +53,16 @@ export class ThaivideosComponent implements OnInit {
   openModal() {
     this.modalOpen = true;
     document.body.classList.add('modal-open');
-    // Agrega una clase para evitar el scroll del body
   }
 
   // Método para cerrar el modal
   closeModal() {
     this.modalOpen = false;
     document.body.classList.remove('modal-open');
-    // Remueve la clase que evita el scroll del body
   }
 
   selectVideo(video: Video) {
-    if (video.exclusive && this.role != "standard" && this.role != "premium" ) {
+    if (video.exclusive && this.role != "standard" && this.role != "premium") {
       this.openModal();
       // Abre el modal si el video es premium y el usuario no tiene un rol premium
     } else {
@@ -71,4 +71,8 @@ export class ThaivideosComponent implements OnInit {
     }
   }
 
+  // Método que se ejecutará cuando cambien los elementos filtrados
+  onFilteredItemsChanged(filteredItems: Video[]) {
+    this.filteredItems = filteredItems;
+  }
 }

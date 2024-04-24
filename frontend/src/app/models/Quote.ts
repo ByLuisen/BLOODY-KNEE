@@ -19,6 +19,7 @@ export class Quote {
   }
 
   //Getters--------------------------
+
   get id(): number {
     return this.#id;
   }
