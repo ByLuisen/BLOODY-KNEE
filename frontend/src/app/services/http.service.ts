@@ -80,10 +80,29 @@ export class HttpService {
   }
 
   getVideoById(id: number): Observable<Video[]> {
-    return this._http
-      .get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
-      .pipe(map((response) => response.data));
+    return new Observable<Video[]>((observer) => {
+      this._http.get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
+        .subscribe(
+          (response) => {
+            observer.next(response.data);
+            observer.complete();
+            // Actualizar las visitas del video
+            this.updateVideoVisits(id).subscribe(
+              () => {
+                console.log('Visitas actualizadas');
+              },
+              (error) => {
+                console.error('Error al actualizar las visitas', error);
+              }
+            );
+          },
+          (error) => {
+            observer.error(error);
+          }
+        );
+    });
   }
+  
   // Obtener todas los cuotas
   getVideos(): Observable<Video[]> {
     return this._http
@@ -99,6 +118,11 @@ export class HttpService {
     const url = `${this.url}/updateDislikes/${videoId}`;
     return this._http.post(url, {});
   }
+  updateVideoVisits(videoId: number): Observable<any> {
+    const url = `${this.url}/videos/${videoId}/visit`;
+    return this._http.put(url, {});
+  }
+  
 
 
 }

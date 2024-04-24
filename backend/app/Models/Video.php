@@ -10,9 +10,19 @@ class Video extends Model
 {
     use HasFactory;
 
-    public function votes()
+    public function likedByUsers()
     {
-        return $this->hasMany(UserLikeDislikeVideo::class, 'video_id');
+        return $this->belongsToMany(User::class, 'user_like_dislike_videos', 'video_id', 'user_id')
+                    ->wherePivot('type', 'Like');
+    }
+
+    /**
+     * Define a relationship to get users who disliked this video.
+     */
+    public function dislikedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'user_like_dislike_videos', 'video_id', 'user_id')
+                    ->wherePivot('type', 'Dislike');
     }
     
 
