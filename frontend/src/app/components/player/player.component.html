@@ -1,4 +1,4 @@
-<div class="aclonica-font fondo_bk overflow-auto">
+<div class="aclonica-font fondo_bk overflow-auto overflow-y-scroll" (scroll)="onScroll($event)">
   <h1 class="sm:px-56 pt-5 text-1xl text-center sm:text-start sm:text-4xl">Bloody<span class="text-red-600">Knee</span>
   </h1>
   <div class="grid grid-cols-1 sm:grid-cols-2 sm:px-56 pb-5 mt-3">
@@ -52,7 +52,7 @@
             <p>Ordenar Por</p>
           </div>
         </div>
-        <div *ngFor="let comentario of comentarios" class="border-b-4 color mb-4 px-2">
+        <div *ngFor="let comentario of comentariosToShow" class="border-b-4 color mb-4 px-2">
           <div class="flex items-center">
             <img src="../../../assets/img/login1rojo2.png" class="w-8 h-8">
             <p class="text-red-600 px-2">nombre usuario</p>
@@ -81,6 +81,7 @@
             </div>
           </div>
         </div>
+        <div *ngIf="loading" class="text-center text-gray-500 py-2">Cargando comentarios...</div>
       </div>
     </div>
     <div class="hidden sm:block sm:pl-96 ">
