@@ -81,13 +81,17 @@
             </div>
           </div>
         </div>
-        <div *ngIf="loading" class="text-center text-gray-500 py-2">Cargando comentarios...</div>
+        <div *ngIf="loading && comentarios.length > comentariosToShow.length"
+          class="flex self-center justify-center content-center">
+          <img src="../../../assets/img/loading.gif" alt="Carregant..."
+            class="text-center flex justify-center py-2 w-14">
+        </div>
       </div>
     </div>
     <div class="hidden sm:block sm:pl-96 ">
       <div *ngFor="let destacado of videosAleatorios" [routerLink]="['/player', destacado.id]"
         class="transition-transform duration-300 transform hover:scale-110">
-        <img src="../../../assets/img/conequipamiento.png" alt="{{ destacado.title }}" class="w-30 h-30">
+        <img src="../../../assets/img/conequipamiento.png" alt="{{destacado.title}}" class="w-30 h-30">
         <p class="font-bold pb-4">{{ destacado.title }}</p>
       </div>
     </div>

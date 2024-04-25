@@ -52,8 +52,9 @@ export class PlayerComponent implements AfterViewInit {
       this.loadMoreComments();
     }
   }
+
   loadMoreComments() {
-    if (this.loading) return;
+    if (this.loading || this.comentariosToShow.length === this.comentarios.length) return;
 
     this.loading = true;
 
