@@ -24,6 +24,7 @@ export class PlayerComponent implements OnInit {
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;
   }
+  
 
   ngOnInit() {
     this.setupButtons();

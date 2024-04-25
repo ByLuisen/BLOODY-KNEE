@@ -110,36 +110,50 @@ class VideoController extends Controller
         return response()->json(['message' => 'Dislikes actualizados correctamente']);
     }
 
-    public function incrementVideoVisits($id)
-{
-    try {
-        $video = Video::find($id);
-
-        if (!$video) {
-            return ApiResponse::error('Video no encontrado', 404);
+    public function incrementVideoVisits($id, $user = null)
+    {
+        try {
+            // Log para verificar que la función se ha iniciado
+            \Log::info('Iniciando incremento de visitas para el video con ID: ' . $id);
+            
+            $video = Video::find($id);
+            
+            if (!$video) {
+                \Log::error('Video no encontrado con ID: ' . $id);
+                return ApiResponse::error('Video no encontrado', 404);
+            }
+            
+            // Verificamos si hay un usuario para registrar la visita
+            if ($user) {
+                \Log::info('Registrando visita para el usuario con ID: ' . $user->id);
+                
+                $visit = UserVisitVideo::create([
+                    'user_id' => $user->id,
+                    'video_id' => $id,
+                    'date' => now(),
+                ]);
+                
+                // Verificar si la visita se creó correctamente
+                if (!$visit) {
+                    \Log::error('Error al crear la visita para el usuario con ID: ' . $user->id);
+                }
+            }
+            
+            // Incrementamos las visitas del video
+            $video->visits += 1;
+            $video->save();
+    
+            // Log para confirmar que las visitas se han incrementado correctamente
+            \Log::info('Visitas incrementadas para el video con ID: ' . $id . '. Visitas actuales: ' . $video->visits);
+    
+            return ApiResponse::success(null, 'Visita registrada correctamente');
+        } catch (\Exception $e) {
+            \Log::error('Error en incrementVideoVisits: ' . $e->getMessage());
+            return ApiResponse::error($e->getMessage());
         }
-
-        // Sumar +1 al contador de visitas
-        $video->visits += 1;
-        $video->save();
-
-        // Registrar la visita del usuario en la tabla intermedia
-        $user = auth()->user();
-        if ($user) {
-            $userVisitVideo = new UserVisitVideo([
-                'user_id' => $user->id,
-                'video_id' => $video->id,
-                'date' => now(),
-            ]);
-            $userVisitVideo->save();
-        }
-
-        return ApiResponse::success(null, 'Visita registrada correctamente');
-    } catch (\Exception $e) {
-        // Loguear el error o realizar otras acciones según tus necesidades
-        return ApiResponse::error($e->getMessage());
     }
-}
+    
+
 
     
 
