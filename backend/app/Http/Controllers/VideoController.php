@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\VideoResource; // Corrección en el espacio de nombres
 use App\Http\Responses\ApiResponse;
 use App\Models\Video;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\UserLikeDislikeVideo;
 use App\Models\UserVisitVideo;
@@ -113,9 +114,10 @@ class VideoController extends Controller
     public function incrementVideoVisits(Request $request, $id)
     {
         try {
-            // Obtener el usuario autenticado
-            $user = $request->email();
-    
+            if($request->input('email') != '') {
+                // Obtener el usuario autenticado
+                $user = User::where('email', $request->input('email'))->first();
+            }
             // Obtener el video por su ID
             $video = Video::findOrFail($id);
             
