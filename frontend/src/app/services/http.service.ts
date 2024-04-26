@@ -87,7 +87,7 @@ export class HttpService {
             observer.next(response.data);
             observer.complete();
             // Actualizar las visitas del video
-            this.updateVideoVisits(id,this.isAuthenticated()).subscribe(
+            this.updateVideoVisits(id).subscribe(
               () => {
                 console.log('Visitas actualizadas');
               },
@@ -103,10 +103,10 @@ export class HttpService {
     });
   }
 
-  isAuthenticated(): any {
-    this.auth.user$.subscribe((data)=>{return data});
+  getUser(): any {
+    this.auth.user$.subscribe((data) => { return data });
   }
-  
+
   // Obtener todas los cuotas
   getVideos(): Observable<Video[]> {
     return this._http
@@ -122,11 +122,18 @@ export class HttpService {
     const url = `${this.url}/updateDislikes/${videoId}`;
     return this._http.post(url, {});
   }
-  updateVideoVisits(videoId: number, user: string): Observable<any> {
+  updateVideoVisits(videoId: number): Observable<any> {
     const url = `${this.url}/videos/${videoId}/visit`;
-    return this._http.put(url, {});
+    // Incluye el usuario en el cuerpo de la solicitud
+    const user = this.getUser()
+    if (user != undefined) {
+      const body = { email: user.email };
+    }
+    const body = { email: '' }
+    // Realiza una solicitud PUT al servidor con el cuerpo que incluye el usuario
+    return this._http.put(url, body);
   }
-  
+
 
 
 }

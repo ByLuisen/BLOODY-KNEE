@@ -29,7 +29,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);  
     Route::post('updateLikes/{id}', [VideoController::class, 'updateLikes']);
     Route::post('updateDislikes/{id}', [VideoController::class, 'updateDislikes']);  
-    Route::post('/videos/{id}/visit', [VideoController::class,'incrementVideoVisits']);
+    Route::put('/videos/{id}/visit', [VideoController::class,'incrementVideoVisits']);
 
 });
 

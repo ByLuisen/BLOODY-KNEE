@@ -25,5 +25,8 @@ class Video extends Model
                     ->wherePivot('type', 'Dislike');
     }
     
-
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_visit_videos')->withTimestamps();
+    }
 }

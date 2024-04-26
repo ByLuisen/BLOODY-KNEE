@@ -49,4 +49,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Quote::class)
         ->withTimestamps();
     }
+
+    public function videos()
+    {
+        return $this->belongsToMany(Video::class, 'user_visit_videos')->withTimestamps();
+    }
 }

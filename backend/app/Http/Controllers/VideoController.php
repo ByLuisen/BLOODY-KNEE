@@ -110,41 +110,23 @@ class VideoController extends Controller
         return response()->json(['message' => 'Dislikes actualizados correctamente']);
     }
 
-    public function incrementVideoVisits($id, $user = null)
+    public function incrementVideoVisits(Request $request, $id)
     {
         try {
-            // Log para verificar que la función se ha iniciado
-            \Log::info('Iniciando incremento de visitas para el video con ID: ' . $id);
+            // Obtener el usuario autenticado
+            $user = $request->email();
+    
+            // Obtener el video por su ID
+            $video = Video::findOrFail($id);
             
-            $video = Video::find($id);
-            
-            if (!$video) {
-                \Log::error('Video no encontrado con ID: ' . $id);
-                return ApiResponse::error('Video no encontrado', 404);
+            if($user != '') {
+                // Registrar la visita del usuario al video
+                $user->videos()->syncWithoutDetaching([$video->id]);
             }
-            
-            // Verificamos si hay un usuario para registrar la visita
-            if ($user) {
-                \Log::info('Registrando visita para el usuario con ID: ' . $user->id);
-                
-                $visit = UserVisitVideo::create([
-                    'user_id' => $user->id,
-                    'video_id' => $id,
-                    'date' => now(),
-                ]);
-                
-                // Verificar si la visita se creó correctamente
-                if (!$visit) {
-                    \Log::error('Error al crear la visita para el usuario con ID: ' . $user->id);
-                }
-            }
-            
-            // Incrementamos las visitas del video
+
+            // Incrementar las visitas del video
             $video->visits += 1;
             $video->save();
-    
-            // Log para confirmar que las visitas se han incrementado correctamente
-            \Log::info('Visitas incrementadas para el video con ID: ' . $id . '. Visitas actuales: ' . $video->visits);
     
             return ApiResponse::success(null, 'Visita registrada correctamente');
         } catch (\Exception $e) {
@@ -152,10 +134,4 @@ class VideoController extends Controller
             return ApiResponse::error($e->getMessage());
         }
     }
-    
-
-
-    
-
-    
 }
