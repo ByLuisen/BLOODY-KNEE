@@ -8,6 +8,8 @@ import { Video } from '../models/Video';
 import { environment } from 'src/environments/environment.development';
 import { AuthService } from '@auth0/auth0-angular';
 import { Role } from '../models/Role';
+import { ConditionalExpr } from '@angular/compiler';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -103,10 +105,6 @@ export class HttpService {
     });
   }
 
-  getUser(): any {
-    this.auth.user$.subscribe((data) => { return data });
-  }
-
   // Obtener todas los cuotas
   getVideos(): Observable<Video[]> {
     return this._http
@@ -124,14 +122,16 @@ export class HttpService {
   }
   updateVideoVisits(videoId: number): Observable<any> {
     const url = `${this.url}/videos/${videoId}/visit`;
-    // Incluye el usuario en el cuerpo de la solicitud
-    const user = this.getUser()
-    if (user != undefined) {
-      const body = { email: user.email };
-    }
-    const body = { email: '' }
-    // Realiza una solicitud PUT al servidor con el cuerpo que incluye el usuario
-    return this._http.put(url, body);
+  
+    // Utiliza switchMap para combinar el resultado del observable user$ con la solicitud HTTP put
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = { email: user ? user.email : '' };
+        console.log(body)
+        // Realiza una solicitud PUT al servidor con el cuerpo que incluye el usuario
+        return this._http.put(url, body);
+      })
+    );
   }
 
 

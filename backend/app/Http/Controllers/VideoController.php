@@ -114,22 +114,25 @@ class VideoController extends Controller
     public function incrementVideoVisits(Request $request, $id)
     {
         try {
-            if($request->input('email') != '') {
-                // Obtener el usuario autenticado
-                $user = User::where('email', $request->input('email'))->first();
+            // Obtener el usuario por su correo electrónico si se proporciona
+            $user = null;
+            $email = $request->input('email');
+            if ($email) {
+                $user = User::where('email', $email)->first();
             }
+
             // Obtener el video por su ID
             $video = Video::findOrFail($id);
             
-            if($user != '') {
-                // Registrar la visita del usuario al video
+            // Si se encontró un usuario, registrar la visita del usuario al video
+            if ($user) {
                 $user->videos()->syncWithoutDetaching([$video->id]);
             }
 
             // Incrementar las visitas del video
             $video->visits += 1;
             $video->save();
-    
+
             return ApiResponse::success(null, 'Visita registrada correctamente');
         } catch (\Exception $e) {
             \Log::error('Error en incrementVideoVisits: ' . $e->getMessage());

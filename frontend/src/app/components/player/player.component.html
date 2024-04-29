@@ -14,7 +14,7 @@
                             *ngFor="let video of videos">{{video.title}}</ng-container></h2>
                     <div class="text-start sm:pl-20 pb-2 pl-2 sm:pt-2">
                         <p class="text-start"><ng-container *ngFor="let video of videos">{{video.duration}}</ng-container> minutos  </p>
-                             <p>  <ng-container *ngFor="let video of videos">{{video.visits}}</ng-container> visitas </p>
+                             <p>  <ng-container *ngFor="let video of videos">{{video.visits + 1}}</ng-container> visitas </p>
                         <p>Entrenador:<ng-container *ngFor="let video of videos">{{video.coach}}</ng-container></p>
                         <div class="flex items-center">
                             <div class="w-18 h-7 flex items-center">
