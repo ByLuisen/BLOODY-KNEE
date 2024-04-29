@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
@@ -26,9 +27,8 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('modalityvideo/{modality_id}/{type_id}', [VideoController::class, 'modalities']);
     Route::get('getvideobyid/{id}', [VideoController::class, 'videoById']);
     Route::resource('videos', VideoController::class);
+    Route::resource('products', ProductController::class);
 });
-
-
 
 Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
 

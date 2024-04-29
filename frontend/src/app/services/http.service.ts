@@ -5,9 +5,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
+
 import { environment } from 'src/environments/environment.development';
 import { AuthService } from '@auth0/auth0-angular';
 import { Role } from '../models/Role';
+import { Product } from '../models/Product';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +19,7 @@ export class HttpService {
   url: string = 'http://localhost:8000/api'; // URL base para las solicitudes HTTP
   // url: string = 'http://49.13.160.230/api'; // URL del servidor
 
-  constructor(private _http: HttpClient, private auth: AuthService) {}
+  constructor(private _http: HttpClient, private auth: AuthService) { }
 
   getAccessToken(): Observable<any> {
     const url = 'https://dev-yyzuj3kafug18e38.eu.auth0.com/oauth/token';
@@ -89,5 +91,12 @@ export class HttpService {
     return this._http
       .get<any>(`${this.url}/videos`)
       .pipe(map((response) => response.data as Video[]));
+  }
+
+  // Obtener todos los productos
+  getProducts(): Observable<Product[]> {
+    return this._http
+      .get<any>(`${this.url}/products`)
+      .pipe(map((response) => response.data as Product[]));
   }
 }

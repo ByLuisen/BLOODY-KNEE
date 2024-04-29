@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
 
+
 /**
  *
  */
@@ -40,7 +41,7 @@ class ProductSeeder extends Seeder
             'description' => '',
             'price' => 75.50,
             'stock' => 50,
-            'url_img' => '.jpg'
+            'url_img' => 'VenumJogger_1'
         ]);
 
         Product::create([
@@ -50,7 +51,7 @@ class ProductSeeder extends Seeder
             'description' => '',
             'price' => 65.30,
             'stock' => 50,
-            'url_img' => 'url_de_la_imagen_del_producto_2.jpg'
+            'url_img' => 'CapSand_1'
         ]);
 
         Product::create([
@@ -60,7 +61,7 @@ class ProductSeeder extends Seeder
             'description' => 'Descripción del Producto 2',
             'price' => 130,
             'stock' => 30,
-            'url_img' => '.jpg'
+            'url_img' => 'CapSand_1'
         ]);
 
         Product::create([
@@ -70,7 +71,7 @@ class ProductSeeder extends Seeder
             'description' => 'Descripción del Producto 2',
             'price' => 89.99,
             'stock' => 30,
-            'url_img' => '.jpg'
+            'url_img' => 'VenumBackpack_1'
         ]);
 
         Product::create([
@@ -80,7 +81,7 @@ class ProductSeeder extends Seeder
             'description' => 'Descripción del Producto 2',
             'price' => 89.99,
             'stock' => 30,
-            'url_img' => '.jpg'
+            'url_img' => 'CapSand_1'
         ]);
 
         Product::create([
@@ -90,7 +91,7 @@ class ProductSeeder extends Seeder
             'description' => 'Descripción del Producto 2',
             'price' => 25.50,
             'stock' => 30,
-            'url_img' => '.jpg'
+            'url_img' => 'CapSand_1'
         ]);
 
         Product::create([
@@ -100,7 +101,7 @@ class ProductSeeder extends Seeder
             'description' => 'Descripción del Producto 2',
             'price' => 25.50,
             'stock' => 30,
-            'url_img' => '.jpg'
+            'url_img' => 'CapBrown_1'
         ]);
 
         Product::create([
@@ -110,27 +111,27 @@ class ProductSeeder extends Seeder
             'description' => 'Descripción del Producto 2',
             'price' => 25.50,
             'stock' => 30,
-            'url_img' => '.jpg'
+            'url_img' => 'CapSand_1'
         ]);
 
         Product::create([
-            'brand_id' => 1,
+            'brand_id' => 2,
             'category_id' => 2,
             'name' => 'Guantes Piel Edition',
             'description' => 'Descripción del Producto 2',
             'price' => 79.99,
             'stock' => 30,
-            'url_img' => '.jpg'
+            'url_img' => 'CapSand_1'
         ]);
 
         Product::create([
-            'brand_id' => 1,
+            'brand_id' => 2,
             'category_id' => 2,
             'name' => 'Guantes Fantasy Edition',
             'description' => 'Descripción del Producto 2',
             'price' => 49.99,
             'stock' => 30,
-            'url_img' => '.jpg'
+            'url_img' => 'CapSand_1'
         ]);
 
         Product::create([
@@ -140,7 +141,7 @@ class ProductSeeder extends Seeder
             'description' => 'Descripción del Producto 2',
             'price' => 47.99,
             'stock' => 50,
-            'url_img' => 'url_de_la_imagen_del_producto_2.jpg'
+            'url_img' => 'CapSand_1'
         ]);
 
         Product::create([
@@ -150,7 +151,7 @@ class ProductSeeder extends Seeder
             'description' => 'Descripción del Producto 2',
             'price' => 29.99,
             'stock' => 50,
-            'url_img' => 'url_de_la_imagen_del_producto_2.jpg'
+            'url_img' => 'CapSand_1'
         ]);
 
         Product::create([
@@ -160,7 +161,7 @@ class ProductSeeder extends Seeder
             'description' => 'Descripción del Producto 2',
             'price' => 24.99,
             'stock' => 50,
-            'url_img' => 'url_de_la_imagen_del_producto_2.jpg'
+            'url_img' => 'CamisetaVenum_1'
         ]);
 
     }

@@ -14,13 +14,13 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         Category::create([
-            "name" => "Ropa",
+            "name" => "Clothes",
         ]);
         Category::create([
-            "name" => "Equipamiento",
+            "name" => "Equipment",
         ]);
         Category::create([
-            "name" => "Accesorios",
+            "name" => "Accessories",
         ]);
     }
 }

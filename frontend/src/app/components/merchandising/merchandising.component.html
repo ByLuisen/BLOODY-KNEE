@@ -27,14 +27,14 @@
     </div>
     <!-- Iterar sobre los productos utilizando *ngFor -->
     <div class="grid grid-cols-4 px-56 pt-10 gap-32">
-        <div  *ngFor="let producto of productos" class="w-auto h-auto justify-center hover:transform hover:scale-105 cursor-pointer ">
-            <img [src]="producto.imagen" class=" hover:border-4 hover:border-solid hover:border-red-600">
-            <p>{{producto.nombre}}</p>
-            <p class="text-red-600">€{{producto.precio}}</p>
+        <div *ngFor="let producto of productos" class="w-auto h-auto justify-center hover:transform hover:scale-105 cursor-pointer ">
+            <img [src]="'../../../assets/img/imgs_productos/' + producto.urlImg + '.PNG'" class="hover:border-4 hover:border-solid hover:border-red-600">
+            <p>{{producto.name}}</p>
+            <p class="text-red-600">€{{producto.price}}</p>
         </div>
     </div>
     <div class="absolute bottom-4 right-4">
         <img src="../../../assets/img/compras3.png" class="w-14 h-14 transition-transform duration-300 transform hover:scale-110">
     </div>
-    
+
 </div>
