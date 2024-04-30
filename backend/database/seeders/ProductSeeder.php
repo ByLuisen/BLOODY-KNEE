@@ -19,26 +19,11 @@ class ProductSeeder extends Seeder
     {
         // Crear productos ficticios
 
-        /**
-         *
-         * Indice de marcas y categorias
-         * ID   =>    Tipo (Brands)
-         * 1    =>  Venum
-         * 2    =>  Buddha
-         * 3    =>  Rival
-         * 4    =>  Nike
-         *
-         * ID   =>    Tipo (Category)
-         * 1    =>      Ropa
-         * 2    =>      Equipamiento
-         * 3    =>      Accesorios
-         */
-
         Product::create([
             'brand_id' => 1,
             'category_id' => 1,
-            'name' => 'Jogger venum',
-            'description' => '',
+            'name' => 'Jogger Venum',
+            'description' => 'Cómodos y estilosos joggers, perfectos tanto para entrenamiento como para uso casual.',
             'price' => 75.50,
             'stock' => 50,
             'url_img' => 'VenumJogger_1'
@@ -47,28 +32,28 @@ class ProductSeeder extends Seeder
         Product::create([
             'brand_id' => 1,
             'category_id' => 2,
-            'name' => 'Venum Backpack',
-            'description' => '',
+            'name' => 'Mochila Venum',
+            'description' => 'Mochila resistente diseñada para satisfacer todas tus necesidades de gimnasio y viaje.',
             'price' => 65.30,
             'stock' => 50,
-            'url_img' => 'CapSand_1'
+            'url_img' => 'VenumSportBag_1'
         ]);
 
         Product::create([
             'brand_id' => 1,
             'category_id' => 2,
-            'name' => 'Venum Xtream Backpack',
-            'description' => 'Descripción del Producto 2',
+            'name' => 'Mochila Xtream Venum',
+            'description' => 'Mochila de gran capacidad, ideal para atletas y aventureros por igual.',
             'price' => 130,
             'stock' => 30,
-            'url_img' => 'CapSand_1'
+            'url_img' => 'VenumXtreamBackpack_1'
         ]);
 
         Product::create([
             'brand_id' => 1,
             'category_id' => 2,
-            'name' => 'Venum Sportbag',
-            'description' => 'Descripción del Producto 2',
+            'name' => 'Bolsa deportiva Venum',
+            'description' => 'Bolsa deportiva versátil con excelente espacio de almacenamiento y fácil acceso.',
             'price' => 89.99,
             'stock' => 30,
             'url_img' => 'VenumBackpack_1'
@@ -77,8 +62,8 @@ class ProductSeeder extends Seeder
         Product::create([
             'brand_id' => 1,
             'category_id' => 3,
-            'name' => 'Venum Cap Sand',
-            'description' => 'Descripción del Producto 2',
+            'name' => 'Gorra Venum Color Arena',
+            'description' => 'Gorra elegante color arena con correa ajustable para un ajuste cómodo.',
             'price' => 89.99,
             'stock' => 30,
             'url_img' => 'CapSand_1'
@@ -87,18 +72,8 @@ class ProductSeeder extends Seeder
         Product::create([
             'brand_id' => 1,
             'category_id' => 3,
-            'name' => 'Venum Cap Sand',
-            'description' => 'Descripción del Producto 2',
-            'price' => 25.50,
-            'stock' => 30,
-            'url_img' => 'CapSand_1'
-        ]);
-
-        Product::create([
-            'brand_id' => 1,
-            'category_id' => 3,
-            'name' => 'Venum Cap Brown',
-            'description' => 'Descripción del Producto 2',
+            'name' => 'Gorra Venum Marrón',
+            'description' => 'Gorra de moda en color marrón, hecha con tela transpirable, perfecta para actividades al aire libre.',
             'price' => 25.50,
             'stock' => 30,
             'url_img' => 'CapBrown_1'
@@ -107,58 +82,58 @@ class ProductSeeder extends Seeder
         Product::create([
             'brand_id' => 1,
             'category_id' => 3,
-            'name' => 'Venum Cap Dark Brown',
-            'description' => 'Descripción del Producto 2',
+            'name' => 'Gorra Venum Marrón Oscuro',
+            'description' => 'Gorra marrón oscuro que combina estilo y comodidad, ideal para uso diario.',
             'price' => 25.50,
             'stock' => 30,
-            'url_img' => 'CapSand_1'
+            'url_img' => 'CapDarkBrown_1'
         ]);
 
         Product::create([
             'brand_id' => 2,
             'category_id' => 2,
             'name' => 'Guantes Piel Edition',
-            'description' => 'Descripción del Producto 2',
+            'description' => 'Guantes de boxeo de cuero premium para profesionales, ofreciendo comodidad y protección.',
             'price' => 79.99,
             'stock' => 30,
-            'url_img' => 'CapSand_1'
+            'url_img' => 'GuantesPiel_1'
         ]);
 
         Product::create([
             'brand_id' => 2,
             'category_id' => 2,
             'name' => 'Guantes Fantasy Edition',
-            'description' => 'Descripción del Producto 2',
+            'description' => 'Guantes coloridos diseñados tanto para entrenamiento como competición, ofreciendo excelente soporte de muñeca.',
             'price' => 49.99,
             'stock' => 30,
-            'url_img' => 'CapSand_1'
+            'url_img' => 'GuantesFantasy_1'
         ]);
 
         Product::create([
             'brand_id' => 1,
             'category_id' => 2,
             'name' => 'Guantes Venum MMA',
-            'description' => 'Descripción del Producto 2',
+            'description' => 'Guantes MMA diseñados para máxima destreza y mejora de agarre durante los combates.',
             'price' => 47.99,
             'stock' => 50,
-            'url_img' => 'CapSand_1'
+            'url_img' => 'GuantesVenumMMA_1'
         ]);
 
         Product::create([
             'brand_id' => 1,
             'category_id' => 1,
             'name' => 'Camiseta Venum Bronze',
-            'description' => 'Descripción del Producto 2',
+            'description' => 'Camiseta ligera y transpirable, perfecta para entrenar o para uso casual.',
             'price' => 29.99,
             'stock' => 50,
-            'url_img' => 'CapSand_1'
+            'url_img' => 'CamisetaVenumBronze_1'
         ]);
 
         Product::create([
             'brand_id' => 1,
             'category_id' => 1,
             'name' => 'Camiseta Venum Negra',
-            'description' => 'Descripción del Producto 2',
+            'description' => 'Camiseta Venum negra que combina comodidad con un diseño elegante.',
             'price' => 24.99,
             'stock' => 50,
             'url_img' => 'CamisetaVenum_1'

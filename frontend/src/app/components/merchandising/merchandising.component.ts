@@ -22,7 +22,7 @@ export class MerchandisingComponent implements OnInit {
   getProductos(): void {
     this.http.getProducts().subscribe(
       (products) => {
-        console.log("Videos destacados obtenidos:", products);
+        console.log("TODOS LOS PRODUCTOS OBTENIDOS:", products);
         this.productos = products;
       },
       (error) => {

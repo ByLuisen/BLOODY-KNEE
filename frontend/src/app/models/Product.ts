@@ -6,9 +6,7 @@ export class Product {
   private _description: string;
   private _price: number;
   private _stock: number;
-  private _urlImg: string;
-  private _createdAt: Date;
-  private _updatedAt: Date;
+  private _url_img: string;
 
   constructor(
     id: number = 0,
@@ -18,9 +16,8 @@ export class Product {
     description: string = '',
     price: number = 0,
     stock: number = 0,
-    urlImg: string = '',
-    createdAt: Date = new Date(),
-    updatedAt: Date = new Date()
+    url_img: string = '',
+
   ) {
     this._id = id;
     this._brandId = brandId;
@@ -29,9 +26,8 @@ export class Product {
     this._description = description;
     this._price = price;
     this._stock = stock;
-    this._urlImg = urlImg;
-    this._createdAt = createdAt;
-    this._updatedAt = updatedAt;
+    this._url_img = url_img;
+
   }
 
   // Getters
@@ -56,15 +52,10 @@ export class Product {
   get stock(): number {
     return this._stock;
   }
-  get urlImg(): string {
-    return this._urlImg;
+  get url_img(): string {
+    return this._url_img;
   }
-  get createdAt(): Date {
-    return this._createdAt;
-  }
-  get updatedAt(): Date {
-    return this._updatedAt;
-  }
+
 
   // Setters
   set id(id: number) {
@@ -88,15 +79,10 @@ export class Product {
   set stock(stock: number) {
     this._stock = stock;
   }
-  set urlImg(urlImg: string) {
-    this._urlImg = urlImg;
+  set url_img(url_img: string) {
+    this._url_img = url_img;
   }
-  set createdAt(createdAt: Date) {
-    this._createdAt = createdAt;
-  }
-  set updatedAt(updatedAt: Date) {
-    this._updatedAt = updatedAt;
-  }
+
 
   // Convertir objeto a JSON
   toJSON(): any {
@@ -108,9 +94,7 @@ export class Product {
       description: this._description,
       price: this._price,
       stock: this._stock,
-      urlImg: this._urlImg,
-      createdAt: this._createdAt.toISOString(),
-      updatedAt: this._updatedAt.toISOString(),
+      url_img: this._url_img,
     };
   }
 }
