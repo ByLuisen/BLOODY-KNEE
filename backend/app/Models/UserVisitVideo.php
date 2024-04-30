@@ -12,8 +12,10 @@ class UserVisitVideo extends Pivot
     protected $table = 'user_visit_videos';
 
     protected $fillable = [
-       'video_id',
+        'user_id',
+        'video_id',
         'date'
     ];
+    
 }
 

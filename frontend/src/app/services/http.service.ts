@@ -88,7 +88,7 @@ export class HttpService {
           (response) => {
             observer.next(response.data);
             observer.complete();
-            // Actualizar las visitas del video
+            // Actualizar las visitas del video 
             this.updateVideoVisits(id).subscribe(
               () => {
                 console.log('Visitas actualizadas');
@@ -133,7 +133,4 @@ export class HttpService {
       })
     );
   }
-
-
-
 }
