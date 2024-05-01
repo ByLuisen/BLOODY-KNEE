@@ -12,9 +12,17 @@ export class MerchandisingComponent implements OnInit {
   // Array para almacenar todos los productos
   productos: Product[] = [];
 
+  // Boolean para controlar los filtros de stock
+  mostrarEnStock: boolean = false;
+  mostrarFueraDeStock: boolean = false;
+
+  // Variable para almacenar el precio máximo seleccionado
+  precioMaximo: number = 150;
+
   constructor(private http: HttpService) { }
 
   ngOnInit(): void {
+
     this.getProductos();
     console.log(this.productos);
   }
@@ -24,17 +32,62 @@ export class MerchandisingComponent implements OnInit {
       (products) => {
         console.log("TODOS LOS PRODUCTOS OBTENIDOS:", products);
         this.productos = products;
+
+        // Calcular precio mínimo y máximo
+        const precios = this.productos.map(producto => producto.price);
+        const precioMinimo = Math.min(...precios);
+        const precioMaximo = Math.max(...precios);
+
+        // Establecer los valores iniciales del rango de precios
+        this.priceRangeInput.nativeElement.min = precioMinimo;
+        this.priceRangeInput.nativeElement.max = precioMaximo;
+
+        // Asignar el valor inicial del rango de precios
+        this.precioMaximo = precioMaximo;
+        console.log("Precio mínimo:", precioMinimo);
+        console.log("Precio máximo:", precioMaximo);
       },
       (error) => {
-        console.error("Error al obtener los videos destacados:", error);
+        console.error("Error al obtener los productos:", error);
       }
     );
   }
 
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
-  onPriceChange() {
-    const minValue = parseInt(this.priceRangeInput.nativeElement.value);
-    const maxValue = 150 - minValue;
+   onPriceChange() {
+    this.precioMaximo = parseInt(this.priceRangeInput.nativeElement.value);
   }
+
+  // Metodos para filtrar los productos
+  contarProductosEnStock(): number {
+    return this.productos.filter(producto => producto.stock > 0).length;
+  }
+
+  contarProductosFueraDeStock(): number {
+    return this.productos.filter(producto => producto.stock === 0).length;
+  }
+
+  productosFiltrados(): Product[] {
+    let productosFiltrados: Product[] = [];
+
+    // Si ninguna opción está seleccionada, mostrar todos los productos
+    if (!this.mostrarEnStock && !this.mostrarFueraDeStock) {
+      productosFiltrados = this.productos;
+    } else {
+      if (this.mostrarEnStock && this.mostrarFueraDeStock) {
+        productosFiltrados = this.productos;
+      } else if (this.mostrarEnStock) {
+        productosFiltrados = this.productos.filter(producto => producto.stock > 0);
+      } else if (this.mostrarFueraDeStock) {
+        productosFiltrados = this.productos.filter(producto => producto.stock === 0);
+      }
+    }
+
+    // Filtrar por rango de precio
+    productosFiltrados = productosFiltrados.filter(producto => producto.price <= this.precioMaximo);
+
+    return productosFiltrados;
+  }
+
 }

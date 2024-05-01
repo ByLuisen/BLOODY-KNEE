@@ -98,13 +98,10 @@ export class PlayerComponent implements AfterViewInit {
     return shuffled.slice(0, count);
   }
 
-
   selectVideo(video: Video): void {
     this.selectedVideo = video;
     this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedVideo?.url || '');
   }
-
-
 
   setupButtons() {
     const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
@@ -129,7 +126,6 @@ export class PlayerComponent implements AfterViewInit {
         this.generateClones(dislikeButton);
       });
     }
-
     this.setupCommentButtons();
   }
 

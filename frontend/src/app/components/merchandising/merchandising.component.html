@@ -4,12 +4,12 @@
     <div class="pl-52 pt-4 text-start">
       <h2>Disponibilidad</h2>
       <div class="flex items-center">
-        <input type="checkbox" class="w-4 h-4 rounded-lg mr-2">
-        <p>En Stock (8)</p>
+        <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2" (change)="mostrarEnStock = !mostrarEnStock" >
+        <p>En Stock ({{ contarProductosEnStock() }})</p>
       </div>
       <div class="flex">
-        <input type="checkbox" class="w-4 h-4 rounded-lg mr-2">
-        <p>Fuera de Stock (6)</p>
+        <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2" (change)="mostrarFueraDeStock = !mostrarFueraDeStock">
+        <p>Fuera de Stock ({{ contarProductosFueraDeStock() }})</p>
       </div>
     </div>
     <div class="text-start pl-36 pt-4">
@@ -26,15 +26,12 @@
   </div>
   <!-- Iterar sobre los productos utilizando *ngFor -->
   <div class="grid grid-cols-4 px-56 pt-10 gap-32">
-    <div *ngFor="let producto of productos"
-      class="w-auto h-auto justify-center hover:transform hover:scale-105 cursor-pointer">
-      <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img + '.PNG'"
-        class="hover:border-4 hover:border-solid hover:border-red-600">
+    <div *ngFor="let producto of productosFiltrados()" class="w-auto h-auto justify-center hover:transform hover:scale-105 cursor-pointer">
+      <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img + '.PNG'" class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto">
       <p>{{producto.name}}</p>
       <p class="text-red-600">€{{producto.price}}</p>
     </div>
   </div>
-
   <div class="absolute bottom-4 right-4">
     <img src="../../../assets/img/compras3.png"
       class="w-14 h-14 transition-transform duration-300 transform hover:scale-110">
