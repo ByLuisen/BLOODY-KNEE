@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ProductDetailComponent implements OnInit {
   productId!: number;
   product!: Product; // Cambiado a una sola instancia de Product, no un array
+  mainImageUrl!: string;
 
   constructor(private http: HttpService, private route: ActivatedRoute) { }
 
@@ -20,14 +21,20 @@ export class ProductDetailComponent implements OnInit {
       this.productId = +!params.get('id')
       this.getProducto();
     });
-  }
 
+    // Inicializar la imagen principal con la primera imagen del producto
+    this.mainImageUrl = this.product ? this.product.url_img1 : '';
+  }
+  
+  setMainImage(url: string): void {
+    this.mainImageUrl = url;
+  }
 
   getProducto(): void {
     this.http.getProductById(this.productId).subscribe(
       (product) => {
         console.log("Producto obtenido:", product);
-        this.product = product[0]; // Cambiado a product[0] para asignar solo un producto
+        this.product = product[0];
       },
       (error) => {
         console.error("Error al obtener el producto:", error);

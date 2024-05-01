@@ -19,7 +19,9 @@ return new class extends Migration
             $table->text('description');
             $table->integer('price');
             $table->integer('stock');
-            $table->text('url_img');
+            $table->text('url_img1');
+            $table->text('url_img2');
+            $table->text('url_img3');
             $table->timestamps();
 
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');

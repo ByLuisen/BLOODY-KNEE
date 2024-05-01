@@ -6,7 +6,9 @@ export class Product {
   private _description: string;
   private _price: number;
   private _stock: number;
-  private _url_img: string;
+  private _url_img1: string;
+  private _url_img2: string;
+  private _url_img3: string;
 
   constructor(
     id: number = 0,
@@ -16,7 +18,9 @@ export class Product {
     description: string = '',
     price: number = 0,
     stock: number = 0,
-    url_img: string = '',
+    url_img1: string = '',
+    url_img2: string = '',
+    url_img3: string = '',
 
   ) {
     this._id = id;
@@ -26,7 +30,9 @@ export class Product {
     this._description = description;
     this._price = price;
     this._stock = stock;
-    this._url_img = url_img;
+    this._url_img1 = url_img1;
+    this._url_img2 = url_img2;
+    this._url_img3 = url_img3;
 
   }
 
@@ -52,8 +58,14 @@ export class Product {
   get stock(): number {
     return this._stock;
   }
-  get url_img(): string {
-    return this._url_img;
+  get url_img1(): string {
+    return this._url_img1;
+  }
+  get url_img2(): string {
+    return this._url_img2;
+  }
+  get url_img3(): string {
+    return this._url_img3;
   }
 
 
@@ -79,8 +91,16 @@ export class Product {
   set stock(stock: number) {
     this._stock = stock;
   }
-  set url_img(url_img: string) {
-    this._url_img = url_img;
+  set url_img1(url_img1: string) {
+    this._url_img1 = url_img1;
+  }
+
+  set url_img2(url_img2: string) {
+    this._url_img2 = url_img2;
+  }
+
+  set url_img3(url_img3: string) {
+    this._url_img3 = url_img3;
   }
 
 
@@ -94,7 +114,9 @@ export class Product {
       description: this._description,
       price: this._price,
       stock: this._stock,
-      url_img: this._url_img,
+      url_img1: this._url_img1,
+      url_img2: this._url_img2,
+      url_img3: this._url_img3,
     };
   }
 }
