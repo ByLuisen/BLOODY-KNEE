@@ -19,7 +19,7 @@ export class PlayerComponent implements OnInit {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    public auth: AuthService,
+    public auth: AuthService
   ) {}
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
@@ -30,14 +30,14 @@ export class PlayerComponent implements OnInit {
   destacados: Video[] = [];
   videosAleatorios: Video[] = [];
   modalOpen: boolean = false;
+  modalOpen2: boolean = false;
   role!: string;
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;
   }
 
   ngOnInit() {
-    this.setupButtons();
-    this.setupCommentButtons();
+    this.loadButtons();
     this.route.params.subscribe((params) => {
       this.videoId = +params['videoId'];
       this.getVideo();
@@ -47,26 +47,60 @@ export class PlayerComponent implements OnInit {
 
   saveVideo(videoId: number): void {}
 
-  likeVideo(videoId: number): void {
-    this.http.updateLikes(videoId).subscribe(
-      (response) => {
-        console.log('Like actualizado correctamente', response);
-      },
-      (error) => {
-        console.error('Error al actualizar like', error);
+  loadButtons() {
+    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.setupButtons();
+        this.setupCommentButtons();
       }
-    );
+    });
+  }
+
+  islogged() {
+    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+      } else {
+        this.likeOpenModal();
+      }
+    });
+  }
+
+  likeVideo(videoId: number): void {
+    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.http.updateLikes(videoId).subscribe(
+          (response) => {
+            console.log('Like actualizado correctamente', response);
+          },
+          (error) => {
+            console.error('Error al actualizar like', error);
+          }
+        );
+      } else {
+        console.log(
+          'El usuario debe estar autenticado para dar me gusta al video.'
+        );
+      }
+    });
   }
 
   dislikeVideo(videoId: number): void {
-    this.http.updateDislikes(videoId).subscribe(
-      (response) => {
-        console.log('Dislike actualizado correctamente', response);
-      },
-      (error) => {
-        console.error('Error al actualizar dislike', error);
+    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.http.updateDislikes(videoId).subscribe(
+          (response) => {
+            console.log('Dislike actualizado correctamente', response);
+          },
+          (error) => {
+            console.error('Error al actualizar dislike', error);
+          }
+        );
+      } else {
+        console.log(
+          'El usuario debe estar autenticado para dar no me gusta al video.'
+        );
       }
-    );
+    });
   }
 
   getVideo(): void {
@@ -212,26 +246,16 @@ export class PlayerComponent implements OnInit {
   }
 
   likeOpenModal() {
-    this.modalOpen = true;
-    document.body.classList.add('likeOpenModal');
+    this.modalOpen2 = true;
+    document.body.classList.add('modal-open');
     // Agrega una clase para evitar el scroll del body
   }
 
   // Método para cerrar el modal
   likeCloseModal() {
-    this.modalOpen = false;
-    document.body.classList.remove('likeOpenModal');
+    this.modalOpen2 = false;
+    document.body.classList.remove('modal-open');
     // Remueve la clase que evita el scroll del body
-  }
-
-  islogged() {
-    if (
-      this.role != 'standard' &&
-      this.role != 'premium' &&
-      this.role != 'basic'
-    ) {
-      this.likeOpenModal();
-    }
   }
 
   getExclusive(video: Video) {
