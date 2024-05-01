@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Product } from 'src/app/models/Product';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -19,7 +20,7 @@ export class MerchandisingComponent implements OnInit {
   // Variable para almacenar el precio máximo seleccionado
   precioMaximo: number = 150;
 
-  constructor(private http: HttpService) { }
+  constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {
 
@@ -55,7 +56,7 @@ export class MerchandisingComponent implements OnInit {
 
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
-   onPriceChange() {
+  onPriceChange() {
     this.precioMaximo = parseInt(this.priceRangeInput.nativeElement.value);
   }
 
@@ -90,4 +91,8 @@ export class MerchandisingComponent implements OnInit {
     return productosFiltrados;
   }
 
+  verDetallesProducto(productId: number) {
+    // Navegar a la vista de detalles del producto con el ID del producto como parámetro
+    this.router.navigate(['/product', productId]);
+  }
 }

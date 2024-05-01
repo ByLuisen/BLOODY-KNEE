@@ -28,6 +28,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('getvideobyid/{id}', [VideoController::class, 'videoById']);
     Route::resource('videos', VideoController::class);
     Route::resource('products', ProductController::class);
+    Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
 });
 
 Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);

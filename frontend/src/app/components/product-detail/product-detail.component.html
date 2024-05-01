@@ -1,0 +1,8 @@
+<div *ngIf="product" class="product-details">
+  <div class="sm:text-center aclonica-font fondo_bk overflow-auto">
+    <h1 class="text-center mb-4">FIT<span class="text-red-600">NESS</span></h1>
+    <h2>{{ product.name }}</h2>
+    <p>Precio: €{{ product.price }}</p>
+    <p>{{ product.description }}</p>
+  </div>
+</div>

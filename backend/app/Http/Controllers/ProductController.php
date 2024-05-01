@@ -20,4 +20,17 @@ class ProductController extends Controller
             return ApiResponse::error($e->getMessage());
         }
     }
+
+
+    public function productById($id){
+        try {
+            $product = Product::where('id', $id)->get();
+
+            return ApiResponse::success(ProductResource::collection($product), 'Product único por id obtenido correctamente');
+
+        } catch (\Exception $e) {
+            // Loguear el error o realizar otras acciones según tus necesidades
+            return ApiResponse::error($e->getMessage());
+        }
+    }
 }

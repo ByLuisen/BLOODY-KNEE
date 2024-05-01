@@ -13,6 +13,7 @@ import { PlayerComponent } from './components/player/player.component';
 import { MerchandisingComponent } from './components/merchandising/merchandising.component';
 // import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { PricingComponent } from './components/pricing/pricing.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'player/:videoId', component: PlayerComponent },
   { path: 'pricing', component: PricingComponent },
   { path: 'merchandising', component: MerchandisingComponent },
+  { path: 'product/:productId', component: ProductDetailComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];

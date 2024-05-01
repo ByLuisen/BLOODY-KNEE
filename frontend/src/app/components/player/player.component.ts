@@ -24,7 +24,7 @@ export class PlayerComponent implements AfterViewInit {
   // "Paginate" comentarios
   comentariosToShow: any[] = [];
   loading: boolean = false;
-  batchSize: number = 5; // Tamaño del lote
+  batchSize: number = 5;
 
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;

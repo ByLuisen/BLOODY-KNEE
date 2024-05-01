@@ -86,7 +86,7 @@ export class HttpService {
       .get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
       .pipe(map((response) => response.data));
   }
-  // Obtener todas los cuotas
+  // Obtener todos los videos
   getVideos(): Observable<Video[]> {
     return this._http
       .get<any>(`${this.url}/videos`)
@@ -99,4 +99,11 @@ export class HttpService {
       .get<any>(`${this.url}/products`)
       .pipe(map((response) => response.data as Product[]));
   }
+
+  getProductById(id: number): Observable<Product[]> {
+    return this._http
+      .get<{ data: Product[] }>(`${this.url}/getproductbyid/${id}`)
+      .pipe(map((response) => response.data));
+  }
+
 }
