@@ -16,15 +16,12 @@ class Video extends Model
                     ->wherePivot('type', 'Like');
     }
 
-    /**
-     * Define a relationship to get users who disliked this video.
-     */
     public function dislikedByUsers()
     {
         return $this->belongsToMany(User::class, 'user_like_dislike_videos', 'video_id', 'user_id')
                     ->wherePivot('type', 'Dislike');
     }
-    
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_visit_videos')->withTimestamps();

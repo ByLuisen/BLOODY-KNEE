@@ -4,14 +4,23 @@ import { Video } from 'src/app/models/Video';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css'],
 })
 export class PlayerComponent implements OnInit {
-
-  constructor(private elementRef: ElementRef, private http: HttpService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private cdr: ChangeDetectorRef) { }
+  constructor(
+    private elementRef: ElementRef,
+    private http: HttpService,
+    public sanitizer: DomSanitizer,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    public auth: AuthService,
+  ) {}
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
   videoId!: number;
@@ -20,32 +29,30 @@ export class PlayerComponent implements OnInit {
   videos: Video[] = [];
   destacados: Video[] = [];
   videosAleatorios: Video[] = [];
-
+  modalOpen: boolean = false;
+  role!: string;
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;
   }
-  
 
   ngOnInit() {
     this.setupButtons();
     this.setupCommentButtons();
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.videoId = +params['videoId'];
       this.getVideo();
       this.getDestacados();
     });
   }
 
-  saveVideo(videoId:number):void{
-
-  }
+  saveVideo(videoId: number): void {}
 
   likeVideo(videoId: number): void {
     this.http.updateLikes(videoId).subscribe(
-      response => {
+      (response) => {
         console.log('Like actualizado correctamente', response);
       },
-      error => {
+      (error) => {
         console.error('Error al actualizar like', error);
       }
     );
@@ -53,10 +60,10 @@ export class PlayerComponent implements OnInit {
 
   dislikeVideo(videoId: number): void {
     this.http.updateDislikes(videoId).subscribe(
-      response => {
+      (response) => {
         console.log('Dislike actualizado correctamente', response);
       },
-      error => {
+      (error) => {
         console.error('Error al actualizar dislike', error);
       }
     );
@@ -65,12 +72,12 @@ export class PlayerComponent implements OnInit {
   getVideo(): void {
     this.http.getVideoById(this.videoId).subscribe(
       (videos) => {
-        console.log("Video obtenido:", videos);
+        console.log('Video obtenido:', videos);
         this.videos = videos;
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       },
       (error) => {
-        console.error("Error al obtener el video:", error);
+        console.error('Error al obtener el video:', error);
       }
     );
   }
@@ -78,12 +85,12 @@ export class PlayerComponent implements OnInit {
   getDestacados(): void {
     this.http.getVideos().subscribe(
       (videos) => {
-        console.log("Videos destacados obtenidos:", videos);
+        console.log('Videos destacados obtenidos:', videos);
         this.destacados = videos;
         this.videosAleatorios = this.getRandomVideos(this.destacados, 7);
       },
       (error) => {
-        console.error("Error al obtener los videos destacados:", error);
+        console.error('Error al obtener los videos destacados:', error);
       }
     );
   }
@@ -93,17 +100,17 @@ export class PlayerComponent implements OnInit {
     return shuffled.slice(0, count);
   }
 
-
   selectVideo(video: Video): void {
     this.selectedVideo = video;
     const url = this.selectedVideo ? this.selectedVideo.url : '';
     this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-
   setupButtons() {
-    const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
-    const dislikeButton = this.elementRef.nativeElement.querySelector('.dislike-button');
+    const likeButton =
+      this.elementRef.nativeElement.querySelector('.like-button');
+    const dislikeButton =
+      this.elementRef.nativeElement.querySelector('.dislike-button');
 
     if (likeButton) {
       likeButton.addEventListener('click', (e: MouseEvent) => {
@@ -111,7 +118,6 @@ export class PlayerComponent implements OnInit {
         likeButton.classList.toggle('active');
         likeButton.classList.add('animated');
         dislikeButton?.classList.remove('active', 'animated');
-   
       });
     }
 
@@ -121,14 +127,15 @@ export class PlayerComponent implements OnInit {
         dislikeButton.classList.toggle('active');
         dislikeButton.classList.add('animated');
         likeButton?.classList.remove('active', 'animated');
-       
       });
     }
   }
 
   setupCommentButtons() {
-    const likeComments: NodeListOf<HTMLElement> = this.elementRef.nativeElement.querySelectorAll('.like-comment');
-    const dislikeComments: NodeListOf<HTMLElement> = this.elementRef.nativeElement.querySelectorAll('.dislike-comment');
+    const likeComments: NodeListOf<HTMLElement> =
+      this.elementRef.nativeElement.querySelectorAll('.like-comment');
+    const dislikeComments: NodeListOf<HTMLElement> =
+      this.elementRef.nativeElement.querySelectorAll('.dislike-comment');
 
     likeComments.forEach((likeComment) => {
       likeComment.addEventListener('click', (e: MouseEvent) => {
@@ -189,6 +196,52 @@ export class PlayerComponent implements OnInit {
 
   randomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  openModal() {
+    this.modalOpen = true;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+
+  // Método para cerrar el modal
+  closeModal() {
+    this.modalOpen = false;
+    document.body.classList.remove('modal-open');
+    // Remueve la clase que evita el scroll del body
+  }
+
+  likeOpenModal() {
+    this.modalOpen = true;
+    document.body.classList.add('likeOpenModal');
+    // Agrega una clase para evitar el scroll del body
+  }
+
+  // Método para cerrar el modal
+  likeCloseModal() {
+    this.modalOpen = false;
+    document.body.classList.remove('likeOpenModal');
+    // Remueve la clase que evita el scroll del body
+  }
+
+  islogged() {
+    if (
+      this.role != 'standard' &&
+      this.role != 'premium' &&
+      this.role != 'basic'
+    ) {
+      this.likeOpenModal();
+    }
+  }
+
+  getExclusive(video: Video) {
+    if (video.exclusive && this.role != 'standard' && this.role != 'premium') {
+      this.openModal();
+      // Abre el modal si el video es premium y el usuario no tiene un rol premium
+    } else {
+      this.router.navigate(['/player', video.id]);
+      // Navega al componente de reproductor si el usuario tiene permiso para ver el video
+    }
   }
 
   comentarios = [

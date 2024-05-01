@@ -54,4 +54,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Video::class, 'user_visit_videos', 'user_id', 'video_id')->withTimestamps();
     }
+
+    public function likes()
+    {
+        return $this->belongsToMany(Video::class, 'user_like_dislike_videos', 'user_id', 'video_id')->withTimestamps();
+    }
 }

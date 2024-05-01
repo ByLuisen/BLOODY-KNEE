@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Resources\VideoResource; // Corrección en el espacio de nombres
@@ -53,65 +54,92 @@ class VideoController extends Controller
 
     public function updateLikes(Request $request, $id)
     {
-        $video = Video::find($id);
-        $user = auth()->user(); // Obtener el usuario autenticado
+        try {
+            $email = $request->input('email');
+            $user = null;
 
-        if (!$video) {
-            return response()->json(['error' => 'Video no encontrado'], 404);
+            if ($email) {
+                $user = User::where('email', $email)->first();
+            }
+
+            $video = Video::findOrFail($id);
+
+            if (!$video) {
+                return response()->json(['error' => 'Video no encontrado'], 404);
+            }
+
+            if ($user) {
+                // Verificar si el usuario ya ha dado like a este video
+                if ($video->likedByUsers->contains($user)) {
+                    return response()->json(['error' => 'Ya diste like a este video'], 400);
+                }
+
+                // Eliminar dislike si existe
+                if ($video->dislikedByUsers->contains($user)) {
+                    $video->dislikedByUsers()->detach($user);
+                    $video->dislikes--;
+                }
+
+                // Registrar el like del usuario en la tabla intermedia
+                $user->likes()->attach($video->id, ['type' => 'Like', 'date' => now()]);
+                $video->likes++;
+                $video->save();
+
+                return response()->json(['message' => 'Likes actualizados correctamente']);
+            } else {
+                return response()->json(['error' => 'Usuario no encontrado'], 404);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error en updateLikes: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        // Verificar si el usuario ya ha dado like a este video
-        if ($video->likedByUsers->contains($user)) {
-            return response()->json(['error' => 'Ya diste like a este video'], 400);
-        }
-
-        // Eliminar dislike si existe
-        if ($video->dislikedByUsers->contains($user)) {
-            $video->dislikedByUsers()->detach($user);
-            $video->dislikes--;
-        }
-
-        $video->likes++;
-        $video->save();
-
-        // Registrar el like del usuario en la tabla intermedia
-        $video->likedByUsers()->attach($user);
-
-        return response()->json(['message' => 'Likes actualizados correctamente']);
     }
+
 
 
     public function updateDislikes(Request $request, $id)
-    {
-        $video = Video::findOrFail($id);
-
+{
+    try {
+        $email = $request->input('email');
         $user = null;
 
-        $email = $request->input('email');
-        
+        if ($email) {
+            $user = User::where('email', $email)->first();
+        }
+
+        $video = Video::findOrFail($id);
+
         if (!$video) {
             return response()->json(['error' => 'Video no encontrado'], 404);
         }
 
-        // Verificar si el usuario ya ha dado dislike a este video
-        if ($video->dislikedByUsers->contains($user)) {
-            return response()->json(['error' => 'Ya diste dislike a este video'], 400);
+        if ($user) {
+            // Verificar si el usuario ya ha dado dislike a este video
+            if ($video->dislikedByUsers->contains($user)) {
+                return response()->json(['error' => 'Ya diste dislike a este video'], 400);
+            }
+
+            // Eliminar like si existe
+            if ($video->likedByUsers->contains($user)) {
+                $video->likedByUsers()->detach($user);
+                $video->likes--;
+            }
+
+            // Registrar el dislike del usuario en la tabla intermedia
+            $user->likes()->attach($video->id, ['type' => 'Dislike', 'date' => now()]);
+            $video->dislikes++;
+            $video->save();
+
+            return response()->json(['message' => 'Dislikes actualizados correctamente']);
+        } else {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
         }
-
-        // Eliminar like si existe
-        if ($video->likedByUsers->contains($user)) {
-            $video->likedByUsers()->detach($user);
-            $video->likes--;
-        }
-
-        $video->dislikes++;
-        $video->save();
-
-        // Registrar el dislike del usuario en la tabla intermedia
-        $video->dislikedByUsers()->attach($user);
-
-        return response()->json(['message' => 'Dislikes actualizados correctamente']);
+    } catch (\Exception $e) {
+        \Log::error('Error en updateDislikes: ' . $e->getMessage());
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
     public function incrementVideoVisits(Request $request, $id)
     {
         try {
@@ -121,29 +149,24 @@ class VideoController extends Controller
             if ($email) {
                 $user = User::where('email', $email)->first();
             }
-    
+
             // Obtener el video por su ID
             $video = Video::findOrFail($id);
-            \Log::debug('Video encontrado: ' . $video);
-            
+
+
             // Si se encontró un usuario, registrar la visita del usuario al video
             if ($user) {
                 // Utiliza el método attach() en la relación con la tabla pivote
                 $user->videos()->attach($video->id, ['date' => now()]);
-                \Log::debug('Visita del usuario registrada correctamente');
             }
-    
+
             // Incrementar las visitas del video
             $video->visits += 1;
             $video->save();
-    
+
             return ApiResponse::success(null, 'Visita registrada correctamente');
         } catch (\Exception $e) {
-            \Log::error('Error en incrementVideoVisits: ' . $e->getMessage());
             return ApiResponse::error($e->getMessage());
         }
     }
-    
-    
-
 }

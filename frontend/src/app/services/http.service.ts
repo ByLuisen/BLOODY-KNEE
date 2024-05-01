@@ -88,7 +88,7 @@ export class HttpService {
           (response) => {
             observer.next(response.data);
             observer.complete();
-            // Actualizar las visitas del video 
+            // Actualizar las visitas del video
             this.updateVideoVisits(id).subscribe(
               () => {
                 console.log('Visitas actualizadas');
@@ -113,16 +113,29 @@ export class HttpService {
   }
   updateLikes(videoId: number): Observable<any> {
     const url = `${this.url}/updateLikes/${videoId}`;
-    return this._http.post(url, {});
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = { email: user ? user.email : '' };
+        console.log(body);
+        return this._http.put(url, body);
+      })
+    );
   }
 
   updateDislikes(videoId: number): Observable<any> {
     const url = `${this.url}/updateDislikes/${videoId}`;
-    return this._http.post(url, {});
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = { email: user ? user.email : '' };
+        console.log(body);
+        return this._http.put(url, body);
+      })
+    );
   }
+
   updateVideoVisits(videoId: number): Observable<any> {
     const url = `${this.url}/videos/${videoId}/visit`;
-  
+
     // Utiliza switchMap para combinar el resultado del observable user$ con la solicitud HTTP put
     return this.auth.user$.pipe(
       switchMap((user) => {
