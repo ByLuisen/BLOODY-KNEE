@@ -75,4 +75,28 @@ export class ThaivideosComponent implements OnInit {
   onFilteredItemsChanged(filteredItems: Video[]) {
     this.filteredItems = filteredItems;
   }
+
+  filterVideos(type: string) {
+    this.selectedType = type;
+
+    switch (type) {
+      case 'Todos':
+        this.filteredItems = this.todos;
+        break;
+      case 'ConSaco':
+        this.filteredItems = this.videosSaco;
+        break;
+      case 'ConPareja':
+        this.filteredItems = this.videosPareja;
+        break;
+      case 'ConEquipamiento':
+        this.filteredItems = this.videosConEquipamiento;
+        break;
+      case 'SinEquipamiento':
+        this.filteredItems = this.videosSinEquipamiento;
+        break;
+      default:
+        this.filteredItems = this.todos;
+    }
+  }
 }

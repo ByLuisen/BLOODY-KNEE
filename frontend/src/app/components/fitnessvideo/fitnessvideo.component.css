@@ -42,3 +42,9 @@ h2 {
   transform:
     scale(1.5);
 }
+
+/* Mantener el efecto hover cuando el botón está activo */
+button.active {
+  background-color: #cbd5e0;
+  color: #1a202c;
+}

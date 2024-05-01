@@ -7,15 +7,26 @@
 
   <!-- Botones de filtro -->
   <div class="grid grid-cols-2 gap-4 sm:grid-cols-5 sm:gap-4 sm:px-96 pb-20 px-10">
-    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filteredItems = todos">Todos</button>
-    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filteredItems = videosSaco">Con
-      Saco</button>
-    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" (click)="filteredItems = videosPareja">Con
-      Pareja</button>
+    <!-- Button to filter all videos -->
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" [class.active]="selectedType === 'Todos'"
+      (click)="filterVideos('Todos')">Todos</button>
+    <!-- Button to filter videos with sack -->
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" [class.active]="selectedType === 'ConSaco'"
+      (click)="filterVideos('ConSaco')">Con Saco</button>
+
+    <!-- Button to filter videos with partner -->
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" [class.active]="selectedType === 'ConPareja'"
+      (click)="filterVideos('ConPareja')">Con Pareja</button>
+
+    <!-- Button to filter videos with equipment -->
     <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-      (click)="filteredItems = videosConEquipamiento">Con Equipamiento</button>
+      [class.active]="selectedType === 'ConEquipamiento'" (click)="filterVideos('ConEquipamiento')">Con
+      Equipamiento</button>
+
+    <!-- Button to filter videos without equipment -->
     <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-      (click)="filteredItems = videosSinEquipamiento">Sin Equipamiento</button>
+      [class.active]="selectedType === 'SinEquipamiento'" (click)="filterVideos('SinEquipamiento')">Sin
+      Equipamiento</button>
   </div>
 
 
