@@ -17,7 +17,7 @@ export class BoxingvideosComponent implements OnInit {
   videosConEquipamiento: Video[] = [];
   videosSinEquipamiento: Video[] = [];
 
-  // En el constructor o donde sea más adecuado inicializar la variable
+  // Admin mode variable
   adminModeActivated: boolean = false;
 
   filteredItems: Video[] = [];
@@ -63,6 +63,7 @@ export class BoxingvideosComponent implements OnInit {
   toggleAdminMode() {
     this.adminModeActivated = !this.adminModeActivated;
   }
+
   // Open modal method
   openModal() {
     this.modalOpen = true;

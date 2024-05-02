@@ -4,13 +4,13 @@
   <!-- Buscador de videos -->
   <app-searchbar [todos]="todos" (filteredItemsChanged)="onFilteredItemsChanged($event)"></app-searchbar>
 
+  <!-- Botón para activar el modo admin -->
   <div class="flex flex-col justify-center items-center mb-4" *ngIf="role == 'admin'">
-    <!-- Botón para activar el modo admin -->
     <div
       class="border-solid border-2 w-44 bg-red-800 rounded-full hover:bg-red-900 transition duration-300 hover:scale-105 items-center "
       role="button" (click)="toggleAdminMode()">
       <img src="../../../assets/img/svg/bxl-dev-to.svg" alt="configAdmin.svg" class="w-14 mx-auto">
-      <p class="text-white">DEV MODE</p>
+      <p class="text-white">MODE</p>
     </div>
   </div>
 
@@ -47,9 +47,11 @@
     <div class="group relative" *ngFor="let video of filteredItems">
       <!-- Mostrar solo si está en modo admin -->
       <div *ngIf="adminModeActivated">
-        <div class="admin-icons">
-          <span (click)="editVideo(video)" class="edit-icon">✎</span>
-          <span (click)="deleteVideo(video)" class="delete-icon">❌</span>
+        <div class="flex flex-row">
+          <img src="../../../assets/img/svg/bx-edit.svg" (click)="editVideo(video)" alt="bx-edit" class="w-9 mx-2"
+            role="button">
+          <img src="../../../assets/img/svg/bx-trash.svg" (click)="deleteVideo(video)" alt="bx-edit" class="w-9 mx-2"
+            role="button">
         </div>
       </div>
       <ng-container>
