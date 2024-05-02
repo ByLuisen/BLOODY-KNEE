@@ -19,11 +19,11 @@ export class FitnessvideoComponent implements OnInit {
   constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {
-    this.http.getRole().subscribe((data) => {
-      this.role = data[0].name;
-      console.log(this.role)
+    // this.http.getRole().subscribe((data) => {
+    //   this.role = data[0].name;
+    //   console.log(this.role)
 
-    })
+    // })
     this.http.getVideosModality(3, 3).subscribe((videos) => {
       this.videosConEquipamiento = videos;
       this.todos = this.todos.concat(videos);

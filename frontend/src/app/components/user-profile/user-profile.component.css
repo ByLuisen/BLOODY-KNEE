@@ -69,6 +69,10 @@ h1 {
   /* overflow: auto; */
 }
 
+.perfil{
+border-radius: 15px;
+}
+
 img {
   display: block;
   max-width: 100%;

@@ -37,11 +37,15 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('modalityvideo/{modality_id}/{type_id}', [VideoController::class, 'modalities']);
     Route::get('getvideobyid/{id}', [VideoController::class, 'videoById']);
     Route::resource('videos', VideoController::class);
+    Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
+    Route::put('updateLikes/{id}', [VideoController::class, 'updateLikes']);
+    Route::put('updateDislikes/{id}', [VideoController::class, 'updateDislikes']);
+    Route::put('/videos/{id}/visit', [VideoController::class,'incrementVideoVisits']);
+
     Route::resource('products', ProductController::class);
     Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
 });
 
 Route::post('/checkout', [StripeController::class, 'checkout']);
-
 
 Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);

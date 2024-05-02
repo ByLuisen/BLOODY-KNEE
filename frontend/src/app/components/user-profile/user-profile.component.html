@@ -1,5 +1,7 @@
-<div class="aclonica-font pb-20 sm:px-52 pt-6 h-14 w-14 ">
-  <div class="background_profile rounded-full flex items-center justify-start bg-gradient-to-r from-red-500 to-red-900 text-white" *ngIf="auth.user$ | async as user">
+<div class="aclonica-font pb-20 sm:px-52 pt-6 h-14 w-14">
+  <div
+    class="background_profile rounded-full flex items-center justify-start bg-gradient-to-r from-red-500 to-red-900 text-white"
+    *ngIf="auth.user$ | async as user">
     <div class="flex items-center h-full">
       <img class="rounded-full h-full w-14" [src]="user.picture" alt="Profile Image" routerLink="/profile" />
       <p class="user_name h-full ml-2">{{user.nickname}}</p>
@@ -11,43 +13,40 @@
 <app-profile-menu class="pb-20"></app-profile-menu>
 
 <div class="sm:text-center text-center aclonica-font overflow-auto mt-10 fondo_bk" *ngIf="auth.user$ | async as user">
-  <div *ngIf="selectedOption === 'editProfile'">
+  <div *ngIf="selectedOption === 'editProfile'"
+    class="mx-52 items-center justify-start bg-gradient-to-r from-red-500 to-red-900 text-white perfil">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 justify-center mx-28 mt-5 mb-5">
       <!-- Foto de perfil -->
-     <div
-       class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 flex flex-col justify-center items-center hover:transform hover:scale-105 transition duration-300">
-       <h2 class="text-lg font-bold mb-2">Foto de perfil:</h2>
-       <img class="rounded-full" width="50px" [src]="user.picture" alt="Profile Image" routerLink="/profile" />
-     </div>
-     <!-- Correo electronico -->
-     <div
-       class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300 ">
-       <h2 class="text-lg font-bold mb-2">Correo electronico:</h2>
-       <input type="text" [(ngModel)]="user.email" placeholder="Correo electrónico"
-         class="bg-white border border-gray-300 rounded-md p-2 w-full">
-     </div>
-   </div>
+      <div
+        class="card rounded-lg p-4 flex flex-col justify-center items-center hover:transform hover:scale-105 transition duration-300">
+        <h2 class="text-lg font-bold mb-2">Foto de perfil:</h2>
+        <img class="rounded-full" width="50px" [src]="user.picture" alt="Profile Image" routerLink="/profile" />
+      </div>
+      <!-- Correo electronico -->
+      <div class="card  rounded-lg p-4 hover:transform hover:scale-105 transition duration-300 ">
+        <h2 class="text-lg font-bold mb-2">Correo electronico:</h2>
+        <input type="text" [(ngModel)]="user.email" placeholder="Correo electrónico"
+          class="bg-white border border-gray-300 text-black rounded-md p-2 w-full">
+      </div>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 justify-center mx-28 mt-2">
       <!-- Nombre de usuario -->
-      <div
-        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300">
+      <div class="card rounded-lg p-4 hover:transform hover:scale-105 transition duration-300">
         <h2 class="text-lg font-bold mb-2">Nombre:</h2>
         <input type="text" [(ngModel)]="user.given_name" placeholder="Nombre"
-          class="bg-white border border-gray-300 rounded-md p-2 w-full">
+          class="bg-white border border-gray-300 text-black rounded-md p-2 w-full">
       </div>
       <!-- Apellido -->
-      <div
-        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300">
+      <div class="card rounded-lg p-4 hover:transform hover:scale-105 transition duration-300">
         <h2 class="text-lg font-bold mb-2">Apellido:</h2>
         <input type="text" [(ngModel)]="user.family_name" placeholder="Nombre"
-          class="bg-white border border-gray-300 rounded-md p-2 w-full">
+          class="bg-white border border-gray-300 text-black rounded-md p-2 w-full">
       </div>
       <!-- Cambiar nombre de usuario -->
-      <div
-        class="card bg-white-100 border border-red-600 rounded-lg shadow-md p-4 hover:transform hover:scale-105 transition duration-300">
+      <div class="card rounded-lg p-4 hover:transform hover:scale-105 transition duration-300">
         <h2 class="text-lg font-bold mb-2">Nombre de usuario:</h2>
         <input type="text" [(ngModel)]="user.nickname" placeholder="Nombre"
-          class="bg-white border border-gray-300 rounded-md p-2 w-full">
+          class="bg-white border text-black border-gray-300 rounded-md p-2 w-full">
       </div>
     </div>
   </div>

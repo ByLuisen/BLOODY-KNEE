@@ -9,6 +9,8 @@ import { Video } from '../models/Video';
 import { environment } from 'src/environments/environment.development';
 import { AuthService } from '@auth0/auth0-angular';
 import { Role } from '../models/Role';
+import { ConditionalExpr } from '@angular/compiler';
+import { switchMap } from 'rxjs/operators';
 import { Product } from '../models/Product';
 
 @Injectable({
@@ -40,21 +42,21 @@ export class HttpService {
       this.auth.user$.subscribe((user) => {
         // Verifica si user?.sub tiene un valor antes de continuar
         if (user?.sub) {
-            const url = `${environment.audience}users/${user?.sub}/roles`;
-            const headers = new HttpHeaders({
-              Accept: 'application/json',
-              // Authorization: `Bearer ${environment.developmentAccessToken}`,
-            });
+          const url = `${environment.audience}users/${user?.sub}/roles`;
+          const headers = new HttpHeaders({
+            Accept: 'application/json',
+            // Authorization: `Bearer ${environment.developmentAccessToken}`,
+          });
 
-            this._http.get<any>(url, { headers: headers }).subscribe(
-              (response) => {
-                observer.next(response);
-                observer.complete();
-              },
-              (error) => {
-                observer.error(error);
-              }
-            );
+          this._http.get<any>(url, { headers: headers }).subscribe(
+            (response) => {
+              observer.next(response);
+              observer.complete();
+            },
+            (error) => {
+              observer.error(error);
+            }
+          );
         } else {
           observer.error(
             'No se pudo obtener el rol: el usuario no está autenticado'
@@ -80,15 +82,69 @@ export class HttpService {
   }
 
   getVideoById(id: number): Observable<Video[]> {
-    return this._http
-      .get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
-      .pipe(map((response) => response.data));
+    return new Observable<Video[]>((observer) => {
+      this._http.get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
+        .subscribe(
+          (response) => {
+            observer.next(response.data);
+            observer.complete();
+            // Actualizar las visitas del video
+            this.updateVideoVisits(id).subscribe(
+              () => {
+                console.log('Visitas actualizadas');
+              },
+              (error) => {
+                console.error('Error al actualizar las visitas', error);
+              }
+            );
+          },
+          (error) => {
+            observer.error(error);
+          }
+        );
+    });
   }
+
   // Obtener todos los videos
   getVideos(): Observable<Video[]> {
     return this._http
       .get<any>(`${this.url}/videos`)
       .pipe(map((response) => response.data as Video[]));
+  }
+  updateLikes(videoId: number): Observable<any> {
+    const url = `${this.url}/updateLikes/${videoId}`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = { email: user ? user.email : '' };
+        console.log(body);
+        return this._http.put(url, body);
+      })
+    );
+  }
+
+  updateDislikes(videoId: number): Observable<any> {
+    const url = `${this.url}/updateDislikes/${videoId}`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = { email: user ? user.email : '' };
+        console.log(body);
+        return this._http.put(url, body);
+      })
+    );
+  }
+
+  updateVideoVisits(videoId: number): Observable<any> {
+    const url = `${this.url}/videos/${videoId}/visit`;
+
+    // Utiliza switchMap para combinar el resultado del observable user$ con la solicitud HTTP put
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = { email: user ? user.email : '' };
+        console.log(body)
+        // Realiza una solicitud PUT al servidor con el cuerpo que incluye el usuario
+        return this._http.put(url, body);
+      })
+    );
   }
 
   // Obtener todos los productos

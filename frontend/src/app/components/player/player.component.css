@@ -83,6 +83,15 @@ iframe {
 
 }
 
+/* Estilos para el icono de premium */
+.premium-icon {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  z-index: 1;
+  transition: transform 0.3s;
+}
+
 .like-button.active svg path {
   fill: rgb(43, 43, 43);
 }
