@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Aclonica&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.fondo_bk {
+  background: linear-gradient(180deg, #ffffff 0%, #c7c7c7 39%, #ffdddd 100%);
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+}
+
+.aclonica-font {
+  font-family: "Aclonica", sans-serif;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
