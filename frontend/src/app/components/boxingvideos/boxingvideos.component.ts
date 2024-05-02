@@ -23,34 +23,38 @@ export class BoxingvideosComponent implements OnInit {
   // Flag to control modal visibility
   modalOpen: boolean = false;
   role: string = "basic";
-  constructor(private http: HttpService,private router: Router) { }
+  constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {
     this.http.getRole().subscribe((data) => {
       this.role = data[0].name;
       console.log(this.role)
-
     })
+
     this.http.getVideosModality(1, 1).subscribe(videos => {
       this.videosSaco = videos;
       this.todos = this.todos.concat(videos);
       this.filteredItems = [...this.todos];
     });
+
     this.http.getVideosModality(1, 2).subscribe(videos => {
       this.videosPareja = videos;
       this.todos = this.todos.concat(videos);
       this.filteredItems = [...this.todos];
     });
+
     this.http.getVideosModality(1, 3).subscribe(videos => {
       this.videosConEquipamiento = videos;
       this.todos = this.todos.concat(videos);
       this.filteredItems = [...this.todos];
     });
+
     this.http.getVideosModality(1, 4).subscribe(videos => {
       this.videosSinEquipamiento = videos;
       this.todos = this.todos.concat(videos);
       this.filteredItems = [...this.todos];
     });
+
   }
 
   // Open modal method
@@ -74,6 +78,35 @@ export class BoxingvideosComponent implements OnInit {
     } else {
       // Navigate to video player if access is permitted
       this.router.navigate(['/player', video.id]);
+    }
+  }
+
+  // Método que se ejecutará cuando cambien los elementos filtrados
+  onFilteredItemsChanged(filteredItems: Video[]) {
+    this.filteredItems = filteredItems;
+  }
+
+  filterVideos(type: string) {
+    this.selectedType = type;
+
+    switch (type) {
+      case 'Todos':
+        this.filteredItems = this.todos;
+        break;
+      case 'ConSaco':
+        this.filteredItems = this.videosSaco;
+        break;
+      case 'ConPareja':
+        this.filteredItems = this.videosPareja;
+        break;
+      case 'ConEquipamiento':
+        this.filteredItems = this.videosConEquipamiento;
+        break;
+      case 'SinEquipamiento':
+        this.filteredItems = this.videosSinEquipamiento;
+        break;
+      default:
+        this.filteredItems = this.todos;
     }
   }
 }

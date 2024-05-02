@@ -11,16 +11,20 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class PlayerComponent implements AfterViewInit {
 
-  constructor(private elementRef: ElementRef, private http: HttpService,public sanitizer: DomSanitizer, private route: ActivatedRoute,private cdr: ChangeDetectorRef) { }
+  constructor(private elementRef: ElementRef, private http: HttpService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private cdr: ChangeDetectorRef) { }
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
 
   videoId!: number;
   selectedVideo: Video | null = null;
   safeUrl: SafeResourceUrl | null = null;
-  videos: Video[]=[];
-  destacados: Video[]=[];
+  videos: Video[] = [];
+  destacados: Video[] = [];
   videosAleatorios: Video[] = [];
+  // "Paginate" comentarios
+  comentariosToShow: any[] = [];
+  loading: boolean = false;
+  batchSize: number = 5;
 
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;
@@ -29,6 +33,7 @@ export class PlayerComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.setupButtons();
     this.getVideo();
+    this.loadInitialComments();
 
     this.route.params.subscribe(params => {
       this.videoId = +params['videoId'];
@@ -38,6 +43,29 @@ export class PlayerComponent implements AfterViewInit {
 
   }
 
+  loadInitialComments() {
+    this.comentariosToShow = this.comentarios.slice(0, this.batchSize);
+  }
+  onScroll(event: any) {
+    const element = event.target;
+    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      this.loadMoreComments();
+    }
+  }
+
+  loadMoreComments() {
+    if (this.loading || this.comentariosToShow.length === this.comentarios.length) return;
+
+    this.loading = true;
+
+    setTimeout(() => {
+      const startIndex = this.comentariosToShow.length;
+      const endIndex = startIndex + this.batchSize;
+      const newComments = this.comentarios.slice(startIndex, endIndex);
+      this.comentariosToShow = this.comentariosToShow.concat(newComments);
+      this.loading = false;
+    }, 1000);
+  }
 
   getVideo(): void {
     this.http.getVideoById(this.videoId).subscribe(
@@ -57,8 +85,8 @@ export class PlayerComponent implements AfterViewInit {
       (videos) => {
         console.log("Videos destacados obtenidos:", videos);
         this.destacados = videos;
-          // Obtener 5 videos aleatorios
-          this.videosAleatorios = this.getRandomVideos(this.destacados, 7);
+        // Obtener 5 videos aleatorios
+        this.videosAleatorios = this.getRandomVideos(this.destacados, 7);
       },
       (error) => {
         console.error("Error al obtener los videos destacados:", error);
@@ -70,13 +98,10 @@ export class PlayerComponent implements AfterViewInit {
     return shuffled.slice(0, count);
   }
 
-
   selectVideo(video: Video): void {
     this.selectedVideo = video;
     this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedVideo?.url || '');
   }
-
-
 
   setupButtons() {
     const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
@@ -101,7 +126,6 @@ export class PlayerComponent implements AfterViewInit {
         this.generateClones(dislikeButton);
       });
     }
-
     this.setupCommentButtons();
   }
 
@@ -253,10 +277,35 @@ export class PlayerComponent implements AfterViewInit {
     },
   ];
   comentarios = [
-    { texto: 'Ay amiga que guapo es el entrenador' },
-    { texto: 'Joel te odio mucho nunca te rindas' },
-    { texto: 'Ostia no he visto nada de nada ayuda' },
-    { texto: 'Me ha ayudado mucho a mejorar ahora nadie me para' },
-    { texto: 'El entrenador va un poco fumadete pero se le ve majo' },
+    { texto: 'La energía de hoy fue increíble, gracias a todos!' },
+    // { texto: '¿Soy el único que termina exhausto después de las sesiones?' },
+    // { texto: 'Cada día me siento más fuerte, este entrenamiento es lo máximo' },
+    // { texto: '¿Alguien tiene tips para recuperarse más rápido?' },
+    // { texto: 'El entrenador siempre tiene la mejor actitud, me inspira mucho' },
+    // { texto: 'Nunca pensé que podría hacer tanto en tan poco tiempo' },
+    // { texto: 'Chicos, ¿qué comen antes de entrenar para tener tanta energía?' },
+    // { texto: 'Definitivamente me estoy volviendo adicto a estas clases' },
+    // { texto: '¿El entrenador siempre es tan exigente o solo es conmigo?' },
+    // { texto: '¡Vamos equipo, podemos superar cualquier desafío!' },
+    // { texto: 'Al principio dudaba, pero ahora estoy viendo los resultados' },
+    // { texto: 'Me encantaría que hubiera más clases por semana' },
+    // { texto: 'Es mi tercer mes y sigo sintiendo que cada día es un nuevo reto' },
+    // { texto: '¡Ese ejercicio nuevo de hoy estuvo brutal!' },
+    // { texto: 'Siento que este grupo se ha convertido en mi segunda familia' },
+    // { texto: '¡Qué risa hoy con los errores que cometimos todos!' },
+    // { texto: 'A veces me pregunto cómo el entrenador tiene tanta paciencia' },
+    // { texto: 'Ojalá hubiera empezado a entrenar aquí mucho antes' },
+    // { texto: '¿Alguien más siente que ha mejorado su vida en general?' },
+    // { texto: 'Cada vez que pienso en rendirme, veo al resto y me motivo' },
+    // { texto: 'Después de cada sesión me siento como nuevo, ¡es mágico!' },
+    // { texto: 'El entrenador dijo que estoy progresando bien, ¡estoy tan feliz!' },
+    // { texto: 'Necesito consejos para mantenerme motivado los días difíciles' },
+    // { texto: 'Agradecido por encontrar un grupo tan bueno y un entrenador excepcional' },
+    // { texto: '¿Quién más está sintiendo esos músculos que no sabía que tenía?' },
+    // { texto: 'Creo que todos deberíamos salir a celebrar nuestros progresos' },
+    // { texto: 'El entrenador me ayudó a superar un bloqueo mental, increíble' },
+    // { texto: '¡Hoy me superé a mí mismo y logré un nuevo récord personal!' },
+    // { texto: 'A veces me cuesta seguir el ritmo, pero no me voy a rendir' },
+    // { texto: '¡La clase de hoy fue fuego puro, quemé tantas calorías!' }
   ];
 }

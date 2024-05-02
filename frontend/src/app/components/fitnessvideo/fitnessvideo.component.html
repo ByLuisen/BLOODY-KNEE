@@ -1,50 +1,61 @@
 <div class="sm:text-center aclonica-font fondo_bk overflow-auto">
   <h1 class="text-center mb-4">FIT<span class="text-red-600">NESS</span></h1>
 
+  <!-- Buscador de videos -->
+  <app-searchbar [todos]="todos" (filteredItemsChanged)="onFilteredItemsChanged($event)"></app-searchbar>
+
   <!-- Botones de filtro -->
   <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-4 sm:px-96 pb-20 px-10">
-      <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-          (click)="filteredItems = todos">Todos</button>
-      <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-          (click)="filteredItems = videosConEquipamiento">Con Equipamiento</button>
-      <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
-          (click)="filteredItems = videosSinEquipamiento">Sin Equipamiento</button>
+
+    <!-- Button to filter all videos -->
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" [class.active]="selectedType === 'Todos'"
+      (click)="filterVideos('Todos')">Todos</button>
+
+    <!-- Button to filter videos with equipment -->
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
+      [class.active]="selectedType === 'ConEquipamiento'" (click)="filterVideos('ConEquipamiento')">Con
+      Equipamiento</button>
+
+    <!-- Button to filter videos without equipment -->
+    <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300"
+      [class.active]="selectedType === 'SinEquipamiento'" (click)="filterVideos('SinEquipamiento')">Sin
+      Equipamiento</button>
   </div>
 
   <!-- Lista de videos filtrados -->
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify">
-      <div class="group relative" *ngFor="let video of filteredItems">
-          <ng-container>
-            <a (click)="selectVideo(video)">
-              <div class="premium-icon" *ngIf="video.exclusive">
-                <img src="../../../assets/img/svg/star.svg" alt="Premium" class="star-icon">
-              </div>
-                  <div class="flex items-center justify-center sm:justify-start">
-                      <img src="../../../assets/img/boxeopareja.png"
-                          class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
-                  </div>
-                  <h3 class="text-lg font-bold sm:mt-4">{{video.title}}</h3>
-              </a>
-          </ng-container>
-          <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
-
-            <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
-
-            <div class="bg-white p-8 rounded-lg z-50">
-
-              <h2 class="text-2xl font-bold mb-4">¡Ups!
-                Contenido Premium</h2>
-
-              <p>Este video es contenido
-                premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
-
-              <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
-                (click)="closeModal()">Cerrar</button>
-
-              <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
-                routerLink="/pricing">Subscribirse</button>
-            </div>
+    <div class="group relative" *ngFor="let video of filteredItems">
+      <ng-container>
+        <a (click)="selectVideo(video)">
+          <div class="premium-icon" *ngIf="video.exclusive">
+            <img src="../../../assets/img/svg/star.svg" alt="Premium" class="star-icon">
           </div>
+          <div class="flex items-center justify-center sm:justify-start">
+            <img src="../../../assets/img/boxeopareja.png"
+              class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+          </div>
+          <h3 class="text-lg font-bold sm:mt-4">{{video.title}}</h3>
+        </a>
+      </ng-container>
+      <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
+
+        <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
+
+        <div class="bg-white p-8 rounded-lg z-50">
+
+          <h2 class="text-2xl font-bold mb-4">¡Ups!
+            Contenido Premium</h2>
+
+          <p>Este video es contenido
+            premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
+
+          <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+            (click)="closeModal()">Cerrar</button>
+
+          <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+            routerLink="/pricing">Subscribirse</button>
+        </div>
       </div>
+    </div>
   </div>
 </div>
