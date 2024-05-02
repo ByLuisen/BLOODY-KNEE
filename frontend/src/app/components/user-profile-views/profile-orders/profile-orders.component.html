@@ -1,0 +1,45 @@
+<h1>MIS PEDIDOS</h1>
+<div class="px-96">
+    <div *ngFor="let order of orders"
+        class="rounded-lg bg-white align-center text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-whitew-px mb-10 grid grid-cols-1 border-4 border-solid border-black ">
+        <div class="border-b-4 border-neutral-100 px-6 py-3 flex justify-between dark:border-white/10">
+            <div>
+                <p class="font-semibold">Fecha de compra:</p>
+                <p>{{ order.fecha_compra }}</p>
+            </div>
+            <div>
+                <p class="font-semibold">Total:</p>
+                <p>{{ order.total }} €</p>
+            </div>
+            <div>
+                <p class="font-semibold">Factura enviada a:</p>
+                <p>{{ order.comprador }}</p>
+            </div>
+            <div>
+                <p class="font-semibold">Número del pedido:</p>
+                <p>56565656156</p>
+            </div>
+        </div>
+        <div class="mx-4 mt-2">
+            <h5 class="mb-2 text-xl font-medium leading-tight">
+                Detalles del pedido
+            </h5>
+            <div>
+                <ul>
+                    <li *ngFor="let product of order.productos"
+                        class="flex justify-between items-center mb-2 border-t-2 border-neutral-100">
+                        <img class="w-12 h-12 mr-2 mt-2" src="{{ product.thumbnail }}" alt="{{ product.nombre }}" />
+                        <span>{{ product.nombre }} - {{ product.precio }} €</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <hr>
+        <!-- <div class="border-t-2 border-neutral-100 px-6 py-3 text-surface/75 dark:border-white/10 dark:text-neutral-300"> -->
+        <!-- {{ calculateDaysAgo(order.fecha_compra) }} -->
+        <!-- 12345 -->
+        <!-- </div> -->
+    </div>
+</div>
