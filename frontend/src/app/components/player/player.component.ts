@@ -32,6 +32,11 @@ export class PlayerComponent implements OnInit {
   modalOpen: boolean = false;
   modalOpen2: boolean = false;
   role!: string;
+  // "Paginate" comentarios
+  comentariosToShow: any[] = [];
+  loading: boolean = false;
+  batchSize: number = 5;
+
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;
   }
@@ -269,10 +274,35 @@ export class PlayerComponent implements OnInit {
   }
 
   comentarios = [
-    { texto: 'Ay amiga que guapo es el entrenador' },
-    { texto: 'Joel te odio mucho nunca te rindas' },
-    { texto: 'Ostia no he visto nada de nada ayuda' },
-    { texto: 'Me ha ayudado mucho a mejorar ahora nadie me para' },
-    { texto: 'El entrenador va un poco fumadete pero se le ve majo' },
+    { texto: 'La energía de hoy fue increíble, gracias a todos!' },
+    // { texto: '¿Soy el único que termina exhausto después de las sesiones?' },
+    // { texto: 'Cada día me siento más fuerte, este entrenamiento es lo máximo' },
+    // { texto: '¿Alguien tiene tips para recuperarse más rápido?' },
+    // { texto: 'El entrenador siempre tiene la mejor actitud, me inspira mucho' },
+    // { texto: 'Nunca pensé que podría hacer tanto en tan poco tiempo' },
+    // { texto: 'Chicos, ¿qué comen antes de entrenar para tener tanta energía?' },
+    // { texto: 'Definitivamente me estoy volviendo adicto a estas clases' },
+    // { texto: '¿El entrenador siempre es tan exigente o solo es conmigo?' },
+    // { texto: '¡Vamos equipo, podemos superar cualquier desafío!' },
+    // { texto: 'Al principio dudaba, pero ahora estoy viendo los resultados' },
+    // { texto: 'Me encantaría que hubiera más clases por semana' },
+    // { texto: 'Es mi tercer mes y sigo sintiendo que cada día es un nuevo reto' },
+    // { texto: '¡Ese ejercicio nuevo de hoy estuvo brutal!' },
+    // { texto: 'Siento que este grupo se ha convertido en mi segunda familia' },
+    // { texto: '¡Qué risa hoy con los errores que cometimos todos!' },
+    // { texto: 'A veces me pregunto cómo el entrenador tiene tanta paciencia' },
+    // { texto: 'Ojalá hubiera empezado a entrenar aquí mucho antes' },
+    // { texto: '¿Alguien más siente que ha mejorado su vida en general?' },
+    // { texto: 'Cada vez que pienso en rendirme, veo al resto y me motivo' },
+    // { texto: 'Después de cada sesión me siento como nuevo, ¡es mágico!' },
+    // { texto: 'El entrenador dijo que estoy progresando bien, ¡estoy tan feliz!' },
+    // { texto: 'Necesito consejos para mantenerme motivado los días difíciles' },
+    // { texto: 'Agradecido por encontrar un grupo tan bueno y un entrenador excepcional' },
+    // { texto: '¿Quién más está sintiendo esos músculos que no sabía que tenía?' },
+    // { texto: 'Creo que todos deberíamos salir a celebrar nuestros progresos' },
+    // { texto: 'El entrenador me ayudó a superar un bloqueo mental, increíble' },
+    // { texto: '¡Hoy me superé a mí mismo y logré un nuevo récord personal!' },
+    // { texto: 'A veces me cuesta seguir el ritmo, pero no me voy a rendir' },
+    // { texto: '¡La clase de hoy fue fuego puro, quemé tantas calorías!' }
   ];
 }

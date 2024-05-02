@@ -8,7 +8,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { MenuMovileComponent } from './components/menus/menu-movile/menu-movile.component';
 import { DietsComponent } from './components/diets/diets.component';
 import { MenuComponent } from './components/menus/menu/menu.component';
-import { provideAuth0 } from '@auth0/auth0-angular';
+import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ThaivideosComponent } from './components/thaivideos/thaivideos.component';
 import { PerfileMenuComponent } from './components/menus/profile-menu/profile-menu.component';
@@ -17,17 +17,19 @@ import { FavouriteVideosComponent } from './components/user-profile-views/favour
 import { LikedVideosComponent} from './components/user-profile-views/liked-videos/liked-videos.component';
 import { ProfileDietsComponent } from './components/user-profile-views/profile-diets/profile-diets.component';
 import { ProfileOrdersComponent } from './components/user-profile-views/profile-orders/profile-orders.component';
-import { DetalleMerchComponent } from './components/detalle-merch/detalle-merch.component';
 import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
 import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
 import { PlayerComponent } from './components/player/player.component';
 import { MerchandisingComponent } from './components/merchandising/merchandising.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PricingComponent } from './components/pricing/pricing.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { environment } from 'src/environments/environment.development';
+import { SearchbarComponent } from './components/searchbar/searchbar.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { environment } from 'src/environments/environment.development';
     FavouriteVideosComponent,
     ProfileDietsComponent,
     ProfileOrdersComponent,
-    DetalleMerchComponent
+    SearchbarComponent,
+    ProductDetailComponent,
+    CheckoutComponent
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, HttpClientModule],
 
@@ -64,6 +68,7 @@ import { environment } from 'src/environments/environment.development';
       },
     }),
     ProfileMenuService,
+    provideHttpClient(withInterceptors([authHttpInterceptorFn])),
 
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],

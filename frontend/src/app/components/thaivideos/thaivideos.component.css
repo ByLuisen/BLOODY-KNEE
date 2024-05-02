@@ -68,3 +68,9 @@ h2 {
 .video-container:hover .premium-icon {
   transform: scale(1.5); /* Amplía el icono de estrella al 150% cuando se pasa el ratón sobre el contenedor del video */
 }
+
+/* Mantener el efecto hover cuando el botón está activo */
+button.active {
+  background-color: #cbd5e0;
+  color: #1a202c;
+}

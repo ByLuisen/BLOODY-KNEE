@@ -8,16 +8,17 @@ use App\Models\Modality;
 
 class ModalitySeeder extends Seeder
 {
-    public function run(): void{
-    
+    public function run(): void
+    {
+
         Modality::create([
-           'name'=>'boxeo'
+            'name' => 'boxeo'
         ]);
         Modality::create([
-            'name'=>'thai'
-         ]);
+            'name' => 'thai'
+        ]);
         Modality::create([
-            'name'=>'fitness'
-         ]);
+            'name' => 'fitness'
+        ]);
     }
-}    
+}

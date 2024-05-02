@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
+import { loadStripe } from '@stripe/stripe-js';
 import { map } from 'rxjs';
 import { Quote } from 'src/app/models/Quote';
 import { HttpService } from 'src/app/services/http.service';
@@ -28,7 +29,7 @@ export class PricingComponent {
       this.loged = false;
     }
     this.http.getQuotes().subscribe((quotes: any[]) => {
-      this.quotes = quotes; 
+      this.quotes = quotes;
       this.arrayAdvantages = this.quotes.map((quote) =>
         quote.advantages.split(';')
       );

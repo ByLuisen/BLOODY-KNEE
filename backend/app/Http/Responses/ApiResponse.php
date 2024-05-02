@@ -62,6 +62,4 @@ class ApiResponse
             'message' => $message,
         ], $status);
     }
-
-    // Puedes agregar más métodos según tus necesidades.
 }

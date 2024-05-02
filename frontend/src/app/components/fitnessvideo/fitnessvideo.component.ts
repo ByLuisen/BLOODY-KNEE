@@ -15,8 +15,8 @@ export class FitnessvideoComponent implements OnInit {
   filteredItems: Video[] = [];
   selectedType: string = 'Todos';
   modalOpen: boolean = false;
-  role!: string;
-  constructor(private http: HttpService, private router: Router) {}
+  role: string = "basic";
+  constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {
     // this.http.getRole().subscribe((data) => {
@@ -55,6 +55,28 @@ export class FitnessvideoComponent implements OnInit {
     } else {
       this.router.navigate(['/player', video.id]);
       // Navega al componente de reproductor si el usuario tiene permiso para ver el video
+    }
+  }
+  // Método que se ejecutará cuando cambien los elementos filtrados
+  onFilteredItemsChanged(filteredItems: Video[]) {
+    this.filteredItems = filteredItems;
+  }
+
+  filterVideos(type: string) {
+    this.selectedType = type;
+
+    switch (type) {
+      case 'Todos':
+        this.filteredItems = this.todos;
+        break;
+      case 'ConEquipamiento':
+        this.filteredItems = this.videosConEquipamiento;
+        break;
+      case 'SinEquipamiento':
+        this.filteredItems = this.videosSinEquipamiento;
+        break;
+      default:
+        this.filteredItems = this.todos;
     }
   }
 }
