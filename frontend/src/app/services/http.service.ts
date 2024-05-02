@@ -25,9 +25,9 @@ export class HttpService {
     const url = 'https://dev-yyzuj3kafug18e38.eu.auth0.com/oauth/token';
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = {
-      client_id: 'QOiV3m6kyD74336XSGU49LOcfiktUp2T',
+      client_id: 'CpniTzVOuifOIXQwMfoZ5MpN86tSUEv7',
       client_secret:
-        'S1ZrkhXmapN90vbTN08qTWoTm7XZVWV76QIOb75hdZDCBvIOSaUJSPQ7axfjLEdj',
+        '8xk0AOKxyaRP2vf9WSy36VYJRYq2Xg-MkJZUF2xPVNsNm1UIDK85W258VmHYbVP-',
       audience: 'https://dev-yyzuj3kafug18e38.eu.auth0.com/api/v2/',
       grant_type: 'client_credentials',
     };
@@ -40,11 +40,10 @@ export class HttpService {
       this.auth.user$.subscribe((user) => {
         // Verifica si user?.sub tiene un valor antes de continuar
         if (user?.sub) {
-          this.getAccessToken().subscribe((data) => {
             const url = `${environment.audience}users/${user?.sub}/roles`;
             const headers = new HttpHeaders({
               Accept: 'application/json',
-              Authorization: `Bearer ${data.access_token}`,
+              Authorization: `Bearer ${environment.develpmentAccessToken}`,
             });
 
             this._http.get<any>(url, { headers: headers }).subscribe(
@@ -56,7 +55,6 @@ export class HttpService {
                 observer.error(error);
               }
             );
-          });
         } else {
           observer.error(
             'No se pudo obtener el rol: el usuario no está autenticado'

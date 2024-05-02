@@ -6,6 +6,8 @@ use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OpenAIController;
+use App\Http\Controllers\StripeController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,9 +19,17 @@ use App\Http\Controllers\OpenAIController;
 |
 */
 
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/private', function () {
+    return response()->json([
+        'message' => 'Your token is valid; you are authorized.',
+    ]);
+})->middleware('auth:api');
 
 // Grupo de rutas para controladores con middleware de autenticacion y namespace de controladores
 Route::group(['middleware' => 'api'], function () {
@@ -31,7 +41,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
 });
 
+Route::post('/checkout', [StripeController::class, 'checkout']);
+
+
 Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
-
-
-

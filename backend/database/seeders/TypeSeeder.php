@@ -8,20 +8,20 @@ use App\Models\Type;
 
 class TypeSeeder extends Seeder
 {
-    public function run(): void{
-    
+    public function run(): void
+    {
+
         Type::create([
-           'name'=>'con pareja'
+            'name' => 'con pareja'
         ]);
         Type::create([
-            'name'=>'con saco'
-         ]);
-         Type::create([
-            'name'=>'sin equipamiento'
-         ]);
-         Type::create([
-            'name'=>'con equipamiento'
-         ]);
-
+            'name' => 'con saco'
+        ]);
+        Type::create([
+            'name' => 'sin equipamiento'
+        ]);
+        Type::create([
+            'name' => 'con equipamiento'
+        ]);
     }
-}    
+}

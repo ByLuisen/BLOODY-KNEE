@@ -13,6 +13,7 @@ import { MerchandisingComponent } from './components/merchandising/merchandising
 // import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { PricingComponent } from './components/pricing/pricing.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'pricing', component: PricingComponent },
   { path: 'merchandising', component: MerchandisingComponent },
   { path: 'product/:productId', component: ProductDetailComponent },
+  { path: 'checkout', component: CheckoutComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];
@@ -34,6 +36,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-
-export class AppRoutingModule { }
-
+export class AppRoutingModule {}

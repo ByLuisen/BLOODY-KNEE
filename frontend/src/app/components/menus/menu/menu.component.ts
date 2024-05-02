@@ -12,6 +12,6 @@ export class MenuComponent {
   constructor(
     @Inject(DOCUMENT) public document: Document,
     public auth: AuthService,
-  ) {
-  }
+    private http: HttpService
+  ) {}
 }
