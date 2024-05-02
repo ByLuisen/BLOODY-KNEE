@@ -43,6 +43,7 @@
             descriptionVisible ? 'Mostrar menos' : 'Mostrar más' }}</button></h2>
         <p class="text-justify pb-2 pl-2 sm:pt-2 pr-2" *ngIf="descriptionVisible">{{video.description}}</p>
       </div>
+      <!-- Comments section -->
       <div *ngIf="comentarios.length >= 1; else noComments">
         <div class="sm:block w-px pt-4">
           <div class="flex">

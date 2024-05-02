@@ -23,7 +23,6 @@ export class MerchandisingComponent implements OnInit {
   constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {
-
     this.getProductos();
     console.log(this.productos);
   }
@@ -45,8 +44,6 @@ export class MerchandisingComponent implements OnInit {
 
         // Asignar el valor inicial del rango de precios
         this.precioMaximo = precioMaximo;
-        console.log("Precio mínimo:", precioMinimo);
-        console.log("Precio máximo:", precioMaximo);
       },
       (error) => {
         console.error("Error al obtener los productos:", error);
