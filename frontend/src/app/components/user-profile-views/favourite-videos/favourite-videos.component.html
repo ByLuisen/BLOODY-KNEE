@@ -1,0 +1,22 @@
+<h1>MIS VIDEOS FAVORITOS</h1>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 justify-center mx-20 md:mx-20 mt-5 mb-10">
+  <div *ngFor="let video of my_videos"
+    class="card bg-white-100 border border-red-600 rounded-lg shadow-md hover:transform hover:scale-105 transition duration-300">
+    <img class="w-full" [src]="video.thumbnail" alt="Miniatura de Video">
+    <div class="p-4">
+      <h2 class="text-lg font-bold mb-2 flex">{{ video.title }}</h2>
+      <div class="flex justify-between">
+        <p class="text-sm mr-2"><b> Autor:</b> </p>
+        <p class="text-sm text-gray-500"> {{ video.author }}</p>
+      </div>
+      <div class="flex justify-between">
+        <p class="text-sm mr-2"><b>Categoría:</b></p>
+        <p class="text-sm text-gray-500">{{ video.category }}</p>
+      </div>
+      <div class="flex justify-between">
+        <p class="text-sm mr-2"><b>Visualizaciones:</b></p>
+        <p class="text-sm text-gray-500">{{ video.views }}</p>
+      </div>
+    </div>
+  </div>
+</div>
