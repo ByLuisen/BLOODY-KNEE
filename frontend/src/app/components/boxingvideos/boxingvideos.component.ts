@@ -22,7 +22,8 @@ export class BoxingvideosComponent implements OnInit {
   selectedType: string = 'Todos';
   // Flag to control modal visibility
   modalOpen: boolean = false;
-  role: string = "basic";
+  role: string = "admin";
+
   constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {

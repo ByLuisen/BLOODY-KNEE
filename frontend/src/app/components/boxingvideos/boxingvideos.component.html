@@ -4,6 +4,11 @@
   <!-- Buscador de videos -->
   <app-searchbar [todos]="todos" (filteredItemsChanged)="onFilteredItemsChanged($event)"></app-searchbar>
 
+  <div *ngIf="role == 'admin'" class="flex flex-col">
+    <button>ADMIN TOOLS</button>
+    <img src="../../../assets/img/svg/configAdmin.svg" alt="configAdmin.svg">
+  </div>
+
   <!-- Filter buttons -->
   <div class="grid grid-cols-2 gap-4 sm:grid-cols-5 sm:gap-4 sm:px-96 pb-20 px-10">
 
