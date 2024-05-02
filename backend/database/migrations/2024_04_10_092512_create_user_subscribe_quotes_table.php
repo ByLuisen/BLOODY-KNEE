@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('user_subscribe_quotes', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('quote_id');
+            $table->date('start_date')->default(now()); // Establece la fecha actual como valor predeterminado
+            $table->date('expiration_date')->default(now()->addMonth()); // Calcula la fecha de vencimiento como un mes después de la fecha actual
+            $table->enum('status', ['Active', 'Expirated', 'Cancelled']);
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('quote_id')->references('id')->on('quotes')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('user_subscribe_quotes');
+    }
+};
