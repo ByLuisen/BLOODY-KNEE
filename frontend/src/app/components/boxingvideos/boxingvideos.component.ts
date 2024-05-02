@@ -16,7 +16,10 @@ export class BoxingvideosComponent implements OnInit {
   videosPareja: Video[] = [];
   videosConEquipamiento: Video[] = [];
   videosSinEquipamiento: Video[] = [];
-  // Array to hold filtered videos
+
+  // En el constructor o donde sea más adecuado inicializar la variable
+  adminModeActivated: boolean = false;
+
   filteredItems: Video[] = [];
   // Default selected type
   selectedType: string = 'Todos';
@@ -27,10 +30,10 @@ export class BoxingvideosComponent implements OnInit {
   constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {
-     // this.http.getRole().subscribe((data) => {
-     //   this.role = data[0].name;
-      //   console.log(this.role)
-     // })
+    // this.http.getRole().subscribe((data) => {
+    //   this.role = data[0].name;
+    //   console.log(this.role)
+    // })
     this.http.getVideosModality(1, 1).subscribe(videos => {
       this.videosSaco = videos;
       this.todos = this.todos.concat(videos);
@@ -56,7 +59,10 @@ export class BoxingvideosComponent implements OnInit {
     });
 
   }
-
+  // Método para activar o desactivar el modo admin
+  toggleAdminMode() {
+    this.adminModeActivated = !this.adminModeActivated;
+  }
   // Open modal method
   openModal() {
     this.modalOpen = true;
@@ -85,6 +91,17 @@ export class BoxingvideosComponent implements OnInit {
   onFilteredItemsChanged(filteredItems: Video[]) {
     this.filteredItems = filteredItems;
   }
+
+  editVideo(video: Video) {
+    // Aquí implementa la lógica para editar el video
+    console.log("Editando video:", video);
+  }
+
+  deleteVideo(video: Video) {
+    // Aquí implementa la lógica para eliminar el video
+    console.log("Eliminando video:", video);
+  }
+
 
   filterVideos(type: string) {
     this.selectedType = type;
