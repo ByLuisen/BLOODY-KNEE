@@ -43,7 +43,7 @@ export class HttpService {
             const url = `${environment.audience}users/${user?.sub}/roles`;
             const headers = new HttpHeaders({
               Accept: 'application/json',
-              Authorization: `Bearer ${environment.develpmentAccessToken}`,
+              // Authorization: `Bearer ${environment.developmentAccessToken}`,
             });
 
             this._http.get<any>(url, { headers: headers }).subscribe(
