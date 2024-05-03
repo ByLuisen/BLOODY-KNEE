@@ -83,7 +83,7 @@ export class HttpService {
 
   getVideoById(id: number): Observable<Video> {
     return new Observable<Video>((observer) => {
-      this._http.get<{ data: Video}>(`${this.url}/getvideobyid/${id}`)
+      this._http.get<{ data: Video }>(`${this.url}/getvideobyid/${id}`)
         .subscribe(
           (response) => {
             observer.next(response.data);

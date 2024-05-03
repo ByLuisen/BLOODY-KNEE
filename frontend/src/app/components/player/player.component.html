@@ -5,12 +5,11 @@
     <div class="sm:pr-6">
       <div class="text-center">
         <div class="mt-2">
-          <!-- <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(video.url)" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
-          <div style="padding:0 0 0 0;position:relative;">
-            <iframe src="https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" 
-            frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" title="FIGHT 0">
-          </iframe>
-        </div>
+          <div style="position:relative;">
+            <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(video.url)" frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write" title="FIGHT 0">
+            </iframe>
+          </div>
         </div>
       </div>
       <div class="video_section text-white w-px">

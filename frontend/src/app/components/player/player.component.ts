@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ElementRef, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
-import { DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./player.component.css'],
 })
 export class PlayerComponent implements OnInit {
-constructor(private elementRef: ElementRef,private http: HttpService,public sanitizer: DomSanitizer,private route: ActivatedRoute,private cdr: ChangeDetectorRef,private router: Router,public auth: AuthService) { }
+  constructor(private elementRef: ElementRef, private http: HttpService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private cdr: ChangeDetectorRef, private router: Router, public auth: AuthService) { }
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
   videoId!: number;
@@ -26,7 +26,6 @@ constructor(private elementRef: ElementRef,private http: HttpService,public sani
   loading: boolean = false;
   batchSize: number = 5;
 
-
   ngOnInit() {
     this.loadButtons();
     this.loadInitialComments();
@@ -36,6 +35,8 @@ constructor(private elementRef: ElementRef,private http: HttpService,public sani
       this.getDestacados();
     });
   }
+
+
 
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;
