@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ElementRef, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer} from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,34 +12,20 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./player.component.css'],
 })
 export class PlayerComponent implements OnInit {
-  constructor(
-    private elementRef: ElementRef,
-    private http: HttpService,
-    public sanitizer: DomSanitizer,
-    private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef,
-    private router: Router,
-    public auth: AuthService
-  ) {}
+constructor(private elementRef: ElementRef,private http: HttpService,public sanitizer: DomSanitizer,private route: ActivatedRoute,private cdr: ChangeDetectorRef,private router: Router,public auth: AuthService) { }
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
   videoId!: number;
-  selectedVideo: Video | null = null;
-  safeUrl: SafeResourceUrl | null = null;
-  videos: Video[] = [];
+  video!: Video;
   destacados: Video[] = [];
   videosAleatorios: Video[] = [];
   modalOpen: boolean = false;
   modalOpen2: boolean = false;
   role!: string;
-  // "Paginate" comentarios
   comentariosToShow: any[] = [];
   loading: boolean = false;
   batchSize: number = 5;
 
-  toggleDescription() {
-    this.descriptionVisible = !this.descriptionVisible;
-  }
 
   ngOnInit() {
     this.loadButtons();
@@ -49,6 +35,10 @@ export class PlayerComponent implements OnInit {
       this.getVideo();
       this.getDestacados();
     });
+  }
+
+  toggleDescription() {
+    this.descriptionVisible = !this.descriptionVisible;
   }
 
   loadInitialComments() {
@@ -74,8 +64,6 @@ export class PlayerComponent implements OnInit {
       this.loading = false;
     }, 1000);
   }
-
-  saveVideo(videoId: number): void {}
 
   loadButtons() {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
@@ -135,9 +123,9 @@ export class PlayerComponent implements OnInit {
 
   getVideo(): void {
     this.http.getVideoById(this.videoId).subscribe(
-      (videos) => {
-        console.log('Video obtenido:', videos);
-        this.videos = videos;
+      (video) => {
+        console.log('Video obtenido:', video);
+        this.video = video;
         this.cdr.detectChanges();
       },
       (error) => {
@@ -162,12 +150,6 @@ export class PlayerComponent implements OnInit {
   getRandomVideos(array: Video[], count: number): Video[] {
     const shuffled = array.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
-  }
-
-  selectVideo(video: Video): void {
-    this.selectedVideo = video;
-    const url = this.selectedVideo ? this.selectedVideo.url : '';
-    this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   setupButtons() {

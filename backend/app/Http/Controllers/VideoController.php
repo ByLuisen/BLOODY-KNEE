@@ -40,17 +40,23 @@ class VideoController extends Controller
         }
     }
     public function videoById($id)
-    {
+{
+    try {
+        // Utiliza first() para obtener solo el primer objeto
+        $video = Video::where('id', $id)->first();
 
-        try {
-            $video = Video::where('id', $id)->get();
-
-            return ApiResponse::success(VideoResource::collection($video), 'Video único por id obtenido correctamente');
-        } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
-            return ApiResponse::error($e->getMessage());
+        // Verifica si se encontró un video
+        if ($video) {
+            return ApiResponse::success(new VideoResource($video), 'Video único por id obtenido correctamente');
+        } else {
+            return ApiResponse::error('No se encontró ningún video con el ID proporcionado');
         }
+    } catch (\Exception $e) {
+        // Loguear el error o realizar otras acciones según tus necesidades
+        return ApiResponse::error($e->getMessage());
     }
+}
+
 
     public function updateLikes(Request $request, $id)
     {

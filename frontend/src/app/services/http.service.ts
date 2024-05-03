@@ -81,9 +81,9 @@ export class HttpService {
       .pipe(map((response) => response.data));
   }
 
-  getVideoById(id: number): Observable<Video[]> {
-    return new Observable<Video[]>((observer) => {
-      this._http.get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
+  getVideoById(id: number): Observable<Video> {
+    return new Observable<Video>((observer) => {
+      this._http.get<{ data: Video}>(`${this.url}/getvideobyid/${id}`)
         .subscribe(
           (response) => {
             observer.next(response.data);
