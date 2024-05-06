@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('video_id');
-            $table->date('date')->default(now()); // Establece la fecha actual como valor predeterminado
+            $table->date('date'); // Establece la fecha actual como valor predeterminado
             $table->string('comment');
             $table->timestamps();
 

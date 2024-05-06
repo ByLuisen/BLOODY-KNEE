@@ -14,20 +14,51 @@ class CommentSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create();
+        Comment::create([
+            'user_id' => '1',
+            'video_id' => '2',
+            'date'  => now(),
+            'comment' => 'Buen video crack sigue así!',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
+        Comment::create([
+            'user_id' => '1',
+            'video_id' => '3',
+            'date'  => now(),
+            'comment' => 'Buen video crack sigue así!',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        // Generar un número aleatorio de comentarios
-        $numComments = rand(5, 10);
+        Comment::create([
+            'user_id' => '1',
+            'video_id' => '4',
+            'date'  => now(),
+            'comment' => 'Buen video crack sigue así!',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        for ($i = 0; $i < $numComments; $i++) {
-            // Crear un comentario aleatorio
-            Comment::create([
-                'user_id' => $faker->numberBetween(1, 10), // Cambia el rango según tus usuarios
-                'video_id' => $faker->numberBetween(1, 10), // Cambia el rango según tus videos
-                'comment' => $faker->sentence(),
-                'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
-                'updated_at' => $faker->dateTimeBetween('-1 year', 'now'),
-            ]);
-        }
+        Comment::create([
+            'user_id' => '1',
+            'video_id' => '5',
+            'date'  => now(),
+            'comment' => 'Buen video crack sigue así!',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        Comment::create([
+            'user_id' => '1',
+            'video_id' => '6',
+            'date'  => now(),
+            'comment' => 'Buen video crack sigue así!',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
     }
+   
 }
