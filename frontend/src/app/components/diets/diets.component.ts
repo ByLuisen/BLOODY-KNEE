@@ -15,7 +15,9 @@ export class DietsComponent implements OnInit {
   showChatbot: boolean = false;
   diets: Diet[] = [];
   modalOpen: boolean = false;
-  modalStates: { [key: string]: boolean } = {}; // Objeto para mantener el estado del modal para cada imagen
+  modalStates: { [key: string]: boolean } = {};
+  errorMessage: string | null = null;
+
   constructor(private http: HttpService) { }
 
   ngOnInit(): void {
@@ -50,6 +52,10 @@ export class DietsComponent implements OnInit {
 
   calculate() {
     if (this.height && this.weight) {
+      if (isNaN(this.height) || isNaN(this.weight)) { // Verifica si la entrada es un número
+        this.errorMessage = "Por favor, introduce números válidos para la altura y el peso.";
+        return; // Sale de la función si hay un error
+      }
       const heightInMeters = this.height / 100;
       this.result = this.weight / (heightInMeters * heightInMeters);
 
@@ -63,11 +69,13 @@ export class DietsComponent implements OnInit {
       } else {
         this.flashingIndex = 3;
       }
-
+      this.errorMessage = "";
       // Lógica para detener el parpadeo después de unos segundos
       setTimeout(() => {
         this.flashingIndex = null;
       }, 2500);
+    }else {
+      this.errorMessage = "Por favor, introduce valores para la altura y el peso.";
     }
   }
 }
