@@ -44,11 +44,24 @@
                   </svg>
                 </div>
               </div>
+            
 
               <div class="pl-4 ml-20 w-18 h-7">
                 <button class="bg-white hover:bg-gray-400 text-black font-bold px-4 w-18 h-7 rounded-lg">
                   Guardar
                 </button>
+              </div>
+            </div>
+            <div [ngClass]="{'': modalOpen2, 'hidden': !modalOpen2}">
+              <div class="bg-black">
+                <p class="text-2xl font-bold mb-4">Te gusta este video?</p>
+          
+                <p class="">Inicia sesión para que tu opinion cuente</p>
+          
+                <button class="mt-4 bg-slate-900 text-white px-4 py-2 rounded mx-1" (click)="likeCloseModal()">Cerrar</button>
+          
+                <button class="mt-4 bg-slate-900 text-white px-4 py-2 rounded  mx-1" (click)="auth.loginWithRedirect()">Iniciar
+                  sesión</button>
               </div>
             </div>
           </div>
@@ -154,19 +167,3 @@
     </div>
   </div>
 
-  <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen2, 'hidden': !modalOpen2}">
-
-    <div class="absolute inset-0"></div>
-
-    <div class="bg-white p-8 rounded-lg z-50">
-
-      <p class="text-2xl font-bold mb-4">Te gusta este video?</p>
-
-      <p>Inicia sesión para que tu opinion cuente</p>
-
-      <button class="mt-4 bg-slate-900 text-white px-4 py-2 rounded mx-1" (click)="likeCloseModal()">Cerrar</button>
-
-      <button class="mt-4 bg-slate-900 text-white px-4 py-2 rounded  mx-1" (click)="auth.loginWithRedirect()">Iniciar
-        sesión</button>
-    </div>
-  </div>
