@@ -46,67 +46,29 @@
   </div>
   <div class="mt-10">
     <h1 class="text-center">TI<span class="text-red-600">POS</span></h1>
-    <div class="TIPES text-justify">
+    <div class="TIPES text-justify mb-5" *ngFor="let diet of diets">
       <div class="border-b-4">
-        <h2>DIETAS PARA EL SOBREPESO</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum lectus sit
-          amet
-          libero dictum,
-          quis semper lectus consectetur.
-          Nulla vel elementum mauris, eget ultrices tortor. Morbi quis mi quis mi hendrerit placerat et in
-          tortor.
-          Vestibulum ac tristique metus. </p>
+        <h2>{{diet.title}}</h2>
+        <p>{{diet.description}}</p>
         <div class="text-end mb-8">
-          <button class="bg-white text-red-600 rounded-lg  px-4 py-2 hover:bg-red-500">Leer más</button>
+          <button class="bg-white text-red-600 rounded-lg  px-4 py-2 hover:bg-red-500" (click)="openModal(diet.content)" >Leer
+            más</button>
+          <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalStates[diet.content], 'hidden': !modalStates[diet.content]}">
+            <div class="absolute inset-0 backdrop-blur-xl"></div>
+            <div class="bg-white p-2 rounded-lg z-50">
+              <img [src]="'../../../assets/img/img_dietas/' + diet.content" style="width: 600px; height: 700px;">
+              <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded mx-1" (click)="closeModal(diet.content)">Cerrar</button>
+            </div>
+          </div> 
         </div>
       </div>
-
-      <div class="border-b-4 mt-4">
-        <h2>DIETAS PARA EL SOBREPESO</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum lectus sit
-          amet
-          libero dictum,
-          quis semper lectus consectetur.
-          Nulla vel elementum mauris, eget ultrices tortor. Morbi quis mi quis mi hendrerit placerat et in
-          tortor.
-          Vestibulum ac tristique metus. </p>
-        <div class="text-end mb-8">
-          <button class="bg-white text-red-600 rounded-lg  px-4 py-2 hover:bg-red-500">Leer más</button>
-        </div>
-      </div>
-
-      <div class="border-b-4 mt-4">
-        <h2>DIETAS PARA EL SOBREPESO</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum lectus sit
-          amet
-          libero dictum,
-          quis semper lectus consectetur.
-          Nulla vel elementum mauris, eget ultrices tortor. Morbi quis mi quis mi hendrerit placerat et in
-          tortor.
-          Vestibulum ac tristique metus. </p>
-        <div class="text-end mb-8">
-          <button class="bg-white text-red-600 rounded-lg  px-4 py-2 hover:bg-red-500">Leer más</button>
-        </div>
-      </div>
-
-      <div class="mt-4">
-        <h2>DIETAS PARA EL SOBREPESO</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum lectus sit
-          amet
-          libero dictum,
-          quis semper lectus consectetur.
-          Nulla vel elementum mauris, eget ultrices tortor. Morbi quis mi quis mi hendrerit placerat et in
-          tortor.
-          Vestibulum ac tristique metus. </p>
-        <div class="text-end mb-8">
-          <button class="bg-white text-red-600 rounded-lg  px-4 py-2 hover:bg-red-500">Leer más</button>
-        </div>
-      </div>
-    </div>
+    </div> 
   </div>
+  
   <div>
-    <button (click)="toggleChatbot()" class="chatbot-toggle-button transition-transform duration-300 transform hover:scale-110">
-      <img src="../../../assets/img/bot4.png"alt="Chatbot Toggle">
+    <button (click)="toggleChatbot()"
+      class="chatbot-toggle-button transition-transform duration-300 transform hover:scale-110">
+      <img src="../../../assets/img/bot4.png" alt="Chatbot Toggle">
     </button>
     <app-chatbot *ngIf="showChatbot"></app-chatbot>
   </div>

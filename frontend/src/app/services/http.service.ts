@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
-
+import { Diet } from '../models/Diet';
 import { environment } from 'src/environments/environment.development';
 import { AuthService } from '@auth0/auth0-angular';
 import { Role } from '../models/Role';
@@ -158,6 +158,14 @@ export class HttpService {
     return this._http
       .get<{ data: Product[] }>(`${this.url}/getproductbyid/${id}`)
       .pipe(map((response) => response.data));
+  }
+
+
+  // Obtener todos los videos
+  getDiets(): Observable<Diet[]> {
+    return this._http
+      .get<any>(`${this.url}/diets`)
+      .pipe(map((response) => response.data as Diet[]));
   }
 
 }
