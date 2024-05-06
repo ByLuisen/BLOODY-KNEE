@@ -35,8 +35,8 @@ h1 {
 }
 .chatbot-toggle-button {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 1.75rem;
+  right: 2.5rem;
   background-color: rgb(204, 0, 0);
   border: none;
   padding: 10px;

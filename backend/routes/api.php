@@ -46,6 +46,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
 });
 
-Route::post('/checkout', [StripeController::class, 'checkout']);
+Route::post('/payment', [StripeController::class, 'payment']);
+Route::post('/subscription', [StripeController::class, 'subscription']);
 
 Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);

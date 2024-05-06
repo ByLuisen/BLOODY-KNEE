@@ -26,10 +26,11 @@
             ],
             "styles": [
               "src/custom-theme.scss",
-              "src/styles.css",
-              "node_modules/video.js/dist/video-js.css"
+              "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/@popperjs/core/dist/umd/popper.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -76,7 +77,7 @@
             }
           },
           "defaultConfiguration": "development"
-        },        
+        },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
@@ -96,8 +97,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css",
-              "node_modules/video.js/dist/video-js.css"
+              "src/styles.css"
             ],
             "scripts": []
           }

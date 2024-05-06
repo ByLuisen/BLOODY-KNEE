@@ -32,15 +32,12 @@
       class="w-auto h-auto justify-center hover:transform hover:scale-105 cursor-pointer"
       (click)="verDetallesProducto(producto.id)">
 
-      <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.PNG'"
+      <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.webp'"
         class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto">
       <p>{{producto.name}}</p>
       <p class="text-red-600">€{{producto.price}}</p>
     </div>
   </div>
-  <div class="absolute bottom-4 right-4">
-    <img src="../../../assets/img/compras3.png"
-      class="w-14 h-14 transition-transform duration-300 transform hover:scale-110">
-  </div>
 
+  <app-cart></app-cart>
 </div>

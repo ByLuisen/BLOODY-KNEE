@@ -9,6 +9,7 @@ export class Product {
   private _url_img1: string;
   private _url_img2: string;
   private _url_img3: string;
+  private _quantity: number;
 
   constructor(
     id: number = 0,
@@ -21,6 +22,7 @@ export class Product {
     url_img1: string = '',
     url_img2: string = '',
     url_img3: string = '',
+    quantity: number = 0
 
   ) {
     this._id = id;
@@ -33,7 +35,7 @@ export class Product {
     this._url_img1 = url_img1;
     this._url_img2 = url_img2;
     this._url_img3 = url_img3;
-
+    this._quantity = quantity;
   }
 
   // Getters
@@ -67,6 +69,9 @@ export class Product {
   get url_img3(): string {
     return this._url_img3;
   }
+  get quantity(): number {
+    return this._quantity;
+  }
 
 
   // Setters
@@ -94,13 +99,14 @@ export class Product {
   set url_img1(url_img1: string) {
     this._url_img1 = url_img1;
   }
-
   set url_img2(url_img2: string) {
     this._url_img2 = url_img2;
   }
-
   set url_img3(url_img3: string) {
     this._url_img3 = url_img3;
+  }
+  set quantity(quantity: number) {
+    this._quantity = quantity;
   }
 
 

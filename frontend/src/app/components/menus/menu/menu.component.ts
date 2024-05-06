@@ -13,5 +13,6 @@ export class MenuComponent {
     @Inject(DOCUMENT) public document: Document,
     public auth: AuthService,
     private http: HttpService
-  ) {}
+  ) {
+  }
 }
