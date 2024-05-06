@@ -190,7 +190,7 @@ class VideoController extends Controller
         }
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         try {
             // Buscar el video por su ID
