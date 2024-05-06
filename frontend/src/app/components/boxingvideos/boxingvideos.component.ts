@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
 import { Router } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-boxingvideos',
@@ -16,6 +17,7 @@ export class BoxingvideosComponent implements OnInit {
   videosPareja: Video[] = [];
   videosConEquipamiento: Video[] = [];
   videosSinEquipamiento: Video[] = [];
+  editingVideo: Video | null = null;
 
   // Admin mode variable
   adminModeActivated: boolean = false;
@@ -27,7 +29,16 @@ export class BoxingvideosComponent implements OnInit {
   modalOpen: boolean = false;
   role: string = "admin";
 
-  constructor(private http: HttpService, private router: Router) { }
+  // Edit form
+  editForm: FormGroup | undefined;
+
+  constructor(private http: HttpService, private router: Router) {
+    this.editForm = new FormGroup({
+      title: new FormControl('', Validators.required),
+      coach: new FormControl('', Validators.required),
+      description: new FormControl('', Validators.required)
+    });
+  }
 
   ngOnInit(): void {
     // this.http.getRole().subscribe((data) => {
@@ -94,13 +105,52 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   editVideo(video: Video) {
-    // Aquí implementa la lógica para editar el video
+    // Asignar el video que se va a editar a la propiedad editingVideo
+    this.editingVideo = video;
     console.log("Editando video:", video);
+
+    // Establecer los valores del formulario de edición con los datos del video
+    this.editForm!.setValue({
+      title: video.title,
+      coach: video.coach,
+      description: video.description
+    });
+  }
+
+  closeEditModal() {
+    this.editingVideo = null;
+  }
+
+  // Método para enviar el formulario de edición
+  submitEditForm() {
+    if (this.editingVideo) {
+      this.http.editVideo(this.editingVideo).subscribe(
+        (updatedVideo) => {
+          console.log('Video edited successfully:', updatedVideo);
+          // Después de guardar los cambios, cierra el modal
+          // this.closeEditModal();
+        },
+        (error) => {
+          console.error('Error editing video:', error);
+        }
+      );
+    }
   }
 
   deleteVideo(video: Video) {
     // Aquí implementa la lógica para eliminar el video
     console.log("Eliminando video:", video);
+
+    this.http.deleteVideo(video.id).subscribe(
+      () => {
+        console.log('Video eliminado exitosamente');
+        // Eliminar el video de la lista local si es necesario
+        this.filteredItems = this.filteredItems.filter(item => item.id !== video.id);
+      },
+      (error) => {
+        console.error('Error deleting video:', error)
+      }
+    )
   }
 
 

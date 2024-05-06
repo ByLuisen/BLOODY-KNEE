@@ -30,6 +30,8 @@ import { environment } from 'src/environments/environment.development';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -54,9 +56,9 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
     ProfileOrdersComponent,
     SearchbarComponent,
     ProductDetailComponent,
-    CheckoutComponent
+    CheckoutComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, HttpClientModule,ReactiveFormsModule,CommonModule],
 
 
   providers: [
