@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->text('advantages');
             $table->enum('type', ['Basic', 'Standard', 'Premium']);
+            $table->string('price_id')->nullable();
             $table->timestamps();
         });
     }

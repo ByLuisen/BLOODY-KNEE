@@ -23,13 +23,15 @@ class QuoteSeeder extends Seeder
             'price' => 5,
             'description' => 'Para los usuarios que quieren difrutar la experiencia de todo lo que ofrece nuestra web.',
             'advantages' => 'Lo misimo que el plan Basic pero más.;Acceso a videos exclusivojs.;Acceso a dietas exclusivas.',
-            'type' => 'Standard'
+            'type' => 'Standard',
+            'price_id' => 'price_1P66JXByhCj4S0lhBWZF1Xe0'
         ]);
         Quote::create([
             'price' => 10,
             'description' => 'Para quien quiera disfrutar de una experiencia más personalizada.',
             'advantages' => 'Lo misimo que el plan Standard pero más.;Asistencia personalizada con dietistas.;Acceso a nuestro chatbot.',
-            'type' => 'Premium'
+            'type' => 'Premium',
+            'price_id' => 'price_1P66ZDByhCj4S0lh4TjKxngd'
         ]);
     }
 }

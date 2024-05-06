@@ -28,7 +28,7 @@
             <span>{{advantages}}</span>
           </li>
         </ul>
-        <a [href]="paymentLinks[i]" *ngIf="quote.type != 'Basic'"
+        <a (click)='subscribeToQuote(quote.price_id)' *ngIf="quote.type != 'Basic'" role="button"
           class="mt-auto text-white bg-primary-500 shadow-lg shadow-primary-500/50 hover:bg-primary-600 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">
           Obtener {{ quote.type }}</a>
         <a *ngIf="(quote.type === 'Basic') && !(auth.user$ | async) as user" role="button"
@@ -42,3 +42,6 @@
     </div>
   </div>
 </section>
+
+<!-- Pantall de carga mientras se redirige al cliente al checkout -->
+<app-loading-screen *ngIf="loading"></app-loading-screen>

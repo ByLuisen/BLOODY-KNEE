@@ -18,7 +18,8 @@ class QuoteResource extends JsonResource
             "price" => $this->price,
             "description" => $this->description,
             "advantages" => $this->advantages,
-            "type" => $this->type
+            "type" => $this->type,
+            "price_id" => $this->price_id
         ];
     }
 }

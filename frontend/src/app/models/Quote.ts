@@ -4,18 +4,21 @@ export class Quote {
   #description: string;
   #advantages: string;
   #type: string;
+  #price_id: string;
   constructor(
     id: number = 0,
     price: number = 0,
     description: string = '',
     advantages: string = '',
     type: string = '',
+    price_id: string = ''
   ) {
     this.#id = id;
     this.#price = price;
     this.#description = description;
     this.#advantages = advantages;
     this.#type = type;
+    this.#price_id = price_id;
   }
 
   //Getters--------------------------
@@ -35,13 +38,15 @@ export class Quote {
   get type(): string {
     return this.#type;
   }
+  get price_id(): string {
+    return this.#price_id;
+  }
   //-----------------------------------
 
   //Setters----------------------------
   set id(id: number) {
     this.#id = id;
   }
-
   set price(price: number) {
     this.#price = price;
   }
@@ -54,6 +59,10 @@ export class Quote {
   set type(type: string) {
     this.#type = type;
   }
+  set price_id(price_id: string) {
+    this.#price_id = price_id;
+  }
+
   //-----------------------------------
 
   toJSON(): any {
@@ -63,6 +72,7 @@ export class Quote {
       description: this.#description,
       advantages: this.#advantages,
       type: this.#type,
+      price_id: this.#price_id
     };
   }
 }

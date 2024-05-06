@@ -7,35 +7,35 @@
     <ul class="flex flex-col mt-3">
       <li>
         <a role="button" class="flex" routerLink="/thaivideos">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/icons8_boxer_512.png" alt="" />
+          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/icons8_boxer_512.webp" alt="" />
           <span class="nav-text">Muay Thai</span>
         </a>
       </li>
       <hr>
       <li>
         <a role="button" class="flex" routerLink="/boxingvideos">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/boxeo1.png" alt="" />
+          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/boxeo1.webp" alt="" />
           <span class="nav-text"> Boxeo </span>
         </a>
       </li>
       <hr>
       <li>
         <a role="button" class="flex" routerLink="/fitnessvideos">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/icons8_fitness_501.png" alt="" />
+          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/icons8_fitness_501.webp" alt="" />
           <span class="nav-text"> Fitness </span>
         </a>
       </li>
       <hr>
       <li>
         <a role="button" class="flex" routerLink="/diets">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/dietas1.png" alt="" />
+          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/dietas1.webp" alt="" />
           <span class="nav-text">Dietas</span>
         </a>
       </li>
       <hr>
       <li>
         <a role="button" class="flex" routerLink="/merchandising">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/eccommerce1.png" alt="" />
+          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/eccommerce1.webp" alt="" />
           <span class="nav-text">Merchandising</span>
         </a>
       </li>
@@ -52,13 +52,13 @@
       <li>
         <a class="flex" (click)="auth.logout({ logoutParams: { returnTo: getLocationOrigin() } })">
           <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
-            <img src="../../../assets/img/logout.png" alt="Logout Image" class="icon">
+            <img src="../../../assets/img/logout.webp" alt="Logout Image" class="icon">
             <p>Logout</p>
           </ng-container>
         </a>
         <ng-template #loggedOut>
           <a class="flex" (click)="auth.loginWithRedirect()">
-            <img src="../../../assets/img/login1.png" alt="Profile Image" class="icon">
+            <img src="../../../assets/img/login1.webp" alt="Profile Image" class="icon">
             <p>Login</p>
           </a>
         </ng-template>

@@ -14,7 +14,7 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
 import { PerfileMenuComponent } from './components/menus/profile-menu/profile-menu.component';
 import { ProfileMenuService } from './services/profile-menu-service.service';
 import { FavouriteVideosComponent } from './components/user-profile-views/favourite-videos/favourite-videos.component';
-import { LikedVideosComponent} from './components/user-profile-views/liked-videos/liked-videos.component';
+import { LikedVideosComponent } from './components/user-profile-views/liked-videos/liked-videos.component';
 import { ProfileDietsComponent } from './components/user-profile-views/profile-diets/profile-diets.component';
 import { ProfileOrdersComponent } from './components/user-profile-views/profile-orders/profile-orders.component';
 import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
@@ -23,13 +23,21 @@ import { PlayerComponent } from './components/player/player.component';
 import { MerchandisingComponent } from './components/merchandising/merchandising.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PricingComponent } from './components/pricing/pricing.component';
-import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClientModule,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { environment } from 'src/environments/environment.development';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
+import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
+import { CartComponent } from './components/cart/cart.component';
+import { CookieService } from 'ngx-cookie-service';
+import { ShippingAddressPageComponent } from './components/shipping-address-page/shipping-address-page.component';
 
 @NgModule({
   declarations: [
@@ -54,10 +62,17 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
     ProfileOrdersComponent,
     SearchbarComponent,
     ProductDetailComponent,
-    CheckoutComponent
+    LoadingScreenComponent,
+    CartComponent,
+    ShippingAddressPageComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, BrowserAnimationsModule, HttpClientModule],
-
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+  ],
 
   providers: [
     provideAuth0({
@@ -71,7 +86,8 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
     provideHttpClient(withInterceptors([authHttpInterceptorFn])),
 
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    CookieService
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
