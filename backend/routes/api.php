@@ -43,7 +43,6 @@ Route::group(['middleware' => 'api'], function () {
     Route::put('/videos/{id}/visit', [VideoController::class,'incrementVideoVisits']);
     Route::resource('products', ProductController::class);
     Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
-
     Route::put('videos/{id}', [VideoController::class, 'update']);
     Route::delete('videos/{id}', [VideoController::class, 'delete']);
 });

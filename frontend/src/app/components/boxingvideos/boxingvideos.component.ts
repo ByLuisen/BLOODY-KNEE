@@ -30,7 +30,7 @@ export class BoxingvideosComponent implements OnInit {
   role: string = "admin";
 
   // Edit form
-  editForm: FormGroup | undefined;
+  editForm: FormGroup;
 
   constructor(private http: HttpService, private router: Router) {
     this.editForm = new FormGroup({
@@ -121,14 +121,19 @@ export class BoxingvideosComponent implements OnInit {
     this.editingVideo = null;
   }
 
-  // Método para enviar el formulario de edición
   submitEditForm() {
-    if (this.editingVideo) {
+    if (this.editingVideo && this.editForm) {
+      // Actualizar los datos del video con los valores del formulario
+      this.editingVideo.title = this.editForm.value.title;
+      this.editingVideo.coach = this.editForm.value.coach;
+      this.editingVideo.description = this.editForm.value.description;
+
+      // Enviar la solicitud HTTP para editar el video
       this.http.editVideo(this.editingVideo).subscribe(
         (updatedVideo) => {
           console.log('Video edited successfully:', updatedVideo);
           // Después de guardar los cambios, cierra el modal
-          // this.closeEditModal();
+          this.closeEditModal();
         },
         (error) => {
           console.error('Error editing video:', error);
@@ -136,6 +141,7 @@ export class BoxingvideosComponent implements OnInit {
       );
     }
   }
+
 
   deleteVideo(video: Video) {
     // Aquí implementa la lógica para eliminar el video
