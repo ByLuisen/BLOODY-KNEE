@@ -4,6 +4,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\DietController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OpenAIController;
@@ -37,6 +38,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::resource('quotes', QuoteController::class);
     Route::get('modalityvideo/{modality_id}/{type_id}', [VideoController::class, 'modalities']);
     Route::get('getvideobyid/{id}', [VideoController::class, 'videoById']);
+    Route::get('getcommentbyid/{id}', [CommentController::class, 'commentById']);
     Route::resource('videos', VideoController::class);
     Route::resource('diets', DietController::class);
     Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);

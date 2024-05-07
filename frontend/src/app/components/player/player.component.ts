@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
+import { Comment } from 'src/app/models/Comment';
+
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
@@ -25,6 +27,7 @@ export class PlayerComponent implements OnInit {
   comentariosToShow: any[] = [];
   loading: boolean = false;
   batchSize: number = 5;
+  comments: Comment[] = [];
 
   ngOnInit() {
     this.loadButtons();
@@ -33,9 +36,21 @@ export class PlayerComponent implements OnInit {
       this.videoId = +params['videoId'];
       this.getVideo();
       this.getDestacados();
+      this.getCommentsByVideoId(this.videoId);
     });
   }
-
+  getCommentsByVideoId(videoId: number): void {
+    this.http.getCommentById(videoId).subscribe(
+      (comments: Comment[]) => {
+        console.log('Comentarios obtenidos:', comments);
+        // Aquí puedes manejar los comentarios obtenidos, por ejemplo, asignarlos a una propiedad del componente
+        this.comments = comments;
+      },
+      (error) => {
+        console.error('Error al obtener comentarios:', error);
+      }
+    );
+  }
 
 
   toggleDescription() {
@@ -43,7 +58,7 @@ export class PlayerComponent implements OnInit {
   }
 
   loadInitialComments() {
-    this.comentariosToShow = this.comentarios.slice(0, this.batchSize);
+    this.comentariosToShow = this.comments.slice(0, this.batchSize);
   }
   onScroll(event: any) {
     const element = event.target;
@@ -53,14 +68,14 @@ export class PlayerComponent implements OnInit {
   }
 
   loadMoreComments() {
-    if (this.loading || this.comentariosToShow.length === this.comentarios.length) return;
+    if (this.loading || this.comentariosToShow.length === this.comments.length) return;
 
     this.loading = true;
 
     setTimeout(() => {
       const startIndex = this.comentariosToShow.length;
       const endIndex = startIndex + this.batchSize;
-      const newComments = this.comentarios.slice(startIndex, endIndex);
+      const newComments = this.comments.slice(startIndex, endIndex);
       this.comentariosToShow = this.comentariosToShow.concat(newComments);
       this.loading = false;
     }, 1000);
@@ -280,37 +295,4 @@ export class PlayerComponent implements OnInit {
       // Navega al componente de reproductor si el usuario tiene permiso para ver el video
     }
   }
-
-  comentarios = [
-    { texto: 'La energía de hoy fue increíble, gracias a todos!' },
-    { texto: '¿Soy el único que termina exhausto después de las sesiones?' },
-    { texto: 'Cada día me siento más fuerte, este entrenamiento es lo máximo' },
-    { texto: '¿Alguien tiene tips para recuperarse más rápido?' },
-    { texto: 'El entrenador siempre tiene la mejor actitud, me inspira mucho' },
-    { texto: 'Nunca pensé que podría hacer tanto en tan poco tiempo' },
-    { texto: 'Chicos, ¿qué comen antes de entrenar para tener tanta energía?' },
-    { texto: 'Definitivamente me estoy volviendo adicto a estas clases' },
-    { texto: '¿El entrenador siempre es tan exigente o solo es conmigo?' },
-    { texto: '¡Vamos equipo, podemos superar cualquier desafío!' },
-    { texto: 'Al principio dudaba, pero ahora estoy viendo los resultados' },
-    { texto: 'Me encantaría que hubiera más clases por semana' },
-    { texto: 'Es mi tercer mes y sigo sintiendo que cada día es un nuevo reto' },
-    { texto: '¡Ese ejercicio nuevo de hoy estuvo brutal!' },
-    { texto: 'Siento que este grupo se ha convertido en mi segunda familia' },
-    { texto: '¡Qué risa hoy con los errores que cometimos todos!' },
-    { texto: 'A veces me pregunto cómo el entrenador tiene tanta paciencia' },
-    { texto: 'Ojalá hubiera empezado a entrenar aquí mucho antes' },
-    { texto: '¿Alguien más siente que ha mejorado su vida en general?' },
-    { texto: 'Cada vez que pienso en rendirme, veo al resto y me motivo' },
-    { texto: 'Después de cada sesión me siento como nuevo, ¡es mágico!' },
-    { texto: 'El entrenador dijo que estoy progresando bien, ¡estoy tan feliz!' },
-    { texto: 'Necesito consejos para mantenerme motivado los días difíciles' },
-    { texto: 'Agradecido por encontrar un grupo tan bueno y un entrenador excepcional' },
-    { texto: '¿Quién más está sintiendo esos músculos que no sabía que tenía?' },
-    { texto: 'Creo que todos deberíamos salir a celebrar nuestros progresos' },
-    { texto: 'El entrenador me ayudó a superar un bloqueo mental, increíble' },
-    { texto: '¡Hoy me superé a mí mismo y logré un nuevo récord personal!' },
-    { texto: 'A veces me cuesta seguir el ritmo, pero no me voy a rendir' },
-    { texto: '¡La clase de hoy fue fuego puro, quemé tantas calorías!' }
-  ];
 }

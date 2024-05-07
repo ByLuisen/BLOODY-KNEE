@@ -59,7 +59,7 @@
         <p class="text-justify pb-2 pl-2 sm:pt-2 pr-2" *ngIf="descriptionVisible">{{video.description}}</p>
       </div>
 
-      <div *ngIf="comentarios.length >= 1; else noComments">
+      <div *ngIf="comments.length >= 1; else noComments">
         <div class="sm:block w-px pt-4">
           <div class="flex">
             <p>343 comentarios</p>
@@ -68,12 +68,12 @@
               <p>Ordenar Por</p>
             </div>
           </div>
-          <div *ngFor="let comentario of comentariosToShow" class="border-b-4 color mb-4 px-2">
+          <div *ngFor="let comentario of comments" class="border-b-4 color mb-4 px-2">
             <div class="flex items-center">
               <img src="../../../assets/img/login1rojo2.webp" class="w-8 h-8">
-              <p class="text-red-600 px-2">nombre usuario</p>
+              <p class="text-red-600 px-2">{{comentario.userId}}</p>
             </div>
-            <p>{{comentario.texto}}</p>
+            <p>{{comentario.comment}}</p>
             <div class="mb-2 flex items-center">
               <div class="w-18 h-7 flex rounded-lg items-center">
                 <div class="like-comment">
@@ -92,12 +92,10 @@
                   </svg>
                 </div>
               </div>
-              <div class="px-6">
-                <button class=" text-red-600 rounded-lg py-2">Responder</button>
-              </div>
+             
             </div>
           </div>
-          <div *ngIf="loading && comentarios.length > comentariosToShow.length"
+          <div *ngIf="loading && comments.length > comentariosToShow.length"
             class="flex self-center justify-center content-center">
             <img src="../../../assets/img/loading.gif" alt="Carregant..."
               class="text-center flex justify-center py-2 w-14">

@@ -58,59 +58,70 @@ class VideoController extends Controller
 }
 
 
-    public function updateLikes(Request $request, $id)
-    {
-        try {
-            $email = $request->input('email');
-            $user = null;
+public function updateLikes(Request $request, $id)
+{
+    try {
+        // Obtener el correo electrónico y la conexión del cuerpo de la solicitud
+        $email = $request->input('email');
+        $connection = $request->input('connection');
+        
+        // Encuentra al usuario por su correo electrónico y conexión
+        $user = User::where('email', $email)
+                    ->where('connection', $connection)
+                    ->first();
 
-            if ($email) {
-                $user = User::where('email', $email)->first();
-            }
-
-            $video = Video::findOrFail($id);
-
-            if (!$video) {
-                return response()->json(['error' => 'Video no encontrado'], 404);
-            }
-
-            if ($user) {
-                // Verificar si el usuario ya ha dado like a este video
-                if ($video->likedByUsers->contains($user)) {
-                    return response()->json(['error' => 'Ya diste like a este video'], 400);
-                }
-
-                // Eliminar dislike si existe
-                if ($video->dislikedByUsers->contains($user)) {
-                    $video->dislikedByUsers()->detach($user);
-                    $video->dislikes--;
-                }
-
-                // Registrar el like del usuario en la tabla intermedia
-                $user->likes()->attach($video->id, ['type' => 'Like', 'date' => now()]);
-                $video->likes++;
-                $video->save();
-
-                return response()->json(['message' => 'Likes actualizados correctamente']);
-            } else {
-                return response()->json(['error' => 'Usuario no encontrado'], 404);
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error en updateLikes: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
+        // Verificar si el usuario existe
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
         }
-    }
 
+        // Encontrar el video por su ID
+        $video = Video::findOrFail($id);
+
+        // Verificar si el video existe
+        if (!$video) {
+            return response()->json(['error' => 'Video no encontrado'], 404);
+        }
+
+        // Verificar si el usuario ya ha dado like a este video
+        if ($video->likedByUsers->contains($user)) {
+            return response()->json(['message' => 'Ya diste like a este video'], 400);
+        }
+
+        // Eliminar dislike si existe
+        if ($video->dislikedByUsers->contains($user)) {
+            $video->dislikedByUsers()->detach($user);
+            $video->dislikes--;
+        }
+
+        // Registrar el like del usuario en la tabla intermedia
+        $user->likes()->attach($video->id, ['type' => 'Like', 'date' => now()]);
+        $video->likes++;
+        $video->save();
+
+        return response()->json(['message' => 'Likes actualizados correctamente']);
+    } catch (\Exception $e) {
+        \Log::error('Error en updateLikes: ' . $e->getMessage());
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}   
 
 
     public function updateDislikes(Request $request, $id)
 {
     try {
+        // Obtener el correo electrónico y la conexión del cuerpo de la solicitud
         $email = $request->input('email');
-        $user = null;
+        $connection = $request->input('connection');
+          
+        // Encuentra al usuario por su correo electrónico y conexión
+        $user = User::where('email', $email)
+                    ->where('connection', $connection)
+                    ->first();
 
-        if ($email) {
-            $user = User::where('email', $email)->first();
+        // Verificar si el usuario existe
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
         }
 
         $video = Video::findOrFail($id);

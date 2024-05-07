@@ -12,6 +12,8 @@ import { Role } from '../models/Role';
 import { ConditionalExpr } from '@angular/compiler';
 import { switchMap } from 'rxjs/operators';
 import { Product } from '../models/Product';
+import { Comment } from '../models/Comment';
+
 
 @Injectable({
   providedIn: 'root',
@@ -111,23 +113,55 @@ export class HttpService {
       .get<any>(`${this.url}/videos`)
       .pipe(map((response) => response.data as Video[]));
   }
+
+  getCommentById(id: number): Observable<Comment[]> {
+    return new Observable<Comment[]>((observer) => {
+      this._http.get<{ data: Comment[] }>(`${this.url}/getcommentbyid/${id}`)
+        .subscribe(
+          (response) => {
+            observer.next(response.data);
+            observer.complete();
+          },
+          (error) => {
+            observer.error(error);
+          }
+        );
+    });
+  }
+
   updateLikes(videoId: number): Observable<any> {
     const url = `${this.url}/updateLikes/${videoId}`;
-    return this.auth.user$.pipe(
+    return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
-        const body = { email: user ? user.email : '' };
+        console.log(user)
+        // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
+        const body = {
+          email: user ? user.email : '',  // Obtén el correo electrónico del usuario actual
+          connection: user ? user['sub'].split('|')[0] : '' // Obtén la conexión del usuario actual
+        };
         console.log(body);
+        
+        // Realiza la solicitud PUT al servidor con el cuerpo construido
         return this._http.put(url, body);
       })
     );
   }
+  
+  
 
   updateDislikes(videoId: number): Observable<any> {
     const url = `${this.url}/updateDislikes/${videoId}`;
-    return this.auth.user$.pipe(
+    return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
-        const body = { email: user ? user.email : '' };
+        console.log(user)
+        // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
+        const body = {
+          email: user ? user.email : '',  // Obtén el correo electrónico del usuario actual
+          connection: user ? user['sub'].split('|')[0] : '' // Obtén la conexión del usuario actual
+        };
         console.log(body);
+        
+        // Realiza la solicitud PUT al servidor con el cuerpo construido
         return this._http.put(url, body);
       })
     );
