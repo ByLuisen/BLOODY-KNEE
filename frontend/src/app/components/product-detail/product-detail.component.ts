@@ -1,10 +1,17 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Product } from 'src/app/models/Product';
 import { HttpService } from 'src/app/services/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { AuthService } from '@auth0/auth0-angular';
+import { catchError, finalize, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail',
@@ -17,11 +24,13 @@ export class ProductDetailComponent implements OnInit {
   mainImageUrl!: string;
   added: boolean = false;
   quantity!: number;
+  loading: boolean = false;
+  openModal: boolean = false;
 
   constructor(
     private http: HttpService,
     private route: ActivatedRoute,
-    private auth: AuthService,
+    public auth: AuthService,
     private cookie: CookieService
   ) {}
 
@@ -40,19 +49,23 @@ export class ProductDetailComponent implements OnInit {
   }
 
   getProducto(): void {
-    this.http.getProductsById([this.productId]).subscribe(
-      (product) => {
-        console.log('Producto obtenido:', product);
-        this.product = product[0];
-
-        // Inicializar la imagen principal con la primera imagen del producto
-        this.mainImageUrl = this.product ? this.product.url_img1 : '';
-      },
-      (error) => {
-        console.error('Error al obtener el producto:', error);
-      }
-    );
+    this.http
+      .getProductsById([this.productId])
+      .pipe(
+        switchMap((product) => {
+          this.product = product[0];
+          // Inicializar la imagen principal con la primera imagen del producto
+          this.mainImageUrl = this.product ? this.product.url_img1 : '';
+          return of(product);
+        }),
+        catchError((error) => {
+          console.error('Error al obtener el producto:', error);
+          return of([]);
+        })
+      )
+      .subscribe();
   }
+
   setMainImage(url: string): void {
     this.mainImageUrl = url;
   }
@@ -67,18 +80,34 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+  loginOrModal(): void {
+    this.auth.isAuthenticated$
+      .pipe(
+        switchMap((logged) => {
+          if (!logged) {
+            return this.auth.loginWithPopup();
+          }
+          return of(null); // Emite un valor nulo si ya está autenticado
+        }),
+        switchMap(() => {
+          this.openModal = true;
+          return of(null);
+        })
+      )
+      .subscribe(
+        () => {},
+        (error) => {
+          console.error(error);
+          // Manejar el error en tu aplicación
+        }
+      );
+  }
+
   saveProductInACookie(): void {
     this.added = true;
     setTimeout(() => {
       this.added = false;
     }, 7000);
-
-    // Get the quantity product selector
-    const selectElement = document.getElementById(
-      'quantity'
-    ) as HTMLSelectElement;
-    // Parse to integer the quantity
-    this.quantity = parseInt(selectElement.value);
 
     // Create the product object to add
     const productToAdd = {
@@ -124,20 +153,24 @@ export class ProductDetailComponent implements OnInit {
   }
 
   submit(): void {
-    const selectElement = document.getElementById(
-      'quantity'
-    ) as HTMLSelectElement;
-    const quantity = parseInt(selectElement.value);
-    this.product.quantity = quantity;
-    this.http.checkout([this.product]).subscribe(
-      (response) => {
-        // Redirigir al usuario a la URL de checkout
-        window.location.href = response.data.checkout_url;
-      },
-      (error) => {
-        console.error('Error al iniciar la sesión de pago:', error);
-        // Manejar el error en tu aplicación
-      }
-    );
+    this.loading = true;
+    this.product.quantity = this.quantity;
+    this.http
+      .checkout([this.product])
+      .pipe(
+        tap((response) => {
+          if (response) {
+            window.location.href = response.data.checkout_url;
+          }
+        }),
+        finalize(() => (this.loading = false))
+      )
+      .subscribe(
+        () => {},
+        (error) => {
+          console.error('Error al iniciar la sesión de pago:', error);
+          // Manejar el error en tu aplicación
+        }
+      );
   }
 }

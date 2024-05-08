@@ -174,7 +174,6 @@ export class HttpService {
         const body = {
           price_id: quotePriceId,
           user_email: user.email ?? '',
-          user_sub: user.sub ? user.sub.split('|')[0] : '',
         };
         return this._http.post(url, body).pipe(
           catchError((error) => {
@@ -188,10 +187,27 @@ export class HttpService {
   }
 
   checkout(products: Product[]): Observable<any> {
-    const url = `${this.url}/payment`;
-    const body = {
-      products: products,
-    };
-    return this._http.post(url, body);
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of(null); // Emite un valor nulo si el usuario no está autenticado
+        }
+
+        const url = `${this.url}/payment`;
+        const body = {
+          user_email: user.email ?? '',
+          products: products,
+          href: window.location.href,
+          origin: window.location.origin,
+        };
+        return this._http.post(url, body).pipe(
+          catchError((error) => {
+            // Manejar errores aquí
+            console.error('Error en la solicitud HTTP:', error);
+            return of(null); // Emite un valor nulo si hay un error
+          })
+        );
+      })
+    );
   }
 }

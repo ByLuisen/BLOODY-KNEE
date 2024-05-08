@@ -20,6 +20,8 @@ export class MerchandisingComponent implements OnInit {
   // Variable para almacenar el precio máximo seleccionado
   precioMaximo: number = 150;
 
+  loading: boolean = false;
+
   constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {

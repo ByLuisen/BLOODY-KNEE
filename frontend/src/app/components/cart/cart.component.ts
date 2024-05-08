@@ -43,12 +43,19 @@ export class CartComponent {
       this.cart = JSON.parse(this.cookie.get('cart'));
       // Obtener solo los IDs de los productos
       const ids = this.cart.map((product: any) => product.productId);
-
       this.http
         .getProductsById(ids)
         .pipe(
           switchMap((products: Product[]) => {
-            this.products = products;
+            this.products = products.map((product) => {
+              const cartItem = this.cart.find(
+                (cart) => cart.productId === product.id
+              );
+              if (cartItem) {
+                product.quantity = cartItem.quantity;
+              }
+              return product;
+            });
             return of(products);
           }),
           catchError((error) => {
@@ -107,5 +114,28 @@ export class CartComponent {
     this.router.navigate(['/product', productId]).then(() => {
       this.closeCart();
     });
+  }
+
+  loginOrAdressForm(): void {
+    this.auth.isAuthenticated$
+      .pipe(
+        switchMap((logged) => {
+          if (!logged) {
+            return this.auth.loginWithPopup();
+          }
+          return of(null); // Emite un valor nulo si ya está autenticado
+        }),
+        switchMap(() => {
+          this.router.navigate(['/address-form']);
+          return of(null);
+        })
+      )
+      .subscribe(
+        () => {},
+        (error) => {
+          console.error(error);
+          // Manejar el error en tu aplicación
+        }
+      );
   }
 }

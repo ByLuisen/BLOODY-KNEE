@@ -14,6 +14,7 @@ import { MerchandisingComponent } from './components/merchandising/merchandising
 import { PricingComponent } from './components/pricing/pricing.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { ShippingAddressPageComponent } from './components/shipping-address-page/shipping-address-page.component';
+import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'merchandising', component: MerchandisingComponent },
   { path: 'product/:productId', component: ProductDetailComponent },
   { path: 'address-form', component: ShippingAddressPageComponent },
+  { path: 'order-summary', component: OrderSummaryComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];

@@ -57,10 +57,9 @@
                               </h3>
                               <p class="ml-4">{{ product.price }}€</p>
                             </div>
-                            <p class="mt-1 text-sm text-gray-500">Salmon</p>
                           </div>
                           <div class="flex flex-1 items-end justify-between text-sm">
-                            <p class="text-gray-500">Cantidad {{ cart[i].quantity }}</p>
+                            <p class="text-gray-500">Cantidad {{ product.quantity }}</p>
 
                             <div class="flex">
                               <button type="button" (click)="deleteProduct(i)"
@@ -94,8 +93,8 @@
                   <p>{{ calculateTotalAmount() }}€</p>
                 </div>
                 <div class="mt-6" *ngIf="products.length != 0">
-                  <a routerLink="/address-form"
-                    class="flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700">Tramitar
+                  <a (click)="loginOrAdressForm()"
+                    class="flex items-center justify-center rounded-md border border-transparent cursor-pointer bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700">Tramitar
                     pedido</a>
                 </div>
                 <div class="mt-6 flex justify-center text-center text-sm text-gray-500">

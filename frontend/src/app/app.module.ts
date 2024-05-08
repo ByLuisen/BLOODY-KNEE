@@ -38,6 +38,7 @@ import { LoadingScreenComponent } from './components/loading-screen/loading-scre
 import { CartComponent } from './components/cart/cart.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ShippingAddressPageComponent } from './components/shipping-address-page/shipping-address-page.component';
+import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { ShippingAddressPageComponent } from './components/shipping-address-page
     LoadingScreenComponent,
     CartComponent,
     ShippingAddressPageComponent,
+    OrderSummaryComponent,
   ],
   imports: [
     BrowserModule,

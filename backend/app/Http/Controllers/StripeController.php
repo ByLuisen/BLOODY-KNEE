@@ -12,8 +12,6 @@ class StripeController extends Controller
     {
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
 
-        $YOUR_DOMAIN = 'http://localhost:4200';
-
         $products = $request->input('products');
         $lineItems = [];
 
@@ -32,16 +30,17 @@ class StripeController extends Controller
         }
 
         $checkout_session = \Stripe\Checkout\Session::create([
+            'customer_email' => $request->input('user_email'),
             'line_items' => $lineItems,
             'mode' => 'payment',
             'payment_method_configuration' => 'pmc_1P680fByhCj4S0lhpHMBLSHL',
             'shipping_options' => [
                 [
-                    'shipping_rate' => 'shr_1PD57kByhCj4S0lhqUmMWKym'
+                    'shipping_rate' => 'shr_1PEBzmByhCj4S0lh7TNdgvlB'
                 ]
             ],
-            'success_url' => $YOUR_DOMAIN . '?success=true',
-            'cancel_url' => $YOUR_DOMAIN . '?canceled=true',
+            'success_url' => $request->input('origin') . '/order-summary',
+            'cancel_url' => $request->input('href'),
             'automatic_tax' => [
                 'enabled' => true,
             ],
@@ -64,8 +63,8 @@ class StripeController extends Controller
             ]],
             'mode' => 'subscription',
             'payment_method_configuration' => 'pmc_1P680fByhCj4S0lhpHMBLSHL',
-            'success_url' => $YOUR_DOMAIN . '?success=true',
-            'cancel_url' => $YOUR_DOMAIN . '?canceled=true',
+            'success_url' => $YOUR_DOMAIN . '/merchandising',
+            'cancel_url' => $YOUR_DOMAIN . '/merchandising',
         ]);
 
         return ApiResponse::success(['checkout_url' => $checkout_session->url], 'Checkout Seesion creada correctamente');
