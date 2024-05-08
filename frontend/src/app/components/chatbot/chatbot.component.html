@@ -9,7 +9,7 @@
       <!-- Display user or bot message -->
       <div class="flex items-center">
         <!-- Bot avatar -->
-        <img *ngIf="message.sender === 'bot'" src="../../../assets/img/bot4.png" class="w-8 h-8">
+        <img *ngIf="message.sender === 'bot'" src="../../../assets/img/bot4.webp" class="w-8 h-8">
 
         <!-- Message text -->
         <p [ngClass]="{'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot'}">
@@ -17,7 +17,7 @@
         </p>
 
         <!-- User avatar -->
-        <img *ngIf="message.sender === 'user'" src="../../../assets/img/login1.png" class="w-10 h-8 pr-2">
+        <img *ngIf="message.sender === 'user'" src="../../../assets/img/login1.webp" class="w-10 h-8 pr-2">
       </div>
     </div>
   </div>

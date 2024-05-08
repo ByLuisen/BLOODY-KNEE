@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
 
@@ -19,9 +19,9 @@ import { Product } from '../models/Product';
 export class HttpService {
   private jwtHelper: JwtHelperService = new JwtHelperService(); // Servicio para manejar JWT
   url: string = 'http://localhost:8000/api'; // URL base para las solicitudes HTTP
-  // url: string = 'http://49.13.160.230/api'; // URL del servidor
+  // url: string = 'https://bloodyknee.es/api'; // URL del servidor
 
-  constructor(private _http: HttpClient, private auth: AuthService) { }
+  constructor(private _http: HttpClient, private auth: AuthService) {}
 
   /**
    * Retrieves an access token for authorization.
@@ -106,7 +106,8 @@ export class HttpService {
    */
   getVideoById(id: number): Observable<Video[]> {
     return new Observable<Video[]>((observer) => {
-      this._http.get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
+      this._http
+        .get<{ data: Video[] }>(`${this.url}/getvideobyid/${id}`)
         .subscribe(
           (response) => {
             observer.next(response.data);
@@ -182,7 +183,7 @@ export class HttpService {
     return this.auth.user$.pipe(
       switchMap((user) => {
         const body = { email: user ? user.email : '' };
-        console.log(body)
+        console.log(body);
         // Realiza una solicitud PUT al servidor con el cuerpo que incluye el usuario
         return this._http.put(url, body);
       })
@@ -198,14 +199,12 @@ export class HttpService {
       .get<any>(`${this.url}/products`)
       .pipe(map((response) => response.data as Product[]));
   }
-  /**
-   * Retrieves a product by its ID.
-   * @param id The ID of the product.
-   * @returns An observable that emits an array containing the product after the request is completed.
-   */
-  getProductById(id: number): Observable<Product[]> {
+
+  getProductsById(id: number[]): Observable<Product[]> {
+    // Construye la URL con los IDs como parámetros de consulta
+    const params = new HttpParams().set('id', id.join(',')); // Unir los IDs en una cadena separada por comas
     return this._http
-      .get<{ data: Product[] }>(`${this.url}/getproductbyid/${id}`)
+      .get<{ data: Product[] }>(`${this.url}/getproductbyid/${id}`, { params })
       .pipe(map((response) => response.data));
   }
 
@@ -236,5 +235,52 @@ export class HttpService {
    */
   getProductBrand(productId: number): Observable<any> {
     return this._http.get<any>(`${this.url}/products/${productId}/brand`);
+  }
+  subscribeQuote(quotePriceId: string): Observable<any> {
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of(null); // Emite un valor nulo si el usuario no está autenticado
+        }
+
+        const url = `${this.url}/subscription`;
+        const body = {
+          price_id: quotePriceId,
+          user_email: user.email ?? '',
+        };
+        return this._http.post(url, body).pipe(
+          catchError((error) => {
+            // Manejar errores aquí
+            console.error('Error en la solicitud HTTP:', error);
+            return of(null); // Emite un valor nulo si hay un error
+          })
+        );
+      })
+    );
+  }
+
+  checkout(products: Product[]): Observable<any> {
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of(null); // Emite un valor nulo si el usuario no está autenticado
+        }
+
+        const url = `${this.url}/payment`;
+        const body = {
+          user_email: user.email ?? '',
+          products: products,
+          href: window.location.href,
+          origin: window.location.origin,
+        };
+        return this._http.post(url, body).pipe(
+          catchError((error) => {
+            // Manejar errores aquí
+            console.error('Error en la solicitud HTTP:', error);
+            return of(null); // Emite un valor nulo si hay un error
+          })
+        );
+      })
+    );
   }
 }

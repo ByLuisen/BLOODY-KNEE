@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { loadStripe } from '@stripe/stripe-js';
-import { map } from 'rxjs';
+import { finalize, map, of, switchMap, tap } from 'rxjs';
 import { Quote } from 'src/app/models/Quote';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -11,28 +11,46 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./pricing.component.css'],
 })
 export class PricingComponent {
-  paymentLinks!: string[];
-  loged!: boolean;
   quotes!: Quote[];
   arrayAdvantages!: any;
+  loading: boolean = false;
   constructor(private http: HttpService, public auth: AuthService) {}
 
   ngOnInit(): void {
-    this.paymentLinks = [
-      '#',
-      'https://buy.stripe.com/test_4gw4gyd336hp3xC5kl',
-      'https://buy.stripe.com/test_8wMaEW9QRgW3b046oq'
-    ]
-    if (localStorage.getItem('token')) {
-      this.loged = true;
-    } else {
-      this.loged = false;
-    }
     this.http.getQuotes().subscribe((quotes: any[]) => {
       this.quotes = quotes;
       this.arrayAdvantages = this.quotes.map((quote) =>
         quote.advantages.split(';')
       );
     });
+  }
+
+  subscribeToQuote(quotePriceId: string) {
+    this.auth.isAuthenticated$
+      .pipe(
+        switchMap((logged) => {
+          if (!logged) {
+            return this.auth.loginWithPopup();
+          }
+          return of(null); // Emite un valor nulo si ya está autenticado
+        }),
+        switchMap(() => {
+          this.loading = true; // Mostrar pantalla de carga
+          return this.http.subscribeQuote(quotePriceId); // Devolver el observable
+        }),
+        tap((response) => {
+          if (response) {
+            window.location.href = response.data.checkout_url;
+          }
+        }),
+        finalize(() => (this.loading = false))
+      )
+      .subscribe(
+        () => {},
+        (error) => {
+          console.error('Error al suscribirse a la cotización:', error);
+          // Manejar el error en tu aplicación
+        }
+      );
   }
 }

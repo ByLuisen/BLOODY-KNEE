@@ -24,18 +24,24 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     *
-     */
-    public function productById($id)
+
+    public function productById(Request $request)
     {
         try {
-            $product = Product::where('id', $id)->get();
+            // Obtiene los IDs de los parámetros de consulta 'id'
+            $ids = $request->query('id');
 
-            return ApiResponse::success(ProductResource::collection($product), 'Product único por id obtenido correctamente');
+            // $ids será una cadena que contiene los IDs separados por comas
+            // Puedes convertirlos a un array usando la función explode
+            $idsArray = explode(',', $ids);
 
+            // Ahora puedes usar $idsArray para lo que necesites, por ejemplo, buscar los productos en la base de datos
+            $products = Product::whereIn('id', $idsArray)->get();
+
+            // Devolver los productos como una respuesta exitosa
+            return ApiResponse::success(ProductResource::collection($products), 'Productos obtenidos correctamente por ID');
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
+            // Manejar errores, loguear, etc.
             return ApiResponse::error($e->getMessage());
         }
     }
@@ -55,7 +61,7 @@ class ProductController extends Controller
     public function productBrand($id)
     {
         $product = Product::findOrFail($id);
-        
+
         // Obtener la marca del producto
         $brand = $product->brand;
 
