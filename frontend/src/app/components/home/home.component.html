@@ -13,7 +13,7 @@
         alt="" />
     </div>
     <div class="red-square">
-      <p class="title_quisom">Quienes somos?</p>
+      <p class="title_quisom sm:mt-10">Quienes somos?</p>
       <p class="p_quisom">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur orci
         tortor, facilisis non tempus sit amet. Ipsum dolor elit. Curabitur roci
@@ -28,21 +28,43 @@
       <p class="text-white subtitle_bk">VIDEOS DESTACADOS</p>
     </div>
   </div>
-  <div class="flex justify-center mb-10">
-    <div class="grid grid-cols-3 gap-5">
-      <iframe src="https://www.youtube.com/embed/watch?v=iyGZ5R06_BI" frameborder="0" allowfullscreen
-        class="featured_video"></iframe>
-      <iframe src="https://www.youtube.com/embed/watch?v=iyGZ5R06_BI" frameborder="0" allowfullscreen
-        class="featured_video"></iframe>
-      <iframe src="https://www.youtube.com/embed/watch?v=iyGZ5R06_BI" frameborder="0" allowfullscreen
-        class="featured_video"></iframe>
-      <iframe src="https://www.youtube.com/embed/watch?v=iyGZ5R06_BI" frameborder="0" allowfullscreen
-        class="featured_video"></iframe>
-      <iframe src="https://www.youtube.com/embed/watch?v=iyGZ5R06_BI" frameborder="0" allowfullscreen
-        class="featured_video"></iframe>
-      <iframe src="https://www.youtube.com/embed/watch?v=iyGZ5R06_BI" frameborder="0" allowfullscreen
-        class="featured_video"></iframe>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 text-center sm:text-justify">
+    <div class="group relative" *ngFor="let video of videosAleatorios">
+      <ng-container>
+        <a (click)="selectVideo(video)">
+            <div class="premium-icon" *ngIf="video.exclusive">
+              <img src="../../../assets/img/svg/star.svg" alt="Premium" class="star-icon">
+            </div>
+              <div class="flex items-center justify-center sm:justify-start">
+                <img src="../../../assets/img/boxeopareja.webp"
+                  class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+              </div>
+        </a>
+      </ng-container>
     </div>
   </div>
+
   <app-pricing></app-pricing>
+   <!-- Modal que alerta cuando un usuario no tiene suficientes permisos para acceder al video si es premium -->
+   <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
+
+    <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
+
+    <div class="bg-white p-8 rounded-lg z-50">
+
+      <h2 class="text-2xl font-bold mb-4">¡Ups!
+        Contenido Premium</h2>
+
+      <p>Este video es contenido
+        premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
+
+      <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+        (click)="closeModal()">Cerrar</button>
+
+      <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+        routerLink="/pricing">Subscribirse</button>
+
+    </div>
+  </div>
 </div>
