@@ -7,7 +7,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { Comment } from 'src/app/models/Comment';
-
+import {SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
@@ -28,8 +28,10 @@ export class PlayerComponent implements OnInit {
   loading: boolean = false;
   batchSize: number = 5;
   comments: Comment[] = [];
+  videoUrl!: SafeResourceUrl;
 
   ngOnInit() {
+    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479');
     this.loadButtons();
     this.loadInitialComments();
     this.route.params.subscribe((params) => {
@@ -39,7 +41,12 @@ export class PlayerComponent implements OnInit {
       this.countAndUpdateComments(this.videoId);
       this.getCommentsByVideoId(this.videoId);
     });
+    
 
+  }
+
+  stopPropagation(event: Event): void {
+    event.stopPropagation();
   }
 
   getCommentsByVideoId(videoId: number): void {
@@ -157,6 +164,8 @@ export class PlayerComponent implements OnInit {
         console.log('Video obtenido:', video);
         this.video = video;
         this.cdr.detectChanges();
+        // this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.video.url);
+        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.video.url);
       },
       (error) => {
         console.error('Error al obtener el video:', error);
