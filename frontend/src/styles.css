@@ -9,9 +9,13 @@
 .fondo_bk {
   background: linear-gradient(180deg, #ffffff 0%, #c7c7c7 39%, #ffdddd 100%);
   background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
   height: 100vh;
   width: 100vw;
+  overflow-x: hidden;
 }
+
 
 .aclonica-font {
   font-family: "Aclonica", sans-serif;

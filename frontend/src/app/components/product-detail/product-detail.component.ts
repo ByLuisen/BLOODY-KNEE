@@ -35,7 +35,7 @@ export class ProductDetailComponent implements OnInit {
     public auth: AuthService,
     private cookie: CookieService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -117,6 +117,7 @@ export class ProductDetailComponent implements OnInit {
       }, error => {
         console.error('Error al obtener la marca del producto:', error);
       });
+  }
   add(): void {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
@@ -142,7 +143,7 @@ export class ProductDetailComponent implements OnInit {
         })
       )
       .subscribe(
-        () => {},
+        () => { },
         (error) => {
           console.error(error);
           // Manejar el error en tu aplicación
@@ -213,7 +214,7 @@ export class ProductDetailComponent implements OnInit {
         finalize(() => (this.loading = false))
       )
       .subscribe(
-        () => {},
+        () => { },
         (error) => {
           console.error('Error al iniciar la sesión de pago:', error);
           // Manejar el error en tu aplicación
