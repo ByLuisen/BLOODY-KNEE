@@ -14,13 +14,8 @@ export class ProductDetailComponent implements AfterViewInit {
   product!: Product;
   topProducts!: Product[]
   mainImageUrl!: string;
-  // Brand names map
-  brandNames: { [key: number]: string } = {
-    1: 'Venum',
-    2: 'Buddha',
-    3: 'Rival',
-    4: 'Nike'
-  };
+  brandName!: string;
+
 
   constructor(private http: HttpService, private route: ActivatedRoute, private router: Router) { }
 
@@ -78,4 +73,12 @@ export class ProductDetailComponent implements AfterViewInit {
     this.router.navigate(['/product', productId]);
   }
 
+  getProductBrand(): void {
+    this.http.getProductBrand(this.productId)
+      .subscribe(response => {
+        this.brandName = response.brand.name;
+      }, error => {
+        console.error('Error al obtener la marca del producto:', error);
+      });
+  }
 }

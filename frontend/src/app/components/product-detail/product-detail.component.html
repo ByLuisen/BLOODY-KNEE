@@ -39,8 +39,8 @@
             <div class="float-start">
               <p class="text-5xl text-start mr-2 mt-3">{{ product.price }}€</p>
               <p class="text-base  text-start mt-3 ">{{ product.description }}</p>
-              <p class="text-base text-start mr-2 mt-80 text-black">Marca<span class="text-gray-700 ml-6">{{product.brandId}}</span></p>
-
+              <p class="text-base text-start mr-2 mt-80 text-black">Marca<span
+                  class="text-gray-700 ml-6">{{brandName}}</span></p>
             </div>
           </div>
           <div class="flex flex-col items-center text-center justify-center">
@@ -74,7 +74,7 @@
               <div class="flex flex-col justify-center items-center">
                 <p class="text-sm mb-3">{{product.name}}</p>
                 <img [src]="'../../../assets/img/imgs_productos/' + product.url_img1 + '.PNG'"
-                class="hover:border-2 hover:border-solid hover:border-red-600  w-36 h-auto transition duration-300 transform hover:scale-110 mb">
+                  class="hover:border-2 hover:border-solid hover:border-red-600  w-36 h-auto transition duration-300 transform hover:scale-110 mb">
                 <p class="text-red-500 mb-3">{{product.price}}€</p>
               </div>
             </div>

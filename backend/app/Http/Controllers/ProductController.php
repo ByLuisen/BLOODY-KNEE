@@ -45,4 +45,20 @@ class ProductController extends Controller
         $product = Product::where('id', $id)->get();
 
     }
+
+    /**
+     * Obtiene la marca de un producto específico.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function productBrand($id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Obtener la marca del producto
+        $brand = $product->brand;
+
+        return response()->json(['brand' => $brand]);
+    }
 }

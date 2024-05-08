@@ -229,4 +229,12 @@ export class HttpService {
     return this._http.delete<void>(url);
   }
 
+  /**
+   * Get the brand of a product by ID
+   * @param productId the ID of the product
+   * @returns An observable than emits
+   */
+  getProductBrand(productId: number): Observable<any> {
+    return this._http.get<any>(`${this.url}/products/${productId}/brand`);
+  }
 }

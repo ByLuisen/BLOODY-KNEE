@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+
+    /**
+     * Obtiene la marca asociada al producto.
+     */
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
 }
+
+

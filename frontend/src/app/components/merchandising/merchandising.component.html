@@ -20,12 +20,6 @@
       <p>Rango de precio: $0 - ${{priceRangeInput.value }}</p>
     </div>
   </div>
-  <!-- <div class="grid grid-cols-1 text-center px-96 pt-4">
-    <select id="ordenarPor" class="mx-auto w-50 bg-gray-200 px-3 py-2 ">
-      <option value="mejorVendido">Mejor Vendido</option>
-      <option value="mejorValorado">Mejor Valorado</option>
-    </select>
-  </div> -->
   <!-- Iterar sobre los productos utilizando *ngFor -->
   <div class="grid grid-cols-4 px-56 pt-10 gap-32">
     <div *ngFor="let producto of productosFiltrados()"
