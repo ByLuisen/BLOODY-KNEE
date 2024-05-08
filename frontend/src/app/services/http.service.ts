@@ -23,6 +23,10 @@ export class HttpService {
 
   constructor(private _http: HttpClient, private auth: AuthService) {}
 
+  /**
+   * Retrieves an access token for authorization.
+   * @returns An observable that emits the access token after the request is completed.
+   */
   getAccessToken(): Observable<any> {
     const url = 'https://dev-yyzuj3kafug18e38.eu.auth0.com/oauth/token';
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -37,6 +41,10 @@ export class HttpService {
     return this._http.post<any>(url, body, { headers: headers });
   }
 
+  /**
+   * Retrieves the role of the authenticated user.
+   * @returns An observable that emits the user's role after the request is completed.
+   */
   getRole(): Observable<Role[]> {
     return new Observable<Role[]>((observer) => {
       this.auth.user$.subscribe((user) => {
@@ -66,13 +74,22 @@ export class HttpService {
     });
   }
 
-  // Obtener todas los cuotas
+  /**
+   * Retrieves all quotes.
+   * @returns An observable that emits an array of quotes after the request is completed.
+   */
   getQuotes(): Observable<Quote[]> {
     return this._http
       .get<any>(`${this.url}/quotes`)
       .pipe(map((response) => response.data as Quote[]));
   }
 
+  /**
+   * Retrieves videos based on modality and type.
+   * @param modality_id The ID of the modality.
+   * @param type_id The ID of the type.
+   * @returns An observable that emits an array of videos after the request is completed.
+   */
   getVideosModality(modality_id: number, type_id: number): Observable<Video[]> {
     return this._http
       .get<{ data: Video[] }>(
@@ -81,6 +98,12 @@ export class HttpService {
       .pipe(map((response) => response.data));
   }
 
+  /**
+   * Retrieves videos based on modality and type.
+   * @param modality_id The ID of the modality.
+   * @param type_id The ID of the type.
+   * @returns An observable that emits an array of videos after the request is completed.
+   */
   getVideoById(id: number): Observable<Video[]> {
     return new Observable<Video[]>((observer) => {
       this._http
@@ -106,12 +129,22 @@ export class HttpService {
     });
   }
 
-  // Obtener todos los videos
+  /**
+   * Retrieves videos based on modality and type.
+   * @param modality_id The ID of the modality.
+   * @param type_id The ID of the type.
+   * @returns An observable that emits an array of videos after the request is completed.
+   */
   getVideos(): Observable<Video[]> {
     return this._http
       .get<any>(`${this.url}/videos`)
       .pipe(map((response) => response.data as Video[]));
   }
+  /**
+  * Updates the number of likes for a video.
+  * @param videoId The ID of the video.
+  * @returns An observable that emits the updated information after the request is completed.
+  */
   updateLikes(videoId: number): Observable<any> {
     const url = `${this.url}/updateLikes/${videoId}`;
     return this.auth.user$.pipe(
@@ -122,7 +155,11 @@ export class HttpService {
       })
     );
   }
-
+  /**
+   * Updates the number of dislikes for a video.
+   * @param videoId The ID of the video.
+   * @returns An observable that emits the updated information after the request is completed.
+   */
   updateDislikes(videoId: number): Observable<any> {
     const url = `${this.url}/updateDislikes/${videoId}`;
     return this.auth.user$.pipe(
@@ -134,6 +171,11 @@ export class HttpService {
     );
   }
 
+  /**
+   * Updates the number of visits for a video.
+   * @param videoId The ID of the video.
+   * @returns An observable that emits the updated information after the request is completed.
+   */
   updateVideoVisits(videoId: number): Observable<any> {
     const url = `${this.url}/videos/${videoId}/visit`;
 
@@ -148,7 +190,10 @@ export class HttpService {
     );
   }
 
-  // Obtener todos los productos
+  /**
+   * Retrieves all products.
+   * @returns An observable that emits an array of products after the request is completed.
+   */
   getProducts(): Observable<Product[]> {
     return this._http
       .get<any>(`${this.url}/products`)
@@ -163,6 +208,34 @@ export class HttpService {
       .pipe(map((response) => response.data));
   }
 
+  /**
+   * Updates the information of a video on the server.
+   * @param video The Video object containing the updated information of the video.
+   * @returns An observable that emits the updated video after the request is completed.
+   */
+  editVideo(video: Video): Observable<Video> {
+    const url = `${this.url}/videos/${video.id}`;
+    return this._http.put<Video>(url, video);
+  }
+
+  /**
+   * Deletes a video from the server.
+   * @param videoId The ID of the video to be deleted.
+   * @returns An observable that emits void after the deletion request is completed.
+   */
+  deleteVideo(videoId: number): Observable<void> {
+    const url = `${this.url}/videos/${videoId}`;
+    return this._http.delete<void>(url);
+  }
+
+  /**
+   * Get the brand of a product by ID
+   * @param productId the ID of the product
+   * @returns An observable than emits
+   */
+  getProductBrand(productId: number): Observable<any> {
+    return this._http.get<any>(`${this.url}/products/${productId}/brand`);
+  }
   subscribeQuote(quotePriceId: string): Observable<any> {
     return this.auth.user$.pipe(
       switchMap((user) => {

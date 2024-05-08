@@ -14,7 +14,7 @@ export class PricingComponent {
   quotes!: Quote[];
   arrayAdvantages!: any;
   loading: boolean = false;
-  constructor(private http: HttpService, public auth: AuthService) {}
+  constructor(private http: HttpService, public auth: AuthService) { }
 
   ngOnInit(): void {
     this.http.getQuotes().subscribe((quotes: any[]) => {
@@ -23,6 +23,10 @@ export class PricingComponent {
         quote.advantages.split(';')
       );
     });
+
+    if (window.location.pathname == "/pricing") {
+      document.getElementById('pricing_section')?.classList.add('fondo_bk')
+    }
   }
 
   subscribeToQuote(quotePriceId: string) {
@@ -46,7 +50,7 @@ export class PricingComponent {
         finalize(() => (this.loading = false))
       )
       .subscribe(
-        () => {},
+        () => { },
         (error) => {
           console.error('Error al suscribirse a la cotización:', error);
           // Manejar el error en tu aplicación
