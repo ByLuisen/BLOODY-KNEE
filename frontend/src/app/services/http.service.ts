@@ -247,6 +247,7 @@ export class HttpService {
         const body = {
           price_id: quotePriceId,
           user_email: user.email ?? '',
+          href: window.location.href
         };
         return this._http.post(url, body).pipe(
           catchError((error) => {
