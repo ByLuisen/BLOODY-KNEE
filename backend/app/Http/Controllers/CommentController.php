@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CommentResource; 
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Models\Video;
 use App\Http\Responses\ApiResponse;
 
 class CommentController extends Controller
@@ -33,6 +34,24 @@ class CommentController extends Controller
             } else {
                 return ApiResponse::error('No se encontró ningún video con el ID proporcionado');
             }
+        } catch (\Exception $e) {
+            // Loguear el error o realizar otras acciones según tus necesidades
+            return ApiResponse::error($e->getMessage());
+        }
+    }
+
+    public function countAndUpdateComments($videoId)
+    {
+        try {
+            // Contar los comentarios asociados al video
+            $commentCount = Comment::where('video_id', $videoId)->count();
+
+            // Actualizar el campo "comments" en la tabla de videos con el recuento obtenido
+            $video = Video::findOrFail($videoId);
+            $video->comments = $commentCount;
+            $video->update();
+
+            return ApiResponse::success(null, 'Conteo y actualización de comentarios realizados correctamente');
         } catch (\Exception $e) {
             // Loguear el error o realizar otras acciones según tus necesidades
             return ApiResponse::error($e->getMessage());

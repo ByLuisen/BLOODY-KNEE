@@ -36,9 +36,12 @@ export class PlayerComponent implements OnInit {
       this.videoId = +params['videoId'];
       this.getVideo();
       this.getDestacados();
+      this.countAndUpdateComments(this.videoId);
       this.getCommentsByVideoId(this.videoId);
     });
+
   }
+
   getCommentsByVideoId(videoId: number): void {
     this.http.getCommentById(videoId).subscribe(
       (comments: Comment[]) => {
@@ -48,6 +51,17 @@ export class PlayerComponent implements OnInit {
       },
       (error) => {
         console.error('Error al obtener comentarios:', error);
+      }
+    );
+  }
+
+  countAndUpdateComments(videoId: number): void {
+    this.http.countAndUpdateComments(videoId).subscribe(
+      () => {
+        console.log('Comentarios contados y actualizados correctamente');
+      },
+      (error) => {
+        console.error('Error al contar y actualizar comentarios:', error);
       }
     );
   }

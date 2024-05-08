@@ -59,14 +59,10 @@
         <p class="text-justify pb-2 pl-2 sm:pt-2 pr-2" *ngIf="descriptionVisible">{{video.description}}</p>
       </div>
 
-      <div *ngIf="comments.length >= 1; else noComments">
+      <div>
         <div class="sm:block w-px pt-4">
           <div class="flex">
-            <p>343 comentarios</p>
-            <div class="px-6 flex">
-              <img src="../../../assets/img/ordenarrojo1.webp">
-              <p>Ordenar Por</p>
-            </div>
+            <p>{{video.comments}} comentarios</p>
           </div>
           <div *ngFor="let comentario of comments" class="border-b-4 color mb-4 px-2">
             <div class="flex items-center">
@@ -92,7 +88,7 @@
                   </svg>
                 </div>
               </div>
-             
+
             </div>
           </div>
           <div *ngIf="loading && comments.length > comentariosToShow.length"
@@ -119,20 +115,6 @@
       </div>
     </div>
   </div>
-
-  <ng-template #noComments>
-    <div class="flex self-center justify-center content-center">
-      <div class="sm:block w-px pt-4">
-        <div class="flex">
-          <p>0 comentarios</p>
-          <div class="px-6 flex">
-            <img src="../../../assets/img/ordenarrojo1.webp">
-            <p>Ordenar Por</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
   <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
 
     <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
@@ -170,4 +152,4 @@
           d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
       </svg>
     </button>
-</div>
+  </div>

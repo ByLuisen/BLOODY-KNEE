@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('url');
             $table->integer('visits');
+            $table->integer('comments');
             $table->integer('likes');
             $table->integer('dislikes');
             $table->date('upload_date')->default(now()); // Establece la fecha actual como valor predeterminado

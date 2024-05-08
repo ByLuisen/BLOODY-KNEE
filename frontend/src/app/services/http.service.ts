@@ -23,7 +23,7 @@ export class HttpService {
   url: string = 'http://localhost:8000/api'; // URL base para las solicitudes HTTP
   // url: string = 'http://49.13.160.230/api'; // URL del servidor
 
-  constructor(private _http: HttpClient, private auth: AuthService) {}
+  constructor(private _http: HttpClient, private auth: AuthService) { }
 
   getAccessToken(): Observable<any> {
     const url = 'https://dev-yyzuj3kafug18e38.eu.auth0.com/oauth/token';
@@ -129,6 +129,16 @@ export class HttpService {
     });
   }
 
+  countAndUpdateComments(videoId: number): Observable<any> {
+    const url = `${this.url}/videos/${videoId}/update-comments`;
+    return this._http.post(url, {}).pipe(
+      catchError((error) => {
+        console.error('Error al contar y actualizar comentarios:', error);
+        return of(null);
+      })
+    );
+  }
+
   updateLikes(videoId: number): Observable<any> {
     const url = `${this.url}/updateLikes/${videoId}`;
     return this.auth.idTokenClaims$.pipe(
@@ -140,14 +150,12 @@ export class HttpService {
           connection: user ? user['sub'].split('|')[0] : '' // Obtén la conexión del usuario actual
         };
         console.log(body);
-        
+
         // Realiza la solicitud PUT al servidor con el cuerpo construido
         return this._http.put(url, body);
       })
     );
   }
-  
-  
 
   updateDislikes(videoId: number): Observable<any> {
     const url = `${this.url}/updateDislikes/${videoId}`;
@@ -160,7 +168,7 @@ export class HttpService {
           connection: user ? user['sub'].split('|')[0] : '' // Obtén la conexión del usuario actual
         };
         console.log(body);
-        
+
         // Realiza la solicitud PUT al servidor con el cuerpo construido
         return this._http.put(url, body);
       })
