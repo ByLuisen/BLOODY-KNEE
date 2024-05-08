@@ -40,7 +40,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
     Route::put('updateLikes/{id}', [VideoController::class, 'updateLikes']);
     Route::put('updateDislikes/{id}', [VideoController::class, 'updateDislikes']);
-    Route::put('/videos/{id}/visit', [VideoController::class,'incrementVideoVisits']);
+    Route::put('/videos/{id}/visit', [VideoController::class, 'incrementVideoVisits']);
     Route::resource('products', ProductController::class);
     Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
     Route::put('videos/{id}', [VideoController::class, 'update']);

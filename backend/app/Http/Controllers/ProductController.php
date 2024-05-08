@@ -9,6 +9,9 @@ use App\Http\Responses\ApiResponse;
 
 class ProductController extends Controller
 {
+    /**
+     *
+     */
     public function index()
     {
         try {
@@ -21,8 +24,11 @@ class ProductController extends Controller
         }
     }
 
-
-    public function productById($id){
+    /**
+     *
+     */
+    public function productById($id)
+    {
         try {
             $product = Product::where('id', $id)->get();
 
@@ -32,5 +38,11 @@ class ProductController extends Controller
             // Loguear el error o realizar otras acciones según tus necesidades
             return ApiResponse::error($e->getMessage());
         }
+    }
+
+    public function getProductBrand($id)
+    {
+        $product = Product::where('id', $id)->get();
+
     }
 }
