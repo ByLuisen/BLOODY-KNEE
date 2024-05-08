@@ -25,6 +25,7 @@ export class ProductDetailComponent implements AfterViewInit {
       this.getProducto();
     });
     this.getRandomProducts();
+    this.getProductBrand()
   }
 
   getProducto(): void {
@@ -68,15 +69,22 @@ export class ProductDetailComponent implements AfterViewInit {
     return shuffled.slice(0, numItems);
   }
 
+  /**
+   * Redirecciona a los detalles del producto recomendado que seleccione el usuario.
+   * @param productId
+   */
   verDetallesProducto(productId: number) {
-    // Navegar a la vista de detalles del producto con el ID del producto como parámetro
     this.router.navigate(['/product', productId]);
   }
 
+  /**
+   * Obtiene la marca a la que pertenece el producto
+   */
   getProductBrand(): void {
     this.http.getProductBrand(this.productId)
       .subscribe(response => {
         this.brandName = response.brand.name;
+        console.log('La marca del producto es:', this.brandName)
       }, error => {
         console.error('Error al obtener la marca del producto:', error);
       });

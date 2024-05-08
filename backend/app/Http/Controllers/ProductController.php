@@ -55,7 +55,7 @@ class ProductController extends Controller
     public function productBrand($id)
     {
         $product = Product::findOrFail($id);
-
+        
         // Obtener la marca del producto
         $brand = $product->brand;
 

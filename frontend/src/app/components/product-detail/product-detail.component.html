@@ -2,7 +2,7 @@
   <div *ngIf="product">
     <div class="grid grid-cols-1 px-24 sm:text-center font-aclo text-gray-800 bg-white overflow-auto p-4 fondo_bk">
       <!-- Go merch -->
-      <div class="ml-10 flex bg-red-700 rounded-full w-64 items-center content-center" role="button"
+      <div class="ml-10 flex bg-red-700 rounded-full w-64 h-12 items-center content-center" role="button"
         routerLink="/merchandising">
         <p class="ml-2 text-white">←</p>
         <img src="../../../assets/img/eccommerce1.png" alt="eccommerce1.png" class="w-8 h-8 ml-1">
@@ -26,7 +26,7 @@
             </div>
             <div class="main-image flex justify-center">
               <img [src]="'../../../assets/img/imgs_productos/' + mainImageUrl + '.PNG'" alt="Imagen Principal"
-                class="w-96 h-auto">
+                class="w-96 h-auto border-2 border-solid border-red-700">
             </div>
           </div>
         </div>
@@ -40,7 +40,7 @@
               <p class="text-5xl text-start mr-2 mt-3">{{ product.price }}€</p>
               <p class="text-base  text-start mt-3 ">{{ product.description }}</p>
               <p class="text-base text-start mr-2 mt-80 text-black">Marca<span
-                  class="text-gray-700 ml-6">{{brandName}}</span></p>
+                  class="text-gray-500 ml-2">{{brandName}}</span></p>
             </div>
           </div>
           <div class="flex flex-col items-center text-center justify-center">
@@ -66,16 +66,16 @@
         </div>
 
         <!-- Recommended products -->
-        <div class="w-full mt-5 mb-16">
+        <div class="w-full mt-5 mb-5">
           <div class="bg-red-700 w-auto h-0.5"></div>
-          <h2 class="text-xl mt-8">También te recomendamos:</h2>
           <div class="flex justify-center mt-8">
-            <div class="mx-4" *ngFor="let product of topProducts" (click)="verDetallesProducto(product.id)">
+            <div class="mx-4" *ngFor="let product of topProducts">
               <div class="flex flex-col justify-center items-center">
                 <p class="text-sm mb-3">{{product.name}}</p>
                 <img [src]="'../../../assets/img/imgs_productos/' + product.url_img1 + '.PNG'"
-                  class="hover:border-2 hover:border-solid hover:border-red-600  w-36 h-auto transition duration-300 transform hover:scale-110 mb">
-                <p class="text-red-500 mb-3">{{product.price}}€</p>
+                  class="hover:border-2 hover:border-solid hover:border-red-600  w-36 h-auto transition duration-300 transform hover:scale-110 mb"
+                  (click)="verDetallesProducto(product.id)">
+                <p class="text-red-500 mb-3 mt-3">{{product.price}} €</p>
               </div>
             </div>
           </div>
