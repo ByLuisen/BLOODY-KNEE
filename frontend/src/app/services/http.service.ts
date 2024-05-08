@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -19,7 +19,7 @@ import { Product } from '../models/Product';
 export class HttpService {
   private jwtHelper: JwtHelperService = new JwtHelperService(); // Servicio para manejar JWT
   url: string = 'http://localhost:8000/api'; // URL base para las solicitudes HTTP
-  // url: string = 'http://49.13.160.230/api'; // URL del servidor
+  // url: string = 'https://bloodyknee.es/api'; // URL del servidor
 
   constructor(private _http: HttpClient, private auth: AuthService) {}
 
@@ -155,9 +155,11 @@ export class HttpService {
       .pipe(map((response) => response.data as Product[]));
   }
 
-  getProductById(id: number): Observable<Product[]> {
+  getProductsById(id: number[]): Observable<Product[]> {
+    // Construye la URL con los IDs como parámetros de consulta
+    const params = new HttpParams().set('id', id.join(',')); // Unir los IDs en una cadena separada por comas
     return this._http
-      .get<{ data: Product[] }>(`${this.url}/getproductbyid/${id}`)
+      .get<{ data: Product[] }>(`${this.url}/getproductbyid/${id}`, { params })
       .pipe(map((response) => response.data));
   }
 

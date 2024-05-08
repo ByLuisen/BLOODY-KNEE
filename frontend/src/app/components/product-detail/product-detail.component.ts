@@ -4,6 +4,7 @@ import { HttpService } from 'src/app/services/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-product-detail',
@@ -15,10 +16,12 @@ export class ProductDetailComponent implements OnInit {
   product!: Product;
   mainImageUrl!: string;
   added: boolean = false;
+  quantity!: number;
 
   constructor(
     private http: HttpService,
     private route: ActivatedRoute,
+    private auth: AuthService,
     private cookie: CookieService
   ) {}
 
@@ -27,10 +30,17 @@ export class ProductDetailComponent implements OnInit {
       this.productId = +params['productId'];
       this.getProducto();
     });
+
+    // Get the quantity product selector
+    const selectElement = document.getElementById(
+      'quantity'
+    ) as HTMLSelectElement;
+    // Parse to integer the quantity
+    this.quantity = parseInt(selectElement.value);
   }
 
   getProducto(): void {
-    this.http.getProductById(this.productId).subscribe(
+    this.http.getProductsById([this.productId]).subscribe(
       (product) => {
         console.log('Producto obtenido:', product);
         this.product = product[0];
@@ -48,6 +58,16 @@ export class ProductDetailComponent implements OnInit {
   }
 
   add(): void {
+    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        // Haz algo si el usuario está autenticado
+      } else {
+        this.saveProductInACookie();
+      }
+    });
+  }
+
+  saveProductInACookie(): void {
     this.added = true;
     setTimeout(() => {
       this.added = false;
@@ -58,12 +78,12 @@ export class ProductDetailComponent implements OnInit {
       'quantity'
     ) as HTMLSelectElement;
     // Parse to integer the quantity
-    const quantity = parseInt(selectElement.value);
+    this.quantity = parseInt(selectElement.value);
 
     // Create the product object to add
     const productToAdd = {
       productId: this.productId,
-      quantity: quantity, // Convertir a número si es necesario
+      quantity: this.quantity, // Convertir a número si es necesario
     };
 
     // Verify if the cookie cart exist
@@ -72,25 +92,34 @@ export class ProductDetailComponent implements OnInit {
       const cart = JSON.parse(this.cookie.get('cart'));
       console.log(cart);
 
-      // Verify if the product to add exist in the cookie
-      if (cart.some((p: any) => p.productId == this.productId)) {
-        // If there is, add the amount
-        cart.map((prod: any) => {
-          if (prod.productId == this.productId) {
-            prod.quantity += quantity;
-          }
-          return prod;
-        });
+      // Verificar si el producto ya está en el carrito
+      const existingProductIndex = cart.findIndex(
+        (p: any) => p.productId === this.productId
+      );
+
+      if (existingProductIndex !== -1) {
+        // Si el producto ya está en el carrito, actualizar su cantidad
+        cart[existingProductIndex].quantity += this.quantity;
       } else {
+        // Si el producto no está en el carrito, agregarlo
         cart.push(productToAdd);
       }
-      this.cookie.set('cart', JSON.stringify(cart), 365);
+      this.cookie.set('cart', JSON.stringify(cart), 365, '/');
     } else {
-      this.cookie.set('cart', JSON.stringify([productToAdd]), 365); // Convert the array to JSON and save it in the cookie
+      this.cookie.set('cart', JSON.stringify([productToAdd]), 365, '/'); // Convert the array to JSON and save it in the cookie
     }
   }
 
-  hideNotification() :void {
+  setQuantity(): void {
+    // Get the quantity product selector
+    const selectElement = document.getElementById(
+      'quantity'
+    ) as HTMLSelectElement;
+    // Parse to integer the quantity
+    this.quantity = parseInt(selectElement.value);
+  }
+
+  hideNotification(): void {
     this.added = false;
   }
 

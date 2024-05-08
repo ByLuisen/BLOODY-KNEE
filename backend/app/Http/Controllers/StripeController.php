@@ -23,8 +23,6 @@ class StripeController extends Controller
                     'currency' => 'eur',
                     'product_data' => [
                         'name' => $product['name'],
-                        'description' => $product['description'],
-                        'images' => ['http://gwent.es/assets/images/4.webp']
                     ],
                     'unit_amount' => $product['price'] * 100,
                     'tax_behavior' => 'inclusive',
