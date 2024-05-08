@@ -64,7 +64,7 @@ public function updateLikes(Request $request, $id)
         // Obtener el correo electrónico y la conexión del cuerpo de la solicitud
         $email = $request->input('email');
         $connection = $request->input('connection');
-        
+
         // Encuentra al usuario por su correo electrónico y conexión
         $user = User::where('email', $email)
                     ->where('connection', $connection)
@@ -104,7 +104,7 @@ public function updateLikes(Request $request, $id)
         \Log::error('Error en updateLikes: ' . $e->getMessage());
         return response()->json(['error' => $e->getMessage()], 500);
     }
-}   
+}
 
 
     public function updateDislikes(Request $request, $id)
@@ -113,7 +113,7 @@ public function updateLikes(Request $request, $id)
         // Obtener el correo electrónico y la conexión del cuerpo de la solicitud
         $email = $request->input('email');
         $connection = $request->input('connection');
-          
+
         // Encuentra al usuario por su correo electrónico y conexión
         $user = User::where('email', $email)
                     ->where('connection', $connection)
@@ -136,26 +136,38 @@ public function updateLikes(Request $request, $id)
                 return response()->json(['error' => 'Ya diste dislike a este video'], 400);
             }
 
-            // Eliminar like si existe
-            if ($video->likedByUsers->contains($user)) {
-                $video->likedByUsers()->detach($user);
-                $video->likes--;
+            $video = Video::findOrFail($id);
+
+            if (!$video) {
+                return response()->json(['error' => 'Video no encontrado'], 404);
             }
 
-            // Registrar el dislike del usuario en la tabla intermedia
-            $user->likes()->attach($video->id, ['type' => 'Dislike', 'date' => now()]);
-            $video->dislikes++;
-            $video->save();
+            if ($user) {
+                // Verificar si el usuario ya ha dado dislike a este video
+                if ($video->dislikedByUsers->contains($user)) {
+                    return response()->json(['error' => 'Ya diste dislike a este video'], 400);
+                }
 
-            return response()->json(['message' => 'Dislikes actualizados correctamente']);
-        } else {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+                // Eliminar like si existe
+                if ($video->likedByUsers->contains($user)) {
+                    $video->likedByUsers()->detach($user);
+                    $video->likes--;
+                }
+
+                // Registrar el dislike del usuario en la tabla intermedia
+                $user->likes()->attach($video->id, ['type' => 'Dislike', 'date' => now()]);
+                $video->dislikes++;
+                $video->save();
+
+                return response()->json(['message' => 'Dislikes actualizados correctamente']);
+            } else {
+                return response()->json(['error' => 'Usuario no encontrado'], 404);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error en updateDislikes: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-    } catch (\Exception $e) {
-        \Log::error('Error en updateDislikes: ' . $e->getMessage());
-        return response()->json(['error' => $e->getMessage()], 500);
     }
-}
 
     public function incrementVideoVisits(Request $request, $id)
     {
@@ -186,4 +198,45 @@ public function updateLikes(Request $request, $id)
             return ApiResponse::error($e->getMessage());
         }
     }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            // Buscar el video por su ID
+            $video = Video::findOrFail($id);
+
+            // Verificar si el video existe
+            if (!$video) {
+                return ApiResponse::error('Video no encontrado', 404);
+            }
+
+            // Actualizar los datos del video con los datos proporcionados en la solicitud
+            $video->update($request->all());
+
+            return ApiResponse::success(new VideoResource($video), 'Video actualizado correctamente');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            // Buscar el video por su ID
+            $video = Video::findOrFail($id);
+
+            // Verificar si el video existe
+            if (!$video) {
+                return ApiResponse::error('Video no encontrado', 404);
+            }
+
+            // Eliminar el video
+            $video->delete();
+
+            return ApiResponse::success(null, 'Video eliminado correctamente');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
+    }
+
 }

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -38,6 +38,7 @@ import { LoadingScreenComponent } from './components/loading-screen/loading-scre
 import { CartComponent } from './components/cart/cart.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ShippingAddressPageComponent } from './components/shipping-address-page/shipping-address-page.component';
+import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,8 @@ import { ShippingAddressPageComponent } from './components/shipping-address-page
     LoadingScreenComponent,
     CartComponent,
     ShippingAddressPageComponent,
+    OrderSummaryComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -72,6 +75,7 @@ import { ShippingAddressPageComponent } from './components/shipping-address-page
     FormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    ReactiveFormsModule
   ],
 
   providers: [

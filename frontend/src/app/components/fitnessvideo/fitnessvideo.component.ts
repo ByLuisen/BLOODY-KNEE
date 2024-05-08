@@ -15,7 +15,12 @@ export class FitnessvideoComponent implements OnInit {
   filteredItems: Video[] = [];
   selectedType: string = 'Todos';
   modalOpen: boolean = false;
-  role: string = "basic";
+  role: string = "admin";
+
+  // Admin mode variable
+  adminModeActivated: boolean = false;
+
+
   constructor(private http: HttpService, private router: Router) { }
 
   ngOnInit(): void {
@@ -78,5 +83,19 @@ export class FitnessvideoComponent implements OnInit {
       default:
         this.filteredItems = this.todos;
     }
+  }
+
+  // Método para activar o desactivar el modo admin
+  toggleAdminMode() {
+    this.adminModeActivated = !this.adminModeActivated;
+  }
+  editVideo(video: Video) {
+    // Aquí implementa la lógica para editar el video
+    console.log("Editando video:", video);
+  }
+
+  deleteVideo(video: Video) {
+    // Aquí implementa la lógica para eliminar el video
+    console.log("Eliminando video:", video);
   }
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shipping-address-page',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class ShippingAddressPageComponent {
 
+  constructor(private router: Router) {
+
+  }
+  goBack(): void {
+    window.history.back(); // Navega hacia atrás en el historial
+  }
 }

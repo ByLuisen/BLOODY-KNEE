@@ -48,6 +48,9 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('videos/{videoId}/update-comments', [CommentController::class, 'countAndUpdateComments']);
     Route::resource('products', ProductController::class);
     Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
+    Route::put('videos/{id}', [VideoController::class, 'update']);
+    Route::delete('videos/{id}', [VideoController::class, 'delete']);
+    Route::get('products/{id}/brand', [ProductController::class, 'productBrand']);
 });
 
 Route::post('/payment', [StripeController::class, 'payment']);
