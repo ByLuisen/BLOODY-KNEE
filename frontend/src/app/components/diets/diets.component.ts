@@ -1,24 +1,61 @@
 import { Component } from '@angular/core';
-
+import { OnInit } from '@angular/core';
+import { HttpService } from 'src/app/services/http.service';
+import { Diet } from 'src/app/models/Diet';
 @Component({
   selector: 'app-diets',
   templateUrl: './diets.component.html',
   styleUrls: ['./diets.component.css']
 })
-export class DietsComponent {
+export class DietsComponent implements OnInit {
   height!: number;
   weight!: number;
   result: number | null = null;
-  flashingIndex: number | null = null; // Variable para controlar el parpadeo
-
+  flashingIndex: number | null = null;
   showChatbot: boolean = false;
+  diets: Diet[] = [];
+  modalOpen: boolean = false;
+  modalStates: { [key: string]: boolean } = {};
+  errorMessage: string | null = null;
+
+  constructor(private http: HttpService) { }
+
+  ngOnInit(): void {
+    this.getDietData();
+  }
 
   toggleChatbot() {
     this.showChatbot = !this.showChatbot;
   }
 
+  openModal(image: string) {
+    this.modalStates[image] = true; // Abrir el modal correspondiente a la imagen
+    this.modalOpen = true;
+    document.body.classList.add('modal-open');
+
+  }
+
+
+  closeModal(image: string) {
+    this.modalStates[image] = false; // Cerrar el modal correspondiente a la imagen
+    this.modalOpen = false;
+    document.body.classList.remove('modal-open');
+  }
+
+  getDietData(): void {
+    this.http.getDiets()
+      .subscribe((diets: Diet[]) => {
+        this.diets = diets;
+        console.log(this.diets);
+      });
+  }
+
   calculate() {
     if (this.height && this.weight) {
+      if (isNaN(this.height) || isNaN(this.weight)) { // Verifica si la entrada es un número
+        this.errorMessage = "Por favor, introduce números válidos para la altura y el peso.";
+        return; // Sale de la función si hay un error
+      }
       const heightInMeters = this.height / 100;
       this.result = this.weight / (heightInMeters * heightInMeters);
 
@@ -32,11 +69,13 @@ export class DietsComponent {
       } else {
         this.flashingIndex = 3;
       }
-
+      this.errorMessage = "";
       // Lógica para detener el parpadeo después de unos segundos
       setTimeout(() => {
         this.flashingIndex = null;
       }, 2500);
+    }else {
+      this.errorMessage = "Por favor, introduce valores para la altura y el peso.";
     }
-}
+  }
 }

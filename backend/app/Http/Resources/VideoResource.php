@@ -24,6 +24,7 @@ class VideoResource extends JsonResource
             'description' => $this->description,
             'url' => $this->url,
             'visits' => $this->visits,
+            'comments'=>$this->comments,
             'likes' => $this->likes,
             'dislikes' => $this->dislikes,
             'upload_date' => $this->upload_date instanceof \DateTime ? $this->upload_date->format('Y-m-d') : $this->upload_date,

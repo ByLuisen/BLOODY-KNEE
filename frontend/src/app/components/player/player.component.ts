@@ -1,11 +1,14 @@
 import { Component, AfterViewInit, ElementRef, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
+import { AuthService, User } from '@auth0/auth0-angular';
+import { Comment } from 'src/app/models/Comment';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { ViewChild } from '@angular/core';
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
@@ -24,36 +27,36 @@ export class PlayerComponent implements OnInit {
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
   videoId!: number;
-  selectedVideo: Video | null = null;
-  safeUrl: SafeResourceUrl | null = null;
-  videos: Video[] = [];
+  video!: Video;
   destacados: Video[] = [];
   videosAleatorios: Video[] = [];
   modalOpen: boolean = false;
   modalOpen2: boolean = false;
   role!: string;
-  // "Paginate" comentarios
-  comentariosToShow: any[] = [];
+  comentariosToShow: Comment[] = [];
   loading: boolean = false;
   batchSize: number = 5;
-
-  toggleDescription() {
-    this.descriptionVisible = !this.descriptionVisible;
-  }
+  comments: Comment[] = [];
+  videoUrl!: SafeResourceUrl;
+  @ViewChild('commentInput') commentInput!: ElementRef;
 
   ngOnInit() {
+    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
+    );
     this.loadButtons();
-    this.loadInitialComments();
     this.route.params.subscribe((params) => {
       this.videoId = +params['videoId'];
       this.getVideo();
       this.getDestacados();
+      this.getCommentsByVideoId(this.videoId);
     });
   }
 
   loadInitialComments() {
-    this.comentariosToShow = this.comentarios.slice(0, this.batchSize);
+    this.comentariosToShow = this.comments.slice(0, this.batchSize);
   }
+
   onScroll(event: any) {
     const element = event.target;
     if (element.scrollHeight - element.scrollTop === element.clientHeight) {
@@ -62,20 +65,68 @@ export class PlayerComponent implements OnInit {
   }
 
   loadMoreComments() {
-    if (this.loading || this.comentariosToShow.length === this.comentarios.length) return;
+    if (this.loading || this.comentariosToShow.length === this.comments.length)
+      return;
 
     this.loading = true;
 
     setTimeout(() => {
       const startIndex = this.comentariosToShow.length;
       const endIndex = startIndex + this.batchSize;
-      const newComments = this.comentarios.slice(startIndex, endIndex);
+      const newComments = this.comments.slice(startIndex, endIndex);
       this.comentariosToShow = this.comentariosToShow.concat(newComments);
       this.loading = false;
     }, 1000);
   }
 
-  saveVideo(videoId: number): void {}
+  stopPropagation(event: Event): void {
+    event.stopPropagation();
+  }
+
+  getCommentsByVideoId(videoId: number): void {
+    this.http.getCommentById(videoId).subscribe(
+      (comments: Comment[]) => {
+        console.log('Comentarios obtenidos:', comments);
+        // Aquí puedes manejar los comentarios obtenidos, por ejemplo, asignarlos a una propiedad del componente
+        this.comments = comments;
+        this.video.comments += 1;
+        this.loadInitialComments();
+      },
+      (error) => {
+        console.error('Error al obtener comentarios:', error);
+      }
+    );
+  }
+
+  addComment(comment: string): void {
+    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.http.addComment(this.videoId, comment).subscribe(
+          () => {
+            console.log('Comentario agregado correctamente');
+            // Actualizar la lista de comentarios después de agregar uno nuevo
+            this.getCommentsByVideoId(this.videoId);
+            this.commentInput.nativeElement.value = '';
+            // También podrías mostrar un mensaje de éxito o realizar otras acciones necesarias
+          },
+          (error) => {
+            console.error('Error al agregar comentario:', error);
+            // Manejar el error, mostrar un mensaje de error, o realizar otras acciones según sea necesario
+          }
+        );
+      } else {
+        console.log(
+          'El usuario debe estar autenticado para agregar un comentario.'
+        );
+        this.auth.loginWithRedirect();
+        // Aquí podrías mostrar un mensaje al usuario indicando que necesita iniciar sesión para agregar un comentario
+      }
+    });
+  }
+
+  toggleDescription() {
+    this.descriptionVisible = !this.descriptionVisible;
+  }
 
   loadButtons() {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
@@ -135,10 +186,14 @@ export class PlayerComponent implements OnInit {
 
   getVideo(): void {
     this.http.getVideoById(this.videoId).subscribe(
-      (videos) => {
-        console.log('Video obtenido:', videos);
-        this.videos = videos;
+      (video) => {
+        console.log('Video obtenido:', video);
+        this.video = video;
         this.cdr.detectChanges();
+        // this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.video.url);
+        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+          this.video.url
+        );
       },
       (error) => {
         console.error('Error al obtener el video:', error);
@@ -162,12 +217,6 @@ export class PlayerComponent implements OnInit {
   getRandomVideos(array: Video[], count: number): Video[] {
     const shuffled = array.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
-  }
-
-  selectVideo(video: Video): void {
-    this.selectedVideo = video;
-    const url = this.selectedVideo ? this.selectedVideo.url : '';
-    this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   setupButtons() {
@@ -297,37 +346,4 @@ export class PlayerComponent implements OnInit {
       // Navega al componente de reproductor si el usuario tiene permiso para ver el video
     }
   }
-
-  comentarios = [
-    { texto: 'La energía de hoy fue increíble, gracias a todos!' },
-    { texto: '¿Soy el único que termina exhausto después de las sesiones?' },
-    { texto: 'Cada día me siento más fuerte, este entrenamiento es lo máximo' },
-    { texto: '¿Alguien tiene tips para recuperarse más rápido?' },
-    { texto: 'El entrenador siempre tiene la mejor actitud, me inspira mucho' },
-    { texto: 'Nunca pensé que podría hacer tanto en tan poco tiempo' },
-    { texto: 'Chicos, ¿qué comen antes de entrenar para tener tanta energía?' },
-    { texto: 'Definitivamente me estoy volviendo adicto a estas clases' },
-    { texto: '¿El entrenador siempre es tan exigente o solo es conmigo?' },
-    { texto: '¡Vamos equipo, podemos superar cualquier desafío!' },
-    { texto: 'Al principio dudaba, pero ahora estoy viendo los resultados' },
-    { texto: 'Me encantaría que hubiera más clases por semana' },
-    { texto: 'Es mi tercer mes y sigo sintiendo que cada día es un nuevo reto' },
-    { texto: '¡Ese ejercicio nuevo de hoy estuvo brutal!' },
-    { texto: 'Siento que este grupo se ha convertido en mi segunda familia' },
-    { texto: '¡Qué risa hoy con los errores que cometimos todos!' },
-    { texto: 'A veces me pregunto cómo el entrenador tiene tanta paciencia' },
-    { texto: 'Ojalá hubiera empezado a entrenar aquí mucho antes' },
-    { texto: '¿Alguien más siente que ha mejorado su vida en general?' },
-    { texto: 'Cada vez que pienso en rendirme, veo al resto y me motivo' },
-    { texto: 'Después de cada sesión me siento como nuevo, ¡es mágico!' },
-    { texto: 'El entrenador dijo que estoy progresando bien, ¡estoy tan feliz!' },
-    { texto: 'Necesito consejos para mantenerme motivado los días difíciles' },
-    { texto: 'Agradecido por encontrar un grupo tan bueno y un entrenador excepcional' },
-    { texto: '¿Quién más está sintiendo esos músculos que no sabía que tenía?' },
-    { texto: 'Creo que todos deberíamos salir a celebrar nuestros progresos' },
-    { texto: 'El entrenador me ayudó a superar un bloqueo mental, increíble' },
-    { texto: '¡Hoy me superé a mí mismo y logré un nuevo récord personal!' },
-    { texto: 'A veces me cuesta seguir el ritmo, pero no me voy a rendir' },
-    { texto: '¡La clase de hoy fue fuego puro, quemé tantas calorías!' }
-  ];
 }
