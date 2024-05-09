@@ -22,23 +22,43 @@ class CommentController extends Controller
         }
     }
 
+    //  public function commentById($id)
+    //  {
+    //      try {
+    //          // Utiliza first() para obtener solo el primer objeto
+    //          $comments = Comment::where('video_id', $id)->get();
+    
+    //          // Verifica si se encontró un video
+    //          if ($comments) {
+    //              return ApiResponse::success(CommentResource::collection($comments), 'Lista de dietas obtenida correctamente');
+    //          } else {
+    //              return ApiResponse::error('No se encontró ningún video con el ID proporcionado');
+    //          }
+    //      } catch (\Exception $e) {
+    //          // Loguear el error o realizar otras acciones según tus necesidades
+    //         return ApiResponse::error($e->getMessage());
+    //   }
+    // }
+
     public function commentById($id)
     {
         try {
-            // Utiliza first() para obtener solo el primer objeto
-            $comments = Comment::where('video_id', $id)->get();
+            $comments = Comment::where('video_id', $id)
+                                ->join('users', 'user_comment_videos.user_id', '=', 'users.id')
+                                ->select('user_comment_videos.*', 'users.nickname as user_nickname')
+                                ->get();
     
-            // Verifica si se encontró un video
             if ($comments) {
-                return ApiResponse::success(CommentResource::collection($comments), 'Lista de dietas obtenida correctamente');
+                return ApiResponse::success(CommentResource::collection($comments), 'Lista de comentarios obtenida correctamente');
             } else {
-                return ApiResponse::error('No se encontró ningún video con el ID proporcionado');
+                return ApiResponse::error('No se encontraron comentarios para el video con el ID proporcionado');
             }
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
             return ApiResponse::error($e->getMessage());
         }
     }
+
+
 
     public function countAndUpdateComments($videoId)
     {

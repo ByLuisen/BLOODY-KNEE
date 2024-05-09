@@ -29,6 +29,7 @@ export class PlayerComponent implements OnInit {
   batchSize: number = 5;
   comments: Comment[] = [];
   videoUrl!: SafeResourceUrl;
+  users: any[] = [];
 
   ngOnInit() {
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479');
@@ -61,6 +62,13 @@ export class PlayerComponent implements OnInit {
       }
     );
   }
+
+
+  getNickname(userId: number): string {
+    const user = this.users.find(user => user.id === userId);
+    return user ? user.nickname : 'Usuario desconocido';
+}
+
 
   countAndUpdateComments(videoId: number): void {
     this.http.countAndUpdateComments(videoId).subscribe(

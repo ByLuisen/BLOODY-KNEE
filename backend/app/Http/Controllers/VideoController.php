@@ -163,11 +163,12 @@ public function updateLikes(Request $request, $id)
             } else {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
-        } catch (\Exception $e) {
-            \Log::error('Error en updateDislikes: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        
+    }} catch (\Exception $e) {
+        \Log::error('Error en updateDislikes: ' . $e->getMessage());
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
 
     public function incrementVideoVisits(Request $request, $id)
     {

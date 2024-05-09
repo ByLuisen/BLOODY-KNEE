@@ -9,4 +9,5 @@ class Comment extends Model
 {
     use HasFactory;
     protected $table = 'user_comment_videos';
+    
 }
