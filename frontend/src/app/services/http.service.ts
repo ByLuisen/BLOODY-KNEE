@@ -110,7 +110,8 @@ export class HttpService {
 
   getVideoById(id: number): Observable<Video> {
     return new Observable<Video>((observer) => {
-      this._http.get<{ data: Video }>(`${this.url}/getvideobyid/${id}`)
+      this._http
+        .get<{ data: Video }>(`${this.url}/getvideobyid/${id}`)
         .subscribe(
           (response) => {
             observer.next(response.data);
@@ -146,7 +147,8 @@ export class HttpService {
 
   getCommentById(id: number): Observable<Comment[]> {
     return new Observable<Comment[]>((observer) => {
-      this._http.get<{ data: Comment[] }>(`${this.url}/getcommentbyid/${id}`)
+      this._http
+        .get<{ data: Comment[] }>(`${this.url}/getcommentbyid/${id}`)
         .subscribe(
           (response) => {
             observer.next(response.data);
@@ -167,8 +169,6 @@ export class HttpService {
     });
   }
 
-
-
   countAndUpdateComments(videoId: number): Observable<any> {
     const url = `${this.url}/videos/${videoId}/update-comments`;
     return this._http.post(url, {}).pipe(
@@ -188,11 +188,11 @@ export class HttpService {
     const url = `${this.url}/updateLikes/${videoId}`;
     return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
-        console.log(user)
+        console.log(user);
         // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
         const body = {
-          email: user ? user.email : '',  // Obtén el correo electrónico del usuario actual
-          connection: user ? user['sub'].split('|')[0] : '' // Obtén la conexión del usuario actual
+          email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
+          connection: user ? user['sub'].split('|')[0] : '', // Obtén la conexión del usuario actual
         };
         console.log(body);
 
@@ -210,11 +210,11 @@ export class HttpService {
     const url = `${this.url}/updateDislikes/${videoId}`;
     return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
-        console.log(user)
+        console.log(user);
         // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
         const body = {
-          email: user ? user.email : '',  // Obtén el correo electrónico del usuario actual
-          connection: user ? user['sub'].split('|')[0] : '' // Obtén la conexión del usuario actual
+          email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
+          connection: user ? user['sub'].split('|')[0] : '', // Obtén la conexión del usuario actual
         };
         console.log(body);
 
@@ -260,7 +260,6 @@ export class HttpService {
       .get<{ data: Product[] }>(`${this.url}/getproductbyid/${id}`, { params })
       .pipe(map((response) => response.data));
   }
-
 
   // Obtener todos los videos
   getDiets(): Observable<Diet[]> {

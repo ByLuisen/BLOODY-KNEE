@@ -65,7 +65,8 @@ export class PlayerComponent implements OnInit {
   }
 
   loadMoreComments() {
-    if (this.loading || this.comentariosToShow.length === this.comments.length) return;
+    if (this.loading || this.comentariosToShow.length === this.comments.length)
+      return;
 
     this.loading = true;
 
@@ -88,7 +89,7 @@ export class PlayerComponent implements OnInit {
         console.log('Comentarios obtenidos:', comments);
         // Aquí puedes manejar los comentarios obtenidos, por ejemplo, asignarlos a una propiedad del componente
         this.comments = comments;
-        this.video.comments+=1;
+        this.video.comments += 1;
         this.loadInitialComments();
       },
       (error) => {
@@ -122,7 +123,6 @@ export class PlayerComponent implements OnInit {
       }
     });
   }
-
 
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;
