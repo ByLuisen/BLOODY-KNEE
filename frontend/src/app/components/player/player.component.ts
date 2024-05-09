@@ -49,9 +49,12 @@ export class PlayerComponent implements OnInit {
       this.videoId = +params['videoId'];
       this.getVideo();
       this.getDestacados();
-      this.countAndUpdateComments(this.videoId);
       this.getCommentsByVideoId(this.videoId);
     });
+  }
+
+  loadInitialComments() {
+    this.comentariosToShow = this.comments.slice(0, this.batchSize);
   }
 
   onScroll(event: any) {
@@ -62,8 +65,7 @@ export class PlayerComponent implements OnInit {
   }
 
   loadMoreComments() {
-    if (this.loading || this.comentariosToShow.length === this.comments.length)
-      return;
+    if (this.loading || this.comentariosToShow.length === this.comments.length) return;
 
     this.loading = true;
 
@@ -86,6 +88,8 @@ export class PlayerComponent implements OnInit {
         console.log('Comentarios obtenidos:', comments);
         // Aquí puedes manejar los comentarios obtenidos, por ejemplo, asignarlos a una propiedad del componente
         this.comments = comments;
+        this.video.comments+=1;
+        this.loadInitialComments();
       },
       (error) => {
         console.error('Error al obtener comentarios:', error);
@@ -101,7 +105,6 @@ export class PlayerComponent implements OnInit {
             console.log('Comentario agregado correctamente');
             // Actualizar la lista de comentarios después de agregar uno nuevo
             this.getCommentsByVideoId(this.videoId);
-            this.video.comments += 1;
             this.commentInput.nativeElement.value = '';
             // También podrías mostrar un mensaje de éxito o realizar otras acciones necesarias
           },
@@ -120,16 +123,6 @@ export class PlayerComponent implements OnInit {
     });
   }
 
-  countAndUpdateComments(videoId: number): void {
-    this.http.countAndUpdateComments(videoId).subscribe(
-      () => {
-        console.log('Comentarios contados y actualizados correctamente');
-      },
-      (error) => {
-        console.error('Error al contar y actualizar comentarios:', error);
-      }
-    );
-  }
 
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;

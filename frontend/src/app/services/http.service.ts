@@ -151,6 +151,14 @@ export class HttpService {
           (response) => {
             observer.next(response.data);
             observer.complete();
+            this.countAndUpdateComments(id).subscribe(
+              () => {
+                console.log('Comentarios actualizados');
+              },
+              (error) => {
+                console.error('Error al actualizar los comentarios', error);
+              }
+            );
           },
           (error) => {
             observer.error(error);
