@@ -332,23 +332,23 @@ export class HttpService {
 
 
   addComment(videoId: number, comment: string): Observable<any> {
-    return this.auth.user$.pipe(
+    return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
         if (!user) {
-          return of(null); // Emite un valor nulo si el usuario no está autenticado
+          return of(null); // Emit null if the user is not authenticated
         }
         const url = `${this.url}/comments`;
         const body = {
-          user_id: user.sub, // Obtén el ID del usuario autenticado
+          email: user?.email || '', // Optional chaining to safely access user.email
+          connection: user ? user['sub'].split('|')[0] : '',
           video_id: videoId,
           comment: comment,
-          date: new Date().toISOString() // Establece la fecha actual
         };
         return this._http.post(url, body).pipe(
           catchError((error) => {
-            // Manejar errores aquí
-            console.error('Error en la solicitud HTTP:', error);
-            return of(null); // Emite un valor nulo si hay un error
+            // Handle errors here
+            console.error('HTTP request error:', error);
+            return of(null); // Emit null if there is an error
           })
         );
       })

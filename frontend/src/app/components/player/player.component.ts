@@ -85,9 +85,6 @@ export class PlayerComponent implements OnInit {
     });
   }
 
-
-
-
   countAndUpdateComments(videoId: number): void {
     this.http.countAndUpdateComments(videoId).subscribe(
       () => {
