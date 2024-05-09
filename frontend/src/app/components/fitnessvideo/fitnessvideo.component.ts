@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
 import { Router } from '@angular/router';
+import { finalize, of, switchMap, tap } from 'rxjs';
 @Component({
   selector: 'app-fitnessvideo',
   templateUrl: './fitnessvideo.component.html',
@@ -15,30 +16,38 @@ export class FitnessvideoComponent implements OnInit {
   filteredItems: Video[] = [];
   selectedType: string = 'Todos';
   modalOpen: boolean = false;
-  role: string = "admin";
+  loading: boolean = false;
+  role: string = 'admin';
 
   // Admin mode variable
   adminModeActivated: boolean = false;
 
-
-  constructor(private http: HttpService, private router: Router) { }
+  constructor(private http: HttpService, private router: Router) {}
 
   ngOnInit(): void {
-    // this.http.getRole().subscribe((data) => {
-    //   this.role = data[0].name;
-    //   console.log(this.role)
+    this.loading = true;
+    this.http
+      .getVideosModality(3, 3)
+      .pipe(
+        switchMap((videos) => {
+          this.videosConEquipamiento = videos;
+          this.todos = this.todos.concat(videos);
+          this.filteredItems = [...this.todos];
 
-    // })
-    this.http.getVideosModality(3, 3).subscribe((videos) => {
-      this.videosConEquipamiento = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
-    this.http.getVideosModality(3, 4).subscribe((videos) => {
-      this.videosSinEquipamiento = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
+          return of(videos);
+        }),
+        switchMap(() => {
+          return this.http.getVideosModality(3, 4);
+        }),
+        tap((videos) => {
+          if (videos) {
+            this.videosSinEquipamiento = videos;
+            this.todos = this.todos.concat(videos);
+            this.filteredItems = [...this.todos];
+          }
+        }), finalize(() => (this.loading = false))
+      )
+      .subscribe();
   }
   openModal() {
     this.modalOpen = true;
@@ -91,11 +100,11 @@ export class FitnessvideoComponent implements OnInit {
   }
   editVideo(video: Video) {
     // Aquí implementa la lógica para editar el video
-    console.log("Editando video:", video);
+    console.log('Editando video:', video);
   }
 
   deleteVideo(video: Video) {
     // Aquí implementa la lógica para eliminar el video
-    console.log("Eliminando video:", video);
+    console.log('Eliminando video:', video);
   }
 }

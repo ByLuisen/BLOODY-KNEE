@@ -21,12 +21,13 @@ import { catchError, finalize, of, switchMap, tap } from 'rxjs';
 export class ProductDetailComponent implements OnInit {
   productId!: number;
   product!: Product;
-  topProducts!: Product[]
+  topProducts!: Product[];
   mainImageUrl!: string;
   brandName!: string;
   added: boolean = false;
   quantity!: number;
   loading: boolean = false;
+  loadingProduct: boolean = false;
   openModal: boolean = false;
 
   constructor(
@@ -35,7 +36,7 @@ export class ProductDetailComponent implements OnInit {
     public auth: AuthService,
     private cookie: CookieService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -43,17 +44,10 @@ export class ProductDetailComponent implements OnInit {
       this.getProducto();
     });
     this.getRandomProducts();
-    this.getProductBrand()
-
-    // Get the quantity product selector
-    const selectElement = document.getElementById(
-      'quantity'
-    ) as HTMLSelectElement;
-    // Parse to integer the quantity
-    this.quantity = parseInt(selectElement.value);
   }
 
   getProducto(): void {
+    this.loadingProduct = true;
     this.http
       .getProductsById([this.productId])
       .pipe(
@@ -79,17 +73,23 @@ export class ProductDetailComponent implements OnInit {
    *
    */
   getRandomProducts(): void {
-    this.http.getProducts().subscribe(
-      (products) => {
-        // Obtener 6 productos aleatorios
-        const randomProducts = this.getRandomItems(products, 6);
-        console.log("Productos aleatorios:", randomProducts);
-        this.topProducts = randomProducts;
-      },
-      (error) => {
-        console.error("Error al obtener productos:", error);
-      }
-    );
+    this.http
+      .getProducts()
+      .pipe(
+        switchMap((products) => {
+          // Obtener 6 productos aleatorios
+          const randomProducts = this.getRandomItems(products, 6);
+          console.log('Productos aleatorios:', randomProducts);
+          this.topProducts = randomProducts;
+          return of(products);
+        }),
+        finalize(() => (this.loadingProduct = false)),
+        catchError((error) => {
+          console.error('Error al obtener productos:', error);
+          return of([]);
+        })
+      )
+      .subscribe();
   }
 
   // Función para obtener elementos aleatorios de una matriz
@@ -103,21 +103,10 @@ export class ProductDetailComponent implements OnInit {
    * @param productId
    */
   verDetallesProducto(productId: number) {
+    window.location.href = window.location.origin + '/product/' + productId;
     this.router.navigate(['/product', productId]);
   }
 
-  /**
-   * Obtiene la marca a la que pertenece el producto
-   */
-  getProductBrand(): void {
-    this.http.getProductBrand(this.productId)
-      .subscribe(response => {
-        this.brandName = response.brand.name;
-        console.log('La marca del producto es:', this.brandName)
-      }, error => {
-        console.error('Error al obtener la marca del producto:', error);
-      });
-  }
   add(): void {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
@@ -143,7 +132,7 @@ export class ProductDetailComponent implements OnInit {
         })
       )
       .subscribe(
-        () => { },
+        () => {},
         (error) => {
           console.error(error);
           // Manejar el error en tu aplicación
@@ -160,14 +149,13 @@ export class ProductDetailComponent implements OnInit {
     // Create the product object to add
     const productToAdd = {
       productId: this.productId,
-      quantity: this.quantity, // Convertir a número si es necesario
+      quantity: this.getQuantity(), // Convertir a número si es necesario
     };
 
     // Verify if the cookie cart exist
     if (this.cookie.check('cart')) {
       // Get the cart cookie value parsing it
       const cart = JSON.parse(this.cookie.get('cart'));
-      console.log(cart);
 
       // Verificar si el producto ya está en el carrito
       const existingProductIndex = cart.findIndex(
@@ -176,7 +164,7 @@ export class ProductDetailComponent implements OnInit {
 
       if (existingProductIndex !== -1) {
         // Si el producto ya está en el carrito, actualizar su cantidad
-        cart[existingProductIndex].quantity += this.quantity;
+        cart[existingProductIndex].quantity += this.getQuantity();
       } else {
         // Si el producto no está en el carrito, agregarlo
         cart.push(productToAdd);
@@ -187,13 +175,13 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  setQuantity(): void {
+  getQuantity(): number {
     // Get the quantity product selector
     const selectElement = document.getElementById(
       'quantity'
     ) as HTMLSelectElement;
     // Parse to integer the quantity
-    this.quantity = parseInt(selectElement.value);
+    return parseInt(selectElement.value);
   }
 
   hideNotification(): void {
@@ -202,7 +190,7 @@ export class ProductDetailComponent implements OnInit {
 
   submit(): void {
     this.loading = true;
-    this.product.quantity = this.quantity;
+    this.product.quantity = this.getQuantity();
     this.http
       .checkout([this.product])
       .pipe(
@@ -214,7 +202,7 @@ export class ProductDetailComponent implements OnInit {
         finalize(() => (this.loading = false))
       )
       .subscribe(
-        () => { },
+        () => {},
         (error) => {
           console.error('Error al iniciar la sesión de pago:', error);
           // Manejar el error en tu aplicación

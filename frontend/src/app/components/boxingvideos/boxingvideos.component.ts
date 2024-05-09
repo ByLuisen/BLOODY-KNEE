@@ -3,11 +3,12 @@ import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { finalize, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-boxingvideos',
   templateUrl: './boxingvideos.component.html',
-  styleUrls: ['./boxingvideos.component.css']
+  styleUrls: ['./boxingvideos.component.css'],
 })
 export class BoxingvideosComponent implements OnInit {
   // Array to hold all videos
@@ -18,6 +19,7 @@ export class BoxingvideosComponent implements OnInit {
   videosConEquipamiento: Video[] = [];
   videosSinEquipamiento: Video[] = [];
   editingVideo: Video | null = null;
+  loading: boolean = false;
 
   // Admin mode variable
   adminModeActivated: boolean = false;
@@ -27,7 +29,7 @@ export class BoxingvideosComponent implements OnInit {
   selectedType: string = 'Todos';
   // Flag to control modal visibility
   modalOpen: boolean = false;
-  role: string = "admin";
+  role: string = 'admin';
 
   // Edit form
   editForm: FormGroup;
@@ -36,7 +38,7 @@ export class BoxingvideosComponent implements OnInit {
     this.editForm = new FormGroup({
       title: new FormControl('', Validators.required),
       coach: new FormControl('', Validators.required),
-      description: new FormControl('', Validators.required)
+      description: new FormControl('', Validators.required),
     });
   }
 
@@ -45,30 +47,46 @@ export class BoxingvideosComponent implements OnInit {
     //   this.role = data[0].name;
     //   console.log(this.role)
     // })
-    this.http.getVideosModality(1, 1).subscribe(videos => {
-      this.videosSaco = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
-
-    this.http.getVideosModality(1, 2).subscribe(videos => {
-      this.videosPareja = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
-
-    this.http.getVideosModality(1, 3).subscribe(videos => {
-      this.videosConEquipamiento = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
-
-    this.http.getVideosModality(1, 4).subscribe(videos => {
-      this.videosSinEquipamiento = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
-
+    this.loading = true;
+    this.http
+      .getVideosModality(1, 1)
+      .pipe(
+        switchMap((videos) => {
+          this.videosSaco = videos;
+          this.todos = this.todos.concat(videos);
+          this.filteredItems = [...this.todos];
+          return of(videos);
+        }),
+        switchMap(() => {
+          return this.http.getVideosModality(1, 2);
+        }),
+        tap((videos) => {
+          this.videosPareja = videos;
+          this.todos = this.todos.concat(videos);
+          this.filteredItems = [...this.todos];
+          return of(videos);
+        }),
+        switchMap(() => {
+          return this.http.getVideosModality(1, 3);
+        }),
+        tap((videos) => {
+          this.videosConEquipamiento = videos;
+          this.todos = this.todos.concat(videos);
+          this.filteredItems = [...this.todos];
+          return of(videos);
+        }),
+        switchMap(() => {
+          return this.http.getVideosModality(1, 4);
+        }),
+        tap((videos) => {
+          this.videosSinEquipamiento = videos;
+          this.todos = this.todos.concat(videos);
+          this.filteredItems = [...this.todos];
+          return videos;
+        }),
+        finalize(() => (this.loading = false))
+      )
+      .subscribe();
   }
   // Método para activar o desactivar el modo admin
   toggleAdminMode() {
@@ -90,7 +108,7 @@ export class BoxingvideosComponent implements OnInit {
   // Method to select a video
   selectVideo(video: Video) {
     // Check if video is exclusive and user role permits access
-    if (video.exclusive && this.role != "standard" && this.role != "premium") {
+    if (video.exclusive && this.role != 'standard' && this.role != 'premium') {
       // Open modal if access is restricted
       this.openModal();
     } else {
@@ -107,13 +125,13 @@ export class BoxingvideosComponent implements OnInit {
   editVideo(video: Video) {
     // Asignar el video que se va a editar a la propiedad editingVideo
     this.editingVideo = video;
-    console.log("Editando video:", video);
+    console.log('Editando video:', video);
 
     // Establecer los valores del formulario de edición con los datos del video
     this.editForm!.setValue({
       title: video.title,
       coach: video.coach,
-      description: video.description
+      description: video.description,
     });
   }
 
@@ -142,23 +160,23 @@ export class BoxingvideosComponent implements OnInit {
     }
   }
 
-
   deleteVideo(video: Video) {
     // Aquí implementa la lógica para eliminar el video
-    console.log("Eliminando video:", video);
+    console.log('Eliminando video:', video);
 
     this.http.deleteVideo(video.id).subscribe(
       () => {
         console.log('Video eliminado exitosamente');
         // Eliminar el video de la lista local si es necesario
-        this.filteredItems = this.filteredItems.filter(item => item.id !== video.id);
+        this.filteredItems = this.filteredItems.filter(
+          (item) => item.id !== video.id
+        );
       },
       (error) => {
-        console.error('Error deleting video:', error)
+        console.error('Error deleting video:', error);
       }
-    )
+    );
   }
-
 
   filterVideos(type: string) {
     this.selectedType = type;

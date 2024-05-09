@@ -1,47 +1,46 @@
 <div class="sm:hidden block">
-  <div class="navigation-menu">
+  <div class="absolute bottom-6 left-5 cursor-pointer z-50">
     <button class="fixed-button" (click)="expandDiv()"></button>
   </div>
-
-  <div id="expandibleDiv" class="expandible-div mx-auto aclonica-font text-white">
+  <div id="expandibleDiv" class="expandible-div mx-auto aclonica-font text-white z-50">
     <ul class="flex flex-col mt-3">
-      <li>
+      <li (click)="expandDiv()">
         <a role="button" class="flex" routerLink="/thaivideos">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/icons8_boxer_512.webp" alt="" />
+          <img class="icon" src="../../../../assets/img/icons8_boxer_512.webp" alt="" />
           <span class="nav-text">Muay Thai</span>
         </a>
       </li>
       <hr>
-      <li>
+      <li (click)="expandDiv()">
         <a role="button" class="flex" routerLink="/boxingvideos">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/boxeo1.webp" alt="" />
+          <img class="icon" src="../../../../assets/img/boxeo1.webp" alt="" />
           <span class="nav-text"> Boxeo </span>
         </a>
       </li>
       <hr>
-      <li>
+      <li (click)="expandDiv()">
         <a role="button" class="flex" routerLink="/fitnessvideos">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/icons8_fitness_501.webp" alt="" />
+          <img class="icon" src="../../../../assets/img/icons8_fitness_501.webp" alt="" />
           <span class="nav-text"> Fitness </span>
         </a>
       </li>
       <hr>
-      <li>
+      <li (click)="expandDiv()">
         <a role="button" class="flex" routerLink="/diets">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/dietas1.webp" alt="" />
+          <img class="icon" src="../../../../assets/img/dietas1.webp" alt="" />
           <span class="nav-text">Dietas</span>
         </a>
       </li>
       <hr>
-      <li>
+      <li (click)="expandDiv()">
         <a role="button" class="flex" routerLink="/merchandising">
-          <img class="fa fa-home fa-2x icon" src="../../../../assets/img/eccommerce1.webp" alt="" />
+          <img class="icon" src="../../../../assets/img/eccommerce1.webp" alt="" />
           <span class="nav-text">Merchandising</span>
         </a>
       </li>
       <hr>
       <div *ngIf="auth.user$ | async as user">
-        <li>
+        <li (click)="expandDiv()">
           <a routerLink="/profile" class="flex">
             <img class="rounded-full icon" [src]="user.picture" alt="Profile Image">
             <p>Perfil</p>
@@ -49,8 +48,8 @@
         </li>
         <hr>
       </div>
-      <li>
-        <a class="flex" (click)="auth.logout({ logoutParams: { returnTo: getLocationOrigin() } })">
+      <li class="cursor-pointer" (click)="expandDiv()">
+        <a class="flex" (click)="auth.logout()">
           <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
             <img src="../../../assets/img/logout.webp" alt="Logout Image" class="icon">
             <p>Logout</p>

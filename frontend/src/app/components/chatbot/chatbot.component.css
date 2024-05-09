@@ -1,6 +1,6 @@
 .chat-container {
   width: 400px; /* Ajusta este valor según tus necesidades */
-  margin: 50px auto;
+  margin: 70px auto;
   border: 1px solid #ccc;
   padding: 20px;
   background: rgb(201, 0, 0);
@@ -32,7 +32,7 @@
   background-color: rgba(255, 255, 255, 0.5);
   color: white;
   margin-left: auto; /* Aplicar el margen directamente aquí */
-  
+
 }
 
 .bot-message {

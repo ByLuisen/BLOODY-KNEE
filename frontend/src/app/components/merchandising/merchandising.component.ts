@@ -1,15 +1,15 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { catchError, finalize, of, switchMap } from 'rxjs';
 import { Product } from 'src/app/models/Product';
 import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app-merchandising',
   templateUrl: './merchandising.component.html',
-  styleUrls: ['./merchandising.component.css']
+  styleUrls: ['./merchandising.component.css'],
 })
 export class MerchandisingComponent implements OnInit {
-
   // Array para almacenar todos los productos
   productos: Product[] = [];
 
@@ -22,7 +22,7 @@ export class MerchandisingComponent implements OnInit {
 
   loading: boolean = false;
 
-  constructor(private http: HttpService, private router: Router) { }
+  constructor(private http: HttpService, private router: Router) {}
 
   ngOnInit(): void {
     this.getProductos();
@@ -30,27 +30,32 @@ export class MerchandisingComponent implements OnInit {
   }
 
   getProductos(): void {
-    this.http.getProducts().subscribe(
-      (products) => {
-        console.log("TODOS LOS PRODUCTOS OBTENIDOS:", products);
-        this.productos = products;
+    this.loading = true;
+    this.http
+      .getProducts()
+      .pipe(
+        switchMap((products) => {
+          this.productos = products;
+          // Calcular precio mínimo y máximo
+          const precios = this.productos.map((producto) => producto.price);
+          const precioMinimo = Math.min(...precios);
+          const precioMaximo = Math.max(...precios);
 
-        // Calcular precio mínimo y máximo
-        const precios = this.productos.map(producto => producto.price);
-        const precioMinimo = Math.min(...precios);
-        const precioMaximo = Math.max(...precios);
+          // Establecer los valores iniciales del rango de precios
+          this.priceRangeInput.nativeElement.min = precioMinimo;
+          this.priceRangeInput.nativeElement.max = precioMaximo;
 
-        // Establecer los valores iniciales del rango de precios
-        this.priceRangeInput.nativeElement.min = precioMinimo;
-        this.priceRangeInput.nativeElement.max = precioMaximo;
-
-        // Asignar el valor inicial del rango de precios
-        this.precioMaximo = precioMaximo;
-      },
-      (error) => {
-        console.error("Error al obtener los productos:", error);
-      }
-    );
+          // Asignar el valor inicial del rango de precios
+          this.precioMaximo = precioMaximo;
+          return of(products);
+        }),
+        finalize(() => (this.loading = false)),
+        catchError((error) => {
+          console.error('Error al obtener los productos:', error);
+          return of([]);
+        })
+      )
+      .subscribe();
   }
 
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
@@ -61,11 +66,11 @@ export class MerchandisingComponent implements OnInit {
 
   // Metodos para filtrar los productos
   contarProductosEnStock(): number {
-    return this.productos.filter(producto => producto.stock > 0).length;
+    return this.productos.filter((producto) => producto.stock > 0).length;
   }
 
   contarProductosFueraDeStock(): number {
-    return this.productos.filter(producto => producto.stock === 0).length;
+    return this.productos.filter((producto) => producto.stock === 0).length;
   }
 
   productosFiltrados(): Product[] {
@@ -78,14 +83,20 @@ export class MerchandisingComponent implements OnInit {
       if (this.mostrarEnStock && this.mostrarFueraDeStock) {
         productosFiltrados = this.productos;
       } else if (this.mostrarEnStock) {
-        productosFiltrados = this.productos.filter(producto => producto.stock > 0);
+        productosFiltrados = this.productos.filter(
+          (producto) => producto.stock > 0
+        );
       } else if (this.mostrarFueraDeStock) {
-        productosFiltrados = this.productos.filter(producto => producto.stock === 0);
+        productosFiltrados = this.productos.filter(
+          (producto) => producto.stock === 0
+        );
       }
     }
 
     // Filtrar por rango de precio
-    productosFiltrados = productosFiltrados.filter(producto => producto.price <= this.precioMaximo);
+    productosFiltrados = productosFiltrados.filter(
+      (producto) => producto.price <= this.precioMaximo
+    );
 
     return productosFiltrados;
   }
