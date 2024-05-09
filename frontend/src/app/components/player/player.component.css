@@ -42,14 +42,13 @@ h2 {
 }
 
 iframe {
-  border-radius: 10px;
+
   width: 1080px;
   height: 720px;
 }
 
 .video_section {
   background: rgb(201, 0, 0);
-
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
@@ -100,8 +99,6 @@ iframe {
   display: flex;
   align-items: center;
   justify-content: center;
-
-
 }
 
 .dislike-button.animated {

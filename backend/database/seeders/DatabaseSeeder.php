@@ -20,11 +20,13 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(QuoteSeeder::class);
         $this->call(TypeSeeder::class);
+        $this->call(DietSeeder::class);
         $this->call(ModalitySeeder::class);
         $this->call(VideoSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(BrandSeeder::class);
         $this->call(ProductSeeder::class);
+        // $this->call(CommentSeeder::class);
         $this->call(RoleSeeder::class);
     }
 }

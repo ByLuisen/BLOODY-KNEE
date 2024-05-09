@@ -7,6 +7,7 @@ export class Video {
   #description: string;
   #url: string;
   #visits: number;
+  #comments: number;
   #likes: number;
   #dislikes: number;
   #upload_date: Date;
@@ -22,6 +23,7 @@ export class Video {
     description: string = '',
     url: string = '',
     visits: number = 0,
+    comments: number = 0,
     likes: number = 0,
     dislikes: number = 0,
     upload_date: Date = new Date(),
@@ -36,6 +38,7 @@ export class Video {
     this.#description = description;
     this.#url = url;
     this.#visits = visits;
+    this.#comments=comments;
     this.#likes = likes;
     this.#dislikes = dislikes;
     this.#upload_date = upload_date;
@@ -67,6 +70,9 @@ export class Video {
   }
   get visits(): number {
     return this.#visits;
+  }
+  get comments(): number{
+    return this.#comments;
   }
   get likes(): number {
     return this.#likes;
@@ -108,6 +114,9 @@ export class Video {
   }
   set visits(visits: number) {
     this.#visits = visits;
+  }
+  set comments(comments: number){
+    this.#comments= comments;
   }
   set likes(likes: number) {
     this.#likes = likes;

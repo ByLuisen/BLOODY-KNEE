@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\DietController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OpenAIController;
@@ -38,11 +40,15 @@ Route::group(['middleware' => 'api'], function () {
     Route::resource('quotes', QuoteController::class);
     Route::get('modalityvideo/{modality_id}/{type_id}', [VideoController::class, 'modalities']);
     Route::get('getvideobyid/{id}', [VideoController::class, 'videoById']);
+    Route::get('getcommentbyid/{id}', [CommentController::class, 'commentById']);
     Route::resource('videos', VideoController::class);
+    Route::resource('diets', DietController::class);
     Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
     Route::put('updateLikes/{id}', [VideoController::class, 'updateLikes']);
     Route::put('updateDislikes/{id}', [VideoController::class, 'updateDislikes']);
-    Route::put('/videos/{id}/visit', [VideoController::class, 'incrementVideoVisits']);
+    Route::put('/videos/{id}/visit', [VideoController::class,'incrementVideoVisits']);
+    Route::post('videos/{videoId}/update-comments', [CommentController::class, 'countAndUpdateComments']);
+    Route::post('/comments', [CommentController::class, 'addComment']);
     Route::resource('products', ProductController::class);
     Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
     Route::put('videos/{id}', [VideoController::class, 'update']);
