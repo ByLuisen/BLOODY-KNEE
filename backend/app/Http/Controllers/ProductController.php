@@ -36,7 +36,7 @@ class ProductController extends Controller
             $idsArray = explode(',', $ids);
 
             // Ahora puedes usar $idsArray para lo que necesites, por ejemplo, buscar los productos en la base de datos
-            $products = Product::whereIn('id', $idsArray)->get();
+            $products = Product::with('brand', 'category')->whereIn('id', $idsArray)->get();
 
             // Devolver los productos como una respuesta exitosa
             return ApiResponse::success(ProductResource::collection($products), 'Productos obtenidos correctamente por ID');

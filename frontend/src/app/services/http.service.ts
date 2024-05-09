@@ -21,7 +21,7 @@ export class HttpService {
   url: string = 'http://localhost:8000/api'; // URL base para las solicitudes HTTP
   // url: string = 'https://bloodyknee.es/api'; // URL del servidor
 
-  constructor(private _http: HttpClient, private auth: AuthService) {}
+  constructor(private _http: HttpClient, private auth: AuthService) { }
 
   /**
    * Retrieves an access token for authorization.
@@ -178,7 +178,6 @@ export class HttpService {
    */
   updateVideoVisits(videoId: number): Observable<any> {
     const url = `${this.url}/videos/${videoId}/visit`;
-
     // Utiliza switchMap para combinar el resultado del observable user$ con la solicitud HTTP put
     return this.auth.user$.pipe(
       switchMap((user) => {
@@ -200,6 +199,11 @@ export class HttpService {
       .pipe(map((response) => response.data as Product[]));
   }
 
+  /**
+   *
+   * @param id
+   * @returns
+   */
   getProductsById(id: number[]): Observable<Product[]> {
     // Construye la URL con los IDs como parámetros de consulta
     const params = new HttpParams().set('id', id.join(',')); // Unir los IDs en una cadena separada por comas
