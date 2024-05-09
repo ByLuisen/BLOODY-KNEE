@@ -26,13 +26,16 @@ class CommentController extends Controller
     public function commentById($id)
     {
         try {
-            // Buscar los comentarios asociados al video especificado por su ID
-            $comments = UserCommentVideo::where('video_id', $id)->get();
+            // Buscar los comentarios asociados al video especificado por su ID, ordenados por fecha de creación
+            $comments = UserCommentVideo::with('user')
+                                        ->where('video_id', $id)
+                                        ->orderBy('created_at', 'desc') // Ordenar por fecha de creación, puedes cambiar 'desc' a 'asc' si deseas orden ascendente
+                                        ->get();
 
             // Verificar si se encontraron comentarios
             if ($comments->isNotEmpty()) {
                 // Retorna la colección de comentarios en forma de recurso
-                return ApiResponse::success(CommentResource::collection($comments), 'Lista de comentarios obtenida correctamente');
+                return ApiResponse::success($comments, 'Lista de comentarios obtenida correctamente');
             } else {
                 // Retorna un mensaje de error si no se encontraron comentarios
                 return ApiResponse::error('No se encontraron comentarios para el video con el ID proporcionado');
@@ -42,6 +45,10 @@ class CommentController extends Controller
             return ApiResponse::error($e->getMessage());
         }
     }
+
+
+
+
 
 
     public function countAndUpdateComments($videoId)

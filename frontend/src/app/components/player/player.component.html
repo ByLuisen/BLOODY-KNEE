@@ -6,7 +6,8 @@
       <div class="text-center">
         <div class="mt-2">
           <div style="position:relative;">
-            <iframe [src]="videoUrl" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" title="FIGHT 0">
+            <iframe [src]="videoUrl" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+              title="FIGHT 0">
             </iframe>
           </div>
         </div>
@@ -57,29 +58,34 @@
             descriptionVisible ? 'Mostrar menos' : 'Mostrar más' }}</button></h2>
         <p class="text-justify pb-2 pl-2 sm:pt-2 pr-2" *ngIf="descriptionVisible">{{video.description}}</p>
       </div>
+
       <div>
         <div class="sm:block w-px pt-4">
           <div class="flex">
             <p>{{video.comments}} comentarios</p>
-          </div>       
+          </div>
           <div class="relative mb-4">
-            <input #commentInput type="text" class="w-full border-2 rounded-lg border-red-600 py-2 px-3 bg-transparent focus:outline-none focus:border-red-600" placeholder="Añade un comentario...">
-            <button (click)="addComment(commentInput.value)" class="absolute top-0 right-0 bg-transparent hover:bg-red-600 text-red-700 hover:text-white font-bold py-2 px-4 rounded-r-lg">Comentar</button>
-        </div>        
+            <input #commentInput type="text"
+              class="w-full border-2 rounded-lg border-red-600 py-2 px-3 bg-transparent focus:outline-none focus:border-red-600"
+              placeholder="Añade un comentario...">
+            <button (click)="addComment(commentInput.value)"
+              class="absolute top-0 right-0 bg-transparent hover:bg-red-600 text-red-700 hover:text-white font-bold py-2 px-4 rounded-r-lg">Comentar</button>
+          </div>
           <div *ngFor="let comentario of comments" class="border-b-4 color mb-4 px-2">
             <div class="flex items-center">
-              <img src="../../../assets/img/login1rojo2.webp" class="w-8 h-8">
-              <p class="text-red-600 px-2">Julian</p>
+              <img [src]="comentario.user.picture" class="w-12 h-12 rounded-full">
+              <p class="text-red-600 px-2">{{comentario.user.nickname}}</p>
             </div>
             <p>{{comentario.comment}}</p>
           </div>
           <div *ngIf="loading && comments.length > comentariosToShow.length"
             class="flex self-center justify-center content-center">
-            <img src="../../../assets/img/loading.gif" alt="Carregant..."
+            <img src="../../../assets/img/loading.gif" alt="Cargando..."
               class="text-center flex justify-center py-2 w-14">
           </div>
         </div>
       </div>
+
 
     </div>
     <div class="hidden sm:block sm:pl-96 mt-16">

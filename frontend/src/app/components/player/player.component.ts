@@ -8,14 +8,22 @@ import { Router } from '@angular/router';
 import { AuthService, User } from '@auth0/auth0-angular';
 import { Comment } from 'src/app/models/Comment';
 import { SafeResourceUrl } from '@angular/platform-browser';
-
+import { ViewChild } from '@angular/core';
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css'],
 })
 export class PlayerComponent implements OnInit {
-  constructor(private elementRef: ElementRef, private http: HttpService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private cdr: ChangeDetectorRef, private router: Router, public auth: AuthService) { }
+  constructor(
+    private elementRef: ElementRef,
+    private http: HttpService,
+    public sanitizer: DomSanitizer,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    public auth: AuthService
+  ) {}
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
   videoId!: number;
@@ -25,16 +33,18 @@ export class PlayerComponent implements OnInit {
   modalOpen: boolean = false;
   modalOpen2: boolean = false;
   role!: string;
-  comentariosToShow: any[] = [];
+  comentariosToShow: Comment[] = [];
   loading: boolean = false;
   batchSize: number = 5;
   comments: Comment[] = [];
   videoUrl!: SafeResourceUrl;
+  @ViewChild('commentInput') commentInput!: ElementRef;
 
   ngOnInit() {
-    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479');
+    this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
+    );
     this.loadButtons();
-    this.loadInitialComments();
     this.route.params.subscribe((params) => {
       this.videoId = +params['videoId'];
       this.getVideo();
@@ -42,8 +52,28 @@ export class PlayerComponent implements OnInit {
       this.countAndUpdateComments(this.videoId);
       this.getCommentsByVideoId(this.videoId);
     });
+  }
 
+  onScroll(event: any) {
+    const element = event.target;
+    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      this.loadMoreComments();
+    }
+  }
 
+  loadMoreComments() {
+    if (this.loading || this.comentariosToShow.length === this.comments.length)
+      return;
+
+    this.loading = true;
+
+    setTimeout(() => {
+      const startIndex = this.comentariosToShow.length;
+      const endIndex = startIndex + this.batchSize;
+      const newComments = this.comments.slice(startIndex, endIndex);
+      this.comentariosToShow = this.comentariosToShow.concat(newComments);
+      this.loading = false;
+    }, 1000);
   }
 
   stopPropagation(event: Event): void {
@@ -71,6 +101,8 @@ export class PlayerComponent implements OnInit {
             console.log('Comentario agregado correctamente');
             // Actualizar la lista de comentarios después de agregar uno nuevo
             this.getCommentsByVideoId(this.videoId);
+            this.video.comments += 1;
+            this.commentInput.nativeElement.value = '';
             // También podrías mostrar un mensaje de éxito o realizar otras acciones necesarias
           },
           (error) => {
@@ -79,7 +111,9 @@ export class PlayerComponent implements OnInit {
           }
         );
       } else {
-        console.log('El usuario debe estar autenticado para agregar un comentario.');
+        console.log(
+          'El usuario debe estar autenticado para agregar un comentario.'
+        );
         // Aquí podrías mostrar un mensaje al usuario indicando que necesita iniciar sesión para agregar un comentario
       }
     });
@@ -96,33 +130,8 @@ export class PlayerComponent implements OnInit {
     );
   }
 
-
   toggleDescription() {
     this.descriptionVisible = !this.descriptionVisible;
-  }
-
-  loadInitialComments() {
-    this.comentariosToShow = this.comments.slice(0, this.batchSize);
-  }
-  onScroll(event: any) {
-    const element = event.target;
-    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-      this.loadMoreComments();
-    }
-  }
-
-  loadMoreComments() {
-    if (this.loading || this.comentariosToShow.length === this.comments.length) return;
-
-    this.loading = true;
-
-    setTimeout(() => {
-      const startIndex = this.comentariosToShow.length;
-      const endIndex = startIndex + this.batchSize;
-      const newComments = this.comments.slice(startIndex, endIndex);
-      this.comentariosToShow = this.comentariosToShow.concat(newComments);
-      this.loading = false;
-    }, 1000);
   }
 
   loadButtons() {
@@ -188,7 +197,9 @@ export class PlayerComponent implements OnInit {
         this.video = video;
         this.cdr.detectChanges();
         // this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.video.url);
-        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.video.url);
+        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+          this.video.url
+        );
       },
       (error) => {
         console.error('Error al obtener el video:', error);

@@ -1,3 +1,5 @@
+import { User } from "./User";
+
 export class Comment {
     #id: number;
     #userId: number;
@@ -6,7 +8,8 @@ export class Comment {
     #comment: string;
     #createdAt: Date;
     #updatedAt: Date;
-  
+    #user: User;
+
     constructor(
       id: number = 0,
       userId: number = 0,
@@ -14,7 +17,8 @@ export class Comment {
       date: Date = new Date(),
       comment: string = '',
       createdAt: Date = new Date(),
-      updatedAt: Date = new Date()
+      updatedAt: Date = new Date(),
+      user: User = new User() // Establece un usuario por defecto
     ) {
       this.#id = id;
       this.#userId = userId;
@@ -23,8 +27,9 @@ export class Comment {
       this.#comment = comment;
       this.#createdAt = createdAt;
       this.#updatedAt = updatedAt;
+      this.#user = user;
     }
-  
+
     // Getters
     get id(): number {
       return this.#id;
@@ -47,7 +52,10 @@ export class Comment {
     get updatedAt(): Date {
       return this.#updatedAt;
     }
-  
+    get user(): User {
+      return this.#user;
+    }
+
     // Setters
     set id(id: number) {
       this.#id = id;
@@ -70,7 +78,10 @@ export class Comment {
     set updatedAt(updatedAt: Date) {
       this.#updatedAt = updatedAt;
     }
-  
+    set user(user: User) {
+      this.#user = user;
+    }
+
     // Convertir objeto a JSON
     toJSON(): any {
       return {
@@ -81,7 +92,7 @@ export class Comment {
         comment: this.#comment,
         createdAt: this.#createdAt.toISOString(), // Convertir fecha a formato ISO
         updatedAt: this.#updatedAt.toISOString(), // Convertir fecha a formato ISO
+        user: this.#user.toJSON() // Convertir el usuario a formato JSON
       };
     }
   }
-  
