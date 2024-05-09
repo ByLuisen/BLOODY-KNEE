@@ -1,5 +1,6 @@
+/* Styles for the chat container */
 .chat-container {
-  width: 400px; /* Ajusta este valor según tus necesidades */
+  width: 400px; /* Adjust this value according to your needs */
   margin: 70px auto;
   border: 1px solid #ccc;
   padding: 20px;
@@ -9,16 +10,17 @@
   color: rgb(255, 255, 255);
 }
 
-
+/* Styles for the chat history section */
 .chat-history {
   height: 300px;
   width: auto;
   overflow-y: scroll;
   border-bottom: 1px solid #ccc;
-
 }
 
-.user-message, .bot-message {
+/* Styles for user and bot messages */
+.user-message,
+.bot-message {
   background-color: rgba(255, 255, 255, 0.5);
   color: white;
   padding: 10px;
@@ -28,30 +30,33 @@
   word-break: break-word;
 }
 
+/* Styles for user messages */
 .user-message {
   background-color: rgba(255, 255, 255, 0.5);
   color: white;
-  margin-left: auto; /* Aplicar el margen directamente aquí */
-
+  margin-left: auto; /* Apply margin directly here */
 }
 
+/* Styles for bot messages */
 .bot-message {
   background-color: rgba(255, 255, 255, 0.5);
   color: rgb(255, 255, 255);
-  margin-right: auto; /* Aplicar el margen directamente aquí */
+  margin-right: auto; /* Apply margin directly here */
 }
 
-
+/* Styles for the chat input section */
 .chat-input {
   margin-top: 20px;
 }
 
+/* Styles for the input field */
 .chat-input input {
   width: 80%;
   padding: 10px;
   border-radius: 15px;
 }
 
+/* Styles for the send button */
 .chat-input button {
   width: 18%;
   padding: 10px;

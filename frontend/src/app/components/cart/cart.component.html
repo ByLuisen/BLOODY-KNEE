@@ -1,36 +1,54 @@
+<!-- Shopping cart icon -->
 <div (click)="toggleCart()" class="absolute bottom-7 right-5 cursor-pointer">
   <img src="../../../assets/img/compras3.webp"
     class="rounded-full w-16 h-16 transition-transform duration-300 transform bg-red-600 hover:scale-110 hover:bg-red-500">
 </div>
 
+<!-- Shopping cart panel -->
 <div class="relative z-50" aria-labelledby="slide-over-title" role="dialog" aria-modal="true" *ngIf="cartOpen"
   [ngClass]="{ 'fade-in': cartOpen}">
+
+  <!-- Darkened background behind the panel -->
   <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
+  <!-- Main container for the panel -->
   <div class="fixed inset-0 overflow-hidden">
     <div class="absolute inset-0 overflow-hidden">
+
+      <!-- Container for panel scroll -->
       <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
         [ngClass]="{ 'slide-over': cartOpen}">
+
+        <!-- Panel content -->
         <div class="pointer-events-auto w-screen max-w-md">
 
-          <!-- Pantalla de carga mientras se obtienen los productos de la cesta -->
+          <!-- Loading screen while fetching cart products -->
           <div class="h-full w-full flex items-center justify-center bg-white shadow-xl"
             *ngIf="loading; else cartContainer">
+
+            <!-- Loading animation -->
             <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
             <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-red-500 animate-spin"></div>
+
+            <!-- Logo -->
             <img src="../../../assets/img/my_logo.webp" class="rounded-full h-8 w-8">
           </div>
 
+          <!-- Cart content -->
           <ng-template #cartContainer>
             <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
               <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+                <!-- Cart header -->
                 <div class="flex items-start justify-between">
                   <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Cesta</h2>
                   <div class="ml-3 flex h-7 items-center">
+                    <!-- Button to close the panel -->
                     <button type="button" class="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
                       (click)="closeCart()">
                       <span class="absolute -inset-0.5"></span>
                       <span class="sr-only">Close panel</span>
+
+                      <!-- Close icon -->
                       <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                         aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -39,18 +57,23 @@
                   </div>
                 </div>
 
+                <!-- List of products in the cart -->
                 <div class="mt-8" *ngIf="products.length != 0; else emptyCart">
                   <div class="flow-root">
                     <ul role="list" class="-my-6 divide-y divide-gray-200">
+                      <!-- List item for each product in the cart -->
                       <li class="flex py-6" *ngFor="let product of products; let i = index">
+                        <!-- Product image -->
                         <div
                           class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 cursor-pointer"
                           (click)="verDetallesProducto(product.id)">
                           <img [src]="'../../../assets/img/imgs_productos/' + product.url_img1 + '.webp'">
                         </div>
 
+                        <!-- Product details -->
                         <div class="ml-4 flex flex-1 flex-col">
                           <div>
+                            <!-- Product name and price -->
                             <div class="flex justify-between text-base font-medium text-gray-900">
                               <h3 class="cursor-pointer" (click)="verDetallesProducto(product.id)">
                                 {{ product.name }}
@@ -59,8 +82,8 @@
                             </div>
                           </div>
                           <div class="flex flex-1 items-end justify-between text-sm">
+                            <!-- Product quantity and button to delete it -->
                             <p class="text-gray-500">Cantidad {{ product.quantity }}</p>
-
                             <div class="flex">
                               <button type="button" (click)="deleteProduct(i)"
                                 class="font-medium text-red-600 hover:text-red-500">Eliminar</button>
@@ -73,9 +96,11 @@
                 </div>
               </div>
 
+              <!-- Empty cart message -->
               <ng-template #emptyCart>
                 <div class="mt-8 text-center text-lg text-gray-500">
                   <p>Tu cesta está vacía.</p>
+                  <!-- Empty cart icon -->
                   <div class="flex justify-center items-center mt-1">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                       stroke="red" class="h-8 w-8">
@@ -86,17 +111,20 @@
                 </div>
               </ng-template>
 
-
+              <!-- Subtotal and action buttons -->
               <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
                 <div class="flex justify-between text-base font-medium text-gray-900" *ngIf="products.length != 0">
                   <p>Subtotal ({{ calculateTotalProducts() }} producto/s):</p>
                   <p>{{ calculateTotalAmount() }}€</p>
                 </div>
+                <!-- Button to proceed to checkout -->
                 <div class="mt-6" *ngIf="products.length != 0">
                   <a (click)="loginOrAdressForm()"
                     class="flex items-center justify-center rounded-md border border-transparent cursor-pointer bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700">Tramitar
                     pedido</a>
                 </div>
+
+                <!-- Continue shopping button -->
                 <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
                   <p>
                     <span class="text-black" *ngIf="products.length != 0">o </span>

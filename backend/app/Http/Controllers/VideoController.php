@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Log;
 
 class VideoController extends Controller
 {
+    /**
+     * Retrieve all videos.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         try {
@@ -20,11 +25,17 @@ class VideoController extends Controller
 
             return ApiResponse::success(VideoResource::collection($videos), 'Lista de videos obtenida correctamente'); // Corrección en el nombre de la clase VideoResource
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
             return ApiResponse::error($e->getMessage());
         }
     }
 
+    /**
+     * Retrieve videos by modality and type.
+     *
+     * @param  int  $modality_id
+     * @param  int  $type_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function modalities($modality_id, $type_id)
     {
 
@@ -35,10 +46,16 @@ class VideoController extends Controller
 
             return ApiResponse::success(VideoResource::collection($videos), 'Lista de videos ordenada por modalidad y tipo obtenida correctamente');
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
             return ApiResponse::error($e->getMessage());
         }
     }
+
+    /**
+     * Retrieve a video by its ID.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function videoById($id)
     {
 
@@ -47,11 +64,17 @@ class VideoController extends Controller
 
             return ApiResponse::success(VideoResource::collection($video), 'Video único por id obtenido correctamente');
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
             return ApiResponse::error($e->getMessage());
         }
     }
 
+    /**
+     * Update likes for a video.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateLikes(Request $request, $id)
     {
         try {
@@ -69,18 +92,18 @@ class VideoController extends Controller
             }
 
             if ($user) {
-                // Verificar si el usuario ya ha dado like a este video
+                // Check if the user has already liked this video
                 if ($video->likedByUsers->contains($user)) {
                     return response()->json(['error' => 'Ya diste like a este video'], 400);
                 }
 
-                // Eliminar dislike si existe
+                // Remove dislike if exists
                 if ($video->dislikedByUsers->contains($user)) {
                     $video->dislikedByUsers()->detach($user);
                     $video->dislikes--;
                 }
 
-                // Registrar el like del usuario en la tabla intermedia
+                // Register the user's like in the pivot table
                 $user->likes()->attach($video->id, ['type' => 'Like', 'date' => now()]);
                 $video->likes++;
                 $video->save();
@@ -95,8 +118,13 @@ class VideoController extends Controller
         }
     }
 
-
-
+    /**
+     * Update dislikes for a video.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateDislikes(Request $request, $id)
     {
         try {
@@ -114,18 +142,18 @@ class VideoController extends Controller
             }
 
             if ($user) {
-                // Verificar si el usuario ya ha dado dislike a este video
+                // Check if the user has already disliked this video
                 if ($video->dislikedByUsers->contains($user)) {
                     return response()->json(['error' => 'Ya diste dislike a este video'], 400);
                 }
 
-                // Eliminar like si existe
+                // Remove like if exists
                 if ($video->likedByUsers->contains($user)) {
                     $video->likedByUsers()->detach($user);
                     $video->likes--;
                 }
 
-                // Registrar el dislike del usuario en la tabla intermedia
+                // Register the user's dislike in the pivot table
                 $user->likes()->attach($video->id, ['type' => 'Dislike', 'date' => now()]);
                 $video->dislikes++;
                 $video->save();
@@ -140,27 +168,34 @@ class VideoController extends Controller
         }
     }
 
+    /**
+     * Increment the visit count for a video.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function incrementVideoVisits(Request $request, $id)
     {
         try {
-            // Obtener el usuario por su correo electrónico si se proporciona
+            // Get the user by their email if provided
             $user = null;
             $email = $request->input('email');
             if ($email) {
                 $user = User::where('email', $email)->first();
             }
 
-            // Obtener el video por su ID
+            // Get the video by its ID
             $video = Video::findOrFail($id);
 
 
-            // Si se encontró un usuario, registrar la visita del usuario al video
+            // If a user is found, record the user's visit to the video
             if ($user) {
-                // Utiliza el método attach() en la relación con la tabla pivote
+                // Use the attach() method on the pivot table relationship
                 $user->videos()->attach($video->id, ['date' => now()]);
             }
 
-            // Incrementar las visitas del video
+            // Increment the video visits
             $video->visits += 1;
             $video->save();
 
@@ -169,19 +204,25 @@ class VideoController extends Controller
             return ApiResponse::error($e->getMessage());
         }
     }
-
+    /**
+     * Update a video's details.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $id)
     {
         try {
-            // Buscar el video por su ID
+            // Find the video by its ID
             $video = Video::findOrFail($id);
 
-            // Verificar si el video existe
+            // Check if the video exists
             if (!$video) {
                 return ApiResponse::error('Video no encontrado', 404);
             }
 
-            // Actualizar los datos del video con los datos proporcionados en la solicitud
+            // Update the video's data with the data provided in the request
             $video->update($request->all());
 
             return ApiResponse::success(new VideoResource($video), 'Video actualizado correctamente');
@@ -190,18 +231,24 @@ class VideoController extends Controller
         }
     }
 
+    /**
+     * Delete a video.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id)
     {
         try {
-            // Buscar el video por su ID
+            // Find the video by its ID
             $video = Video::findOrFail($id);
 
-            // Verificar si el video existe
+            // Check if the video exists
             if (!$video) {
                 return ApiResponse::error('Video no encontrado', 404);
             }
 
-            // Eliminar el video
+            // Delete the video
             $video->delete();
 
             return ApiResponse::success(null, 'Video eliminado correctamente');

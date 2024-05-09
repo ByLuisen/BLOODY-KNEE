@@ -8,14 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class UserVisitVideo extends Pivot
 {
     use HasFactory;
+    // The table associated with the model.
 
     protected $table = 'user_visit_videos';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'user_id',
         'video_id',
         'date'
     ];
-    
+
 }
 

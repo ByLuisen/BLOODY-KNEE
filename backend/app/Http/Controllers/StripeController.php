@@ -8,6 +8,12 @@ use Stripe\StripeClient;
 
 class StripeController extends Controller
 {
+    /**
+     * Process payment for products.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function payment(Request $request)
     {
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
@@ -49,16 +55,24 @@ class StripeController extends Controller
         return ApiResponse::success(['checkout_url' => $checkout_session->url], 'Checkout Seesion creada correctamente');
     }
 
+    /**
+     * Process subscription payment.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function subscription(Request $request)
     {
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
 
         $checkout_session = \Stripe\Checkout\Session::create([
             'customer_email' => $request->input('user_email'),
-            'line_items' => [[
-                'price' => $request->input('price_id'),
-                'quantity' => 1,
-            ]],
+            'line_items' => [
+                [
+                    'price' => $request->input('price_id'),
+                    'quantity' => 1,
+                ]
+            ],
             'mode' => 'subscription',
             'payment_method_configuration' => 'pmc_1P680fByhCj4S0lhpHMBLSHL',
             'success_url' => $request->input('href') . '?success=true',

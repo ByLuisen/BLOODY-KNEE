@@ -20,18 +20,19 @@ use App\Http\Controllers\StripeController;
 */
 
 
-
+// Route to retrieve user information if authenticated with Sanctum
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Route to check token validity and authorization
 Route::get('/private', function () {
     return response()->json([
         'message' => 'Your token is valid; you are authorized.',
     ]);
 })->middleware('auth:api');
 
-// Grupo de rutas para controladores con middleware de autenticacion y namespace de controladores
+// Route group for controllers with authentication middleware and controller namespace
 Route::group(['middleware' => 'api'], function () {
     Route::resource('quotes', QuoteController::class);
     Route::get('modalityvideo/{modality_id}/{type_id}', [VideoController::class, 'modalities']);
@@ -48,7 +49,11 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('products/{id}/brand', [ProductController::class, 'productBrand']);
 });
 
+// Route to handle payment
 Route::post('/payment', [StripeController::class, 'payment']);
+
+// Route to handle subscription
 Route::post('/subscription', [StripeController::class, 'subscription']);
 
+// Route to send messages to OpenAI
 Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);

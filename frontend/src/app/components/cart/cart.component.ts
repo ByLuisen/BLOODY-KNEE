@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
-import { CookieService } from 'ngx-cookie-service';
-import { catchError, finalize, of, switchMap } from 'rxjs';
-import { Product } from 'src/app/models/Product';
-import { HttpService } from 'src/app/services/http.service';
+import { AuthService } from '@auth0/auth0-angular'; // Import AuthService from Auth0 Angular SDK
+import { CookieService } from 'ngx-cookie-service'; // Import CookieService from ngx-cookie-service
+import { catchError, finalize, of, switchMap } from 'rxjs'; // Import necessary operators from RxJS
+import { Product } from 'src/app/models/Product'; // Import Product model
+import { HttpService } from 'src/app/services/http.service'; // Import HttpService
 
 @Component({
   selector: 'app-cart',
@@ -12,41 +12,48 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./cart.component.css'],
 })
 export class CartComponent {
-  cartOpen = false;
-  products: Product[] = [];
-  cart!: any[];
-  loading: boolean = false;
+  cartOpen = false; // Flag to control cart visibility
+  products: Product[] = []; // Array to hold cart products
+  cart!: any[]; // Array to hold cart items
+  loading: boolean = false; // Flag to indicate loading state
 
   constructor(
-    private auth: AuthService,
-    private http: HttpService,
-    private cookie: CookieService,
-    private router: Router
-  ) {}
+    private auth: AuthService, // Instance of AuthService
+    private http: HttpService, // Instance of HttpService
+    private cookie: CookieService, // Instance of CookieService
+    private router: Router // Instance of Router
+  ) { }
 
+  // Function to toggle cart visibility
   toggleCart() {
+    // Check if user is authenticated
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
-        // Haz algo si el usuario está autenticado
+        // Perform actions if user is authenticated
       } else {
+        // Retrieve products from cookie if user is not authenticated
         this.getProductsFromACookie();
       }
     });
+    // Toggle cart visibility
     this.cartOpen = !this.cartOpen;
   }
 
+  // Function to retrieve products from a cookie
   getProductsFromACookie(): void {
-    // Verify if the cookie cart exist
+    // Verify if the cart cookie exists
     if (this.cookie.check('cart')) {
-      this.loading = true;
-      // Get the cart cookie value parsing it
+      this.loading = true;// Set loading flag to true
+      // Parse the cart cookie value
       this.cart = JSON.parse(this.cookie.get('cart'));
-      // Obtener solo los IDs de los productos
+      // Extract only the IDs of the products
       const ids = this.cart.map((product: any) => product.productId);
+      // Retrieve products by their IDs
       this.http
         .getProductsById(ids)
         .pipe(
           switchMap((products: Product[]) => {
+            // Map retrieved products to include quantity information from the cart
             this.products = products.map((product) => {
               const cartItem = this.cart.find(
                 (cart) => cart.productId === product.id
@@ -60,21 +67,24 @@ export class CartComponent {
           }),
           catchError((error) => {
             console.error('Error al obtener el producto:', error);
-            return of([]); // Devolver un observable vacío o un valor por defecto
+            return of([]); // Return an empty observable or a default value
           }),
           finalize(() => {
-            this.loading = false;
+            this.loading = false;// Set loading flag to false after completion
           })
         )
         .subscribe();
     }
   }
-
+  /**
+   * Function to delete a product from the cart
+   * @param index
+   */
   deleteProduct(index: number): void {
-    // Eliminar el producto del array products
+    // Remove the product from the products array
     this.products.splice(index, 1);
 
-    // Eliminar el producto del array cart
+    // Remove the product from the cart array
     this.cart.splice(index, 1);
 
     // Verificar si todavía hay productos en el carrito
@@ -86,9 +96,12 @@ export class CartComponent {
       this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
     }
   }
-
+  /**
+   * Function to calculate the total number of products in the cart
+   * @returns
+   */
   calculateTotalProducts(): number {
-    // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
+    // Use the reduce method to sum all the quantities of products in the cart
     const totalProducts = this.cart.reduce(
       (total, product) => total + product.quantity,
       0
@@ -96,8 +109,12 @@ export class CartComponent {
     return totalProducts;
   }
 
+  /**
+   * Function to calculate the total amount of the cart
+   * @returns
+   */
   calculateTotalAmount(): number {
-    // Usar la función map para calcular el precio total
+    // Use the map function to calculate the total price
     const totalAmount = this.products
       .map((product, index) => product.price * this.cart[index].quantity)
       .reduce((total, current) => total + current, 0);
@@ -105,36 +122,47 @@ export class CartComponent {
     return totalAmount;
   }
 
+  /**
+   * Function to close the cart
+   */
   closeCart() {
     this.cartOpen = false;
   }
 
+  /**
+   * Function to view product details
+   * @param productId
+   */
   verDetallesProducto(productId: number) {
-    // Navegar a la vista de detalles del producto con el ID del producto como parámetro
+    // Navigate to the product details view with the product ID as a parameter
     this.router.navigate(['/product', productId]).then(() => {
       this.closeCart();
     });
   }
-
+  /**
+   * Function to handle login or address form submission
+   */
   loginOrAdressForm(): void {
+
+    // Check if user is authenticated
     this.auth.isAuthenticated$
       .pipe(
         switchMap((logged) => {
           if (!logged) {
-            return this.auth.loginWithPopup();
+            return this.auth.loginWithPopup();// Redirect to login if not authenticated
           }
-          return of(null); // Emite un valor nulo si ya está autenticado
+          return of(null); // Emit null if already authenticated
         }),
         switchMap(() => {
-          this.router.navigate(['/address-form']);
-          return of(null);
+          this.router.navigate(['/address-form']); // Navigate to address form
+          return of(null); // Emit null
         })
       )
       .subscribe(
-        () => {},
+        () => { },// Do nothing on success
         (error) => {
           console.error(error);
-          // Manejar el error en tu aplicación
+          // Handle error in your application
         }
       );
   }

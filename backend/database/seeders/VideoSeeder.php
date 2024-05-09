@@ -9,14 +9,19 @@ use App\Models\Video;
 
 class VideoSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run(): void
     {
-        // Videos de boxeo (modality_id = 1)
+        // Boxing videos (modality_id = 1)
         for ($i = 1; $i <= 10; $i++) {
-            $type_id = ($i % 4) + 1; // Genera un valor de tipo cíclico entre 1 y 4
-            $isExclusive = (bool)rand(0, 1); // Randomly set exclusive to true or false
+            $type_id = ($i % 4) + 1; // Generates a cyclic type value between 1 and 4
+            $isExclusive = (bool) rand(0, 1); // Randomly set exclusive to true or false
             Video::create([
-                'type_id' => (string)$type_id,
+                'type_id' => (string) $type_id,
                 'modality_id' => '1',
                 'title' => "Entrenamiento de boxeo #{$i}",
                 'coach' => 'Entrenador Principal',
@@ -30,12 +35,12 @@ class VideoSeeder extends Seeder
             ]);
         }
 
-        // Videos de thai (modality_id = 2)
+        // Muay Thai videos (modality_id = 2)
         for ($i = 1; $i <= 10; $i++) {
-            $type_id = ($i % 4) + 1; // Genera un valor de tipo cíclico entre 1 y 4
-            $isExclusive = (bool)rand(0, 1); // Randomly set exclusive to true or false
+            $type_id = ($i % 4) + 1; // Generates a cyclic type value between 1 and 4
+            $isExclusive = (bool) rand(0, 1); // Randomly set exclusive to true or false
             Video::create([
-                'type_id' => (string)$type_id,
+                'type_id' => (string) $type_id,
                 'modality_id' => '2',
                 'title' => "Entrenamiento de thai #{$i}",
                 'coach' => 'Entrenador Principal',
@@ -51,10 +56,10 @@ class VideoSeeder extends Seeder
 
         // Videos de fitness (modality_id = 3)
         for ($i = 1; $i <= 10; $i++) {
-            $type_id = ($i % 4) + 1; // Genera un valor de tipo cíclico entre 1 y 4
-            $isExclusive = (bool)rand(0, 1); // Randomly set exclusive to true or false
+            $type_id = ($i % 4) + 1;// Generates a cyclic type value between 1 and 4
+            $isExclusive = (bool) rand(0, 1);// Randomly set exclusive to true or false
             Video::create([
-                'type_id' => (string)$type_id,
+                'type_id' => (string) $type_id,
                 'modality_id' => '3',
                 'title' => "Entrenamiento de fitness #{$i}",
                 'coach' => 'Entrenador Principal',
