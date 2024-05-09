@@ -114,6 +114,7 @@ export class PlayerComponent implements OnInit {
         console.log(
           'El usuario debe estar autenticado para agregar un comentario.'
         );
+        this.auth.loginWithRedirect();
         // Aquí podrías mostrar un mensaje al usuario indicando que necesita iniciar sesión para agregar un comentario
       }
     });
