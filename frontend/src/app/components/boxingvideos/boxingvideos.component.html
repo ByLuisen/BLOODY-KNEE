@@ -42,60 +42,67 @@
 
   <!-- Filtered video list -->
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify">
-
-    <!-- Individual video item -->
-    <div class="group relative" *ngFor="let video of filteredItems">
-      <!-- Mostrar solo si está en modo admin -->
-      <div class="mb-2" *ngIf="adminModeActivated">
-        <div class="flex flex-row">
-          <img src="../../../assets/img/svg/bx-edit.svg" (click)="editVideo(video)" alt="bx-edit" class="w-9 mx-2"
-            role="button">
-          <img src="../../../assets/img/svg/bx-trash.svg" (click)="deleteVideo(video)" alt="bx-edit" class="w-9 mx-2"
-            role="button">
-        </div>
-      </div>
-      <ng-container>
-        <a (click)="selectVideo(video)">
-
-          <!-- Premium content icon -->
-          <div class="premium-icon" *ngIf="video.exclusive">
-            <img src="../../../assets/img/svg/star.svg" alt="Premium" class="star-icon">
-          </div>
-
-          <!-- Thumbnail of the video -->
-          <div class="flex items-center justify-center sm:justify-start">
-            <img src="../../../assets/img/saco.webp"
-              class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
-          </div>
-
-          <!-- Title of the video -->
-          <h3 class="text-lg font-bold sm:mt-4">{{video.title}}</h3>
-        </a>
-      </ng-container>
-      <!-- Modal for premium content -->
-      <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
-
-        <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
-
-        <div class="bg-white p-8 rounded-lg z-50">
-
-          <!-- Error message for premium content -->
-          <h2 class="text-2xl font-bold mb-4">¡Ups!
-            Contenido Premium</h2>
-
-          <p>Este video es contenido
-            premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
-
-          <!-- Button to close the modal -->
-          <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
-            (click)="closeModal()">Volver</button>
-
-          <!-- Button to subscribe -->
-          <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
-            routerLink="/pricing">Subscribirse</button>
-        </div>
-      </div>
+    <!-- Pantalla de carga mientras se obtienen los videos de boxing -->
+    <div class="fixed inset-0 flex items-center justify-center shadow-xl" *ngIf="loading; else boxingContainer">
+      <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
+      <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-red-500 animate-spin"></div>
+      <img src="../../../assets/img/my_logo.webp" class="rounded-full h-8 w-8">
     </div>
+    <ng-template #boxingContainer>
+      <!-- Individual video item -->
+      <div class="group relative" *ngFor="let video of filteredItems">
+        <!-- Mostrar solo si está en modo admin -->
+        <div class="mb-2" *ngIf="adminModeActivated">
+          <div class="flex flex-row">
+            <img src="../../../assets/img/svg/bx-edit.svg" (click)="editVideo(video)" alt="bx-edit" class="w-9 mx-2"
+              role="button">
+            <img src="../../../assets/img/svg/bx-trash.svg" (click)="deleteVideo(video)" alt="bx-edit" class="w-9 mx-2"
+              role="button">
+          </div>
+        </div>
+        <ng-container>
+          <a (click)="selectVideo(video)">
+
+            <!-- Premium content icon -->
+            <div class="premium-icon" *ngIf="video.exclusive">
+              <img src="../../../assets/img/svg/star.svg" alt="Premium" class="star-icon">
+            </div>
+
+            <!-- Thumbnail of the video -->
+            <div class="flex items-center justify-center sm:justify-start">
+              <img src="../../../assets/img/saco.webp"
+                class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+            </div>
+
+            <!-- Title of the video -->
+            <h3 class="text-lg font-bold sm:mt-4">{{video.title}}</h3>
+          </a>
+        </ng-container>
+        <!-- Modal for premium content -->
+        <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
+
+          <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
+
+          <div class="bg-white p-8 rounded-lg z-50">
+
+            <!-- Error message for premium content -->
+            <h2 class="text-2xl font-bold mb-4">¡Ups!
+              Contenido Premium</h2>
+
+            <p>Este video es contenido
+              premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
+
+            <!-- Button to close the modal -->
+            <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+              (click)="closeModal()">Volver</button>
+
+            <!-- Button to subscribe -->
+            <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+              routerLink="/pricing">Subscribirse</button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </div>
   <!-- Edit video modal (only admin) -->
   <div

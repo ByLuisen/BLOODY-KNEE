@@ -102,8 +102,8 @@ export class ProductDetailComponent implements OnInit {
    * Redirecciona a los detalles del producto recomendado que seleccione el usuario.
    * @param productId
    */
-    verDetallesProducto(productId: number) {
-      window.location.href = window.location.origin + '/product/' + productId;
+  verDetallesProducto(productId: number) {
+    window.location.href = window.location.origin + '/product/' + productId;
     this.router.navigate(['/product', productId]);
   }
 
