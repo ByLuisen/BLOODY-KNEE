@@ -49,13 +49,13 @@
   </div>
   <!-- Iterar sobre los productos utilizando *ngFor -->
   <div class="grid grid-cols-4 px-56 pt-10 gap-32">
-    <!-- Pantalla de carga mientras se obtienen los productos de la cesta -->
-    <div class="h-full w-full flex items-center justify-center bg-white shadow-xl" *ngIf="loading; else cartContainer">
+    <!-- Pantalla de carga mientras se obtienen los productos del merch -->
+    <div class="fixed inset-0 flex items-center justify-center shadow-xl" *ngIf="loading; else merchContainer">
       <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
       <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-red-500 animate-spin"></div>
       <img src="../../../assets/img/my_logo.webp" class="rounded-full h-8 w-8">
     </div>
-    <ng-template #cartContainer>
+    <ng-template #merchContainer>
       <div *ngFor="let producto of productosFiltrados()"
         class="w-auto h-auto justify-center hover:transform hover:scale-105 cursor-pointer"
         (click)="verDetallesProducto(producto.id)">

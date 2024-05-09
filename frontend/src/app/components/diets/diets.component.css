@@ -36,13 +36,13 @@ h1 {
 .chatbot-toggle-button {
   position: fixed;
   bottom: 1.75rem;
-  right: 2.5rem;
-  background-color: rgb(204, 0, 0);
+  right: 1.25rem;
+  background-color: rgb(255, 0, 0);
   border: none;
   padding: 10px;
   border-radius: 50%;
   cursor: pointer;
-  z-index: 1000; /* Asegura que el botón esté por encima del resto del contenido */
+  z-index: 10; /* Asegura que el botón esté por encima del resto del contenido */
 }
 
 .chatbot-toggle-button img {

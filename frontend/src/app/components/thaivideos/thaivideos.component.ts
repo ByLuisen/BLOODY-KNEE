@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
 import { Router } from '@angular/router';
+import { finalize, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-thaivideos',
@@ -18,39 +19,59 @@ export class ThaivideosComponent implements OnInit {
   filteredItems: Video[] = [];
   selectedType: string = 'Todos';
   modalOpen: boolean = false;
-  role: string = "admin";
+  role: string = 'admin';
   searchTerm: string = '';
   // Admin mode variable
   adminModeActivated: boolean = false;
+  loading: boolean = false;
 
-
-  constructor(private http: HttpService, private router: Router) { }
+  constructor(private http: HttpService, private router: Router) {}
 
   ngOnInit(): void {
     // this.http.getRole().subscribe((data) => {
     //   this.role = data[0].name;
     //   console.log(this.role)
     // })
-    this.http.getVideosModality(2, 1).subscribe((videos) => {
-      this.videosSaco = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
-    this.http.getVideosModality(2, 2).subscribe((videos) => {
-      this.videosPareja = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
-    this.http.getVideosModality(2, 3).subscribe((videos) => {
-      this.videosConEquipamiento = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
-    this.http.getVideosModality(2, 4).subscribe((videos) => {
-      this.videosSinEquipamiento = videos;
-      this.todos = this.todos.concat(videos);
-      this.filteredItems = [...this.todos];
-    });
+    this.loading = true;
+    this.http
+      .getVideosModality(2, 1)
+      .pipe(
+        switchMap((videos) => {
+          this.videosSaco = videos;
+          this.todos = this.todos.concat(videos);
+          this.filteredItems = [...this.todos];
+          return of(videos);
+        }),
+        switchMap(() => {
+          return this.http.getVideosModality(2, 2);
+        }),
+        tap((videos) => {
+          this.videosPareja = videos;
+          this.todos = this.todos.concat(videos);
+          this.filteredItems = [...this.todos];
+          return of(videos);
+        }),
+        switchMap(() => {
+          return this.http.getVideosModality(2, 3);
+        }),
+        tap((videos) => {
+          this.videosConEquipamiento = videos;
+          this.todos = this.todos.concat(videos);
+          this.filteredItems = [...this.todos];
+          return of(videos);
+        }),
+        switchMap(() => {
+          return this.http.getVideosModality(2, 4);
+        }),
+        tap((videos) => {
+          this.videosSinEquipamiento = videos;
+          this.todos = this.todos.concat(videos);
+          this.filteredItems = [...this.todos];
+          return videos;
+        }),
+        finalize(() => (this.loading = false))
+      )
+      .subscribe();
   }
   openModal() {
     this.modalOpen = true;
@@ -64,7 +85,7 @@ export class ThaivideosComponent implements OnInit {
   }
 
   selectVideo(video: Video) {
-    if (video.exclusive && this.role != "standard" && this.role != "premium") {
+    if (video.exclusive && this.role != 'standard' && this.role != 'premium') {
       this.openModal();
       // Abre el modal si el video es premium y el usuario no tiene un rol premium
     } else {
@@ -108,11 +129,11 @@ export class ThaivideosComponent implements OnInit {
   }
   editVideo(video: Video) {
     // Aquí implementa la lógica para editar el video
-    console.log("Editando video:", video);
+    console.log('Editando video:', video);
   }
 
   deleteVideo(video: Video) {
     // Aquí implementa la lógica para eliminar el video
-    console.log("Eliminando video:", video);
+    console.log('Eliminando video:', video);
   }
 }

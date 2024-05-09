@@ -17,11 +17,6 @@ export class MenuMovileComponent {
     const button = this.elementRef.nativeElement.querySelector(".fixed-button") as HTMLElement;
 
     if (!this.expanded) {
-      // Cambiar posición del botón al centro
-      button.style.bottom = "50%";
-      button.style.right = "50%";
-      button.style.transform = "translate(50%, 50%)";
-
       // Expandir el div
       div.style.height = "auto"; // Cambia este valor al deseado
     } else {
