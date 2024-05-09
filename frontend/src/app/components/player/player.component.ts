@@ -5,9 +5,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
+import { AuthService, User } from '@auth0/auth0-angular';
 import { Comment } from 'src/app/models/Comment';
-import {SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
@@ -29,7 +30,6 @@ export class PlayerComponent implements OnInit {
   batchSize: number = 5;
   comments: Comment[] = [];
   videoUrl!: SafeResourceUrl;
-  users: any[] = [];
 
   ngOnInit() {
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479');
@@ -42,7 +42,7 @@ export class PlayerComponent implements OnInit {
       this.countAndUpdateComments(this.videoId);
       this.getCommentsByVideoId(this.videoId);
     });
-    
+
 
   }
 
@@ -63,11 +63,29 @@ export class PlayerComponent implements OnInit {
     );
   }
 
+  addComment(comment: string): void {
+    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.http.addComment(this.videoId, comment).subscribe(
+          () => {
+            console.log('Comentario agregado correctamente');
+            // Actualizar la lista de comentarios después de agregar uno nuevo
+            this.getCommentsByVideoId(this.videoId);
+            // También podrías mostrar un mensaje de éxito o realizar otras acciones necesarias
+          },
+          (error) => {
+            console.error('Error al agregar comentario:', error);
+            // Manejar el error, mostrar un mensaje de error, o realizar otras acciones según sea necesario
+          }
+        );
+      } else {
+        console.log('El usuario debe estar autenticado para agregar un comentario.');
+        // Aquí podrías mostrar un mensaje al usuario indicando que necesita iniciar sesión para agregar un comentario
+      }
+    });
+  }
 
-  getNickname(userId: number): string {
-    const user = this.users.find(user => user.id === userId);
-    return user ? user.nickname : 'Usuario desconocido';
-}
+
 
 
   countAndUpdateComments(videoId: number): void {

@@ -63,13 +63,13 @@
             <p>{{video.comments}} comentarios</p>
           </div>       
           <div class="relative mb-4">
-            <input type="text" class="w-full border-2 rounded-lg border-red-600 py-2 px-3 bg-transparent focus:outline-none focus:border-red-600" placeholder="Añade un comentario...">
-            <button class="absolute top-0 right-0 bg-transparent hover:bg-red-600 text-red-700 hover:text-white font-bold py-2 px-4 rounded-r-lg">Comentar</button>
-          </div>  
+            <input #commentInput type="text" class="w-full border-2 rounded-lg border-red-600 py-2 px-3 bg-transparent focus:outline-none focus:border-red-600" placeholder="Añade un comentario...">
+            <button (click)="addComment(commentInput.value)" class="absolute top-0 right-0 bg-transparent hover:bg-red-600 text-red-700 hover:text-white font-bold py-2 px-4 rounded-r-lg">Comentar</button>
+        </div>        
           <div *ngFor="let comentario of comments" class="border-b-4 color mb-4 px-2">
             <div class="flex items-center">
               <img src="../../../assets/img/login1rojo2.webp" class="w-8 h-8">
-              <p class="text-red-600 px-2">{{ getNickname(comentario.userId) }}</p>
+              <p class="text-red-600 px-2">Julian</p>
             </div>
             <p>{{comentario.comment}}</p>
           </div>

@@ -9,5 +9,8 @@ class Comment extends Model
 {
     use HasFactory;
     protected $table = 'user_comment_videos';
-    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
