@@ -7,13 +7,14 @@ import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
 import { Diet } from '../models/Diet';
 import { environment } from 'src/environments/environment.development';
-import { AuthService } from '@auth0/auth0-angular';
+import { AuthService, User } from '@auth0/auth0-angular';
 import { Role } from '../models/Role';
 import { ConditionalExpr } from '@angular/compiler';
 import { switchMap } from 'rxjs/operators';
 import { Product } from '../models/Product';
 import { Comment } from '../models/Comment';
 
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,47 @@ export class HttpService {
   url: string = 'http://localhost:8000/api'; // URL base para las solicitudes HTTP
   // url: string = 'https://bloodyknee.es/api'; // URL del servidor
 
-  constructor(private _http: HttpClient, private auth: AuthService) { }
+  constructor(
+    private _http: HttpClient,
+    private auth: AuthService,
+    private cookie: CookieService
+  ) {}
+
+  initUser(): void {
+    this.auth.user$.subscribe((user) => {
+      if (user) {
+        this.addNewUserAndRole(user).subscribe();
+        if (this.cookie.check('cart')) {
+          this.storeCartInDDBB(user).subscribe();
+        }
+      }
+    });
+  }
+
+  /**
+   *Function that add new user and role Basic if ti's doesn't exist
+   * @param user Data of the user logged provided by auth0 classes
+   */
+  addNewUserAndRole(user: User): Observable<any> {
+    const url = `${this.url}/new-user`;
+    return this._http.post(url, user);
+  }
+
+  /**
+   *Store the products
+   * @param user
+   * @returns
+   */
+  storeCartInDDBB(user: User): Observable<any> {
+    const url = `${this.url}/store-cart`;
+
+    const body = {
+      user: user,
+      cart: JSON.parse(this.cookie.get('cart')),
+    };
+
+    return this._http.post(url, user);
+  }
 
   /**
    * Retrieves an access token for authorization.
@@ -41,39 +82,6 @@ export class HttpService {
     };
 
     return this._http.post<any>(url, body, { headers: headers });
-  }
-
-  /**
-   * Retrieves the role of the authenticated user.
-   * @returns An observable that emits the user's role after the request is completed.
-   */
-  getRole(): Observable<Role[]> {
-    return new Observable<Role[]>((observer) => {
-      this.auth.user$.subscribe((user) => {
-        // Verifica si user?.sub tiene un valor antes de continuar
-        if (user?.sub) {
-          const url = `${environment.audience}users/${user?.sub}/roles`;
-          const headers = new HttpHeaders({
-            Accept: 'application/json',
-            // Authorization: `Bearer ${environment.developmentAccessToken}`,
-          });
-
-          this._http.get<any>(url, { headers: headers }).subscribe(
-            (response) => {
-              observer.next(response);
-              observer.complete();
-            },
-            (error) => {
-              observer.error(error);
-            }
-          );
-        } else {
-          observer.error(
-            'No se pudo obtener el rol: el usuario no está autenticado'
-          );
-        }
-      });
-    });
   }
 
   /**
@@ -164,10 +172,10 @@ export class HttpService {
   }
 
   /**
-  * Updates the number of likes for a video.
-  * @param videoId The ID of the video.
-  * @returns An observable that emits the updated information after the request is completed.
-  */
+   * Updates the number of likes for a video.
+   * @param videoId The ID of the video.
+   * @returns An observable that emits the updated information after the request is completed.
+   */
   updateLikes(videoId: number): Observable<any> {
     const url = `${this.url}/updateLikes/${videoId}`;
     return this.auth.idTokenClaims$.pipe(
@@ -292,7 +300,7 @@ export class HttpService {
         const body = {
           price_id: quotePriceId,
           user_email: user.email ?? '',
-          href: window.location.href
+          href: window.location.href,
         };
         return this._http.post(url, body).pipe(
           catchError((error) => {

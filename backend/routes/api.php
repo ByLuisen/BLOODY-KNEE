@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OpenAIController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::get('/private', function () {
 
 // Grupo de rutas para controladores con middleware de autenticacion y namespace de controladores
 Route::group(['middleware' => 'api'], function () {
+    Route::post('/new-user', [UserController::class, 'newUser']);
     Route::resource('quotes', QuoteController::class);
     Route::get('modalityvideo/{modality_id}/{type_id}', [VideoController::class, 'modalities']);
     Route::get('getvideobyid/{id}', [VideoController::class, 'videoById']);
@@ -52,9 +54,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::put('videos/{id}', [VideoController::class, 'update']);
     Route::delete('videos/{id}', [VideoController::class, 'delete']);
     Route::get('products/{id}/brand', [ProductController::class, 'productBrand']);
+    Route::post('/payment', [StripeController::class, 'payment']);
+    Route::post('/subscription', [StripeController::class, 'subscription']);
+    Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
 });
-
-Route::post('/payment', [StripeController::class, 'payment']);
-Route::post('/subscription', [StripeController::class, 'subscription']);
-
-Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
