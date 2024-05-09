@@ -67,23 +67,43 @@ class CommentController extends Controller
         try {
             // Validar los datos del comentario
             $request->validate([
-                'user_id' => 'required|exists:users,id',
                 'video_id' => 'required|exists:videos,id',
                 'comment' => 'required|string|max:255',
+                'email' => 'required|email', // Asegúrate de que el campo de email esté presente y sea un correo electrónico válido
+                'connection' => 'required', // Asegúrate de que el campo de connection esté presente
             ]);
 
-            // Crear un nuevo comentario
-            $comment = new UserCommentVideo();
-            $comment->user_id = $request->user_id;
-            $comment->video_id = $request->video_id;
-            $comment->comment = $request->comment;
-            $comment->date = now(); // Establecer la fecha actual
-            $comment->save();
+            // Obtener el correo electrónico y la conexión del cuerpo de la solicitud
+            $email = $request->input('email');
+            $connection = $request->input('connection');
 
-            return ApiResponse::success($comment, 'Comentario añadido correctamente');
+            // Encuentra al usuario por su correo electrónico y conexión
+            $user = User::where('email', $email)
+                ->where('connection', $connection)
+                ->first();
+
+            // Verifica si el usuario existe
+            if ($user) {
+                // Crear un nuevo comentario con los datos del usuario
+                $comment = new UserCommentVideo();
+                $comment->user_id = $user->id; // Asigna el user_id del usuario encontrado
+                $comment->video_id = $request->video_id;
+                $comment->comment = $request->comment;
+                $comment->date = now(); // Establecer la fecha actual
+                $comment->save();
+
+                // Incluir los datos del usuario en la respuesta
+                $comment->user = $user;
+
+                return ApiResponse::success($comment, 'Comentario añadido correctamente');
+            } else {
+                // Manejar el caso en el que el usuario no fue encontrado
+                return ApiResponse::error('El usuario no fue encontrado.');
+            }
         } catch (\Exception $e) {
             // Loguear el error o realizar otras acciones según tus necesidades
             return ApiResponse::error($e->getMessage());
         }
     }
+
 }

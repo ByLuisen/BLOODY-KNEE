@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         ]);
         User::create([
             'email' => 'christiansastre74@gmail.com', // Reemplaza con el correo electrónico deseado
-            'connection' => 'auht0', // Reemplaza con el tipo de conexión deseada ('wifi', 'ethernet', 'mobile')
+            'connection' => 'auth0', // Reemplaza con el tipo de conexión deseada ('wifi', 'ethernet', 'mobile')
         ]);
     }
 }

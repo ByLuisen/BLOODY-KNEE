@@ -151,7 +151,7 @@ export class HttpService {
     });
   }
 
-  
+
 
   countAndUpdateComments(videoId: number): Observable<any> {
     const url = `${this.url}/videos/${videoId}/update-comments`;
@@ -330,29 +330,28 @@ export class HttpService {
     );
   }
 
-
   addComment(videoId: number, comment: string): Observable<any> {
+    const url = `${this.url}/comments`;
     return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
-        if (!user) {
-          return of(null); // Emit null if the user is not authenticated
-        }
-        const url = `${this.url}/comments`;
+        console.log(user);
+        // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
         const body = {
-          email: user?.email || '', // Optional chaining to safely access user.email
-          connection: user ? user['sub'].split('|')[0] : '',
+          email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
+          connection: user ? user['sub'].split('|')[0] : '', // Obtén la conexión del usuario actual
           video_id: videoId,
           comment: comment,
         };
+        console.log(body);
+
         return this._http.post(url, body).pipe(
           catchError((error) => {
-            // Handle errors here
-            console.error('HTTP request error:', error);
-            return of(null); // Emit null if there is an error
+            // Manejar errores aquí
+            console.error('Error en la solicitud HTTP:', error);
+            return of(null); // Emite un valor nulo si hay un error
           })
         );
       })
     );
   }
-  
 }
