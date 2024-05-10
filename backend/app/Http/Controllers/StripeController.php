@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Stripe\StripeClient;
 
 class StripeController extends Controller
 {
     public function payment(Request $request)
     {
+        Session::put('shippingData', $request->shippingData);
+
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
 
         $products = $request->input('products');
@@ -39,14 +42,14 @@ class StripeController extends Controller
                     'shipping_rate' => 'shr_1PEBzmByhCj4S0lh7TNdgvlB'
                 ]
             ],
-            'success_url' => $request->input('origin') . '/order-summary',
+            'success_url' => $request->input('origin') . '/order-summary?success=true&session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $request->input('href'),
             'automatic_tax' => [
                 'enabled' => true,
             ],
         ]);
 
-        return ApiResponse::success(['checkout_url' => $checkout_session->url], 'Checkout Seesion creada correctamente');
+        return ApiResponse::success(['checkout_url' => $checkout_session->url], 'Checkout Seesion payment creada correctamente');
     }
 
     public function subscription(Request $request)
@@ -61,10 +64,34 @@ class StripeController extends Controller
             ]],
             'mode' => 'subscription',
             'payment_method_configuration' => 'pmc_1P680fByhCj4S0lhpHMBLSHL',
-            'success_url' => $request->input('href') . '?success=true',
+            'success_url' => $request->input('href') . '?success=true&session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $request->input('href'),
         ]);
 
-        return ApiResponse::success(['checkout_url' => $checkout_session->url], 'Checkout Seesion creada correctamente');
+        return ApiResponse::success(['checkout_url' => $checkout_session->url], 'Checkout Seesion subscription creada correctamente');
+    }
+
+    public function retrieveCheckoutSession(Request $request)
+    {
+        \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
+
+        $checkout_session = \Stripe\Checkout\Session::retrieve(
+            $request->checkout_session_id,
+            []
+        );
+
+        return ApiResponse::success(['checkout_session' => $checkout_session], 'Checkout Seesion obtenida correctamente');
+    }
+
+    public function retrieveLineItems(Request $request)
+    {
+        \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
+
+        $line_items = \Stripe\Checkout\Session::allLineItems(
+            $request->checkout_session_id,
+            []
+        );
+
+        return ApiResponse::success(['line_items' => $line_items], 'Line Items obtenido correctamente');
     }
 }

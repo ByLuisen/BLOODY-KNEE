@@ -10,6 +10,7 @@ export class Product {
   private _url_img2: string;
   private _url_img3: string;
   private _quantity: number;
+  private _added_date: string;
 
   constructor(
     id: number = 0,
@@ -22,8 +23,8 @@ export class Product {
     url_img1: string = '',
     url_img2: string = '',
     url_img3: string = '',
-    quantity: number = 0
-
+    quantity: number = 0,
+    added_date: string = ''
   ) {
     this._id = id;
     this._brandId = brandId;
@@ -36,6 +37,7 @@ export class Product {
     this._url_img2 = url_img2;
     this._url_img3 = url_img3;
     this._quantity = quantity;
+    this._added_date = added_date
   }
 
   // Getters
@@ -71,6 +73,9 @@ export class Product {
   }
   get quantity(): number {
     return this._quantity;
+  }
+  get added_date(): string {
+    return this._added_date;
   }
 
 
@@ -108,6 +113,9 @@ export class Product {
   set quantity(quantity: number) {
     this._quantity = quantity;
   }
+  set added_date(added_date: string) {
+    this._added_date = added_date;
+  }
 
 
   // Convertir objeto a JSON
@@ -123,6 +131,8 @@ export class Product {
       url_img1: this._url_img1,
       url_img2: this._url_img2,
       url_img3: this._url_img3,
+      quantity: this._quantity,
+      added_date: this._added_date
     };
   }
 }

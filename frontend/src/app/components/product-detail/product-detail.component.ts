@@ -12,6 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { AuthService } from '@auth0/auth0-angular';
 import { catchError, finalize, of, switchMap, tap } from 'rxjs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-product-detail',
@@ -29,6 +30,7 @@ export class ProductDetailComponent implements OnInit {
   loading: boolean = false;
   loadingProduct: boolean = false;
   openModal: boolean = false;
+  shippingAddress!: FormGroup;
 
   constructor(
     private http: HttpService,
@@ -44,6 +46,36 @@ export class ProductDetailComponent implements OnInit {
       this.getProducto();
     });
     this.getRandomProducts();
+    this.shippingAddress = new FormGroup({
+      country: new FormControl('España', [Validators.required]),
+      first_name: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-ZáéíóúñçÁÉÍÓÚÑÇ'\s]*$/),
+      ]),
+      last_name: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-ZáéíóúñçÁÉÍÓÚÑÇ'\s]*$/),
+      ]),
+      phone: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^(\+)?[0-9]+$/),
+      ]),
+      address: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚªº'·\s\-\.\,]*$/),
+      ]),
+      province: new FormControl('', [
+        Validators.pattern(/^[a-zA-ZáéíóúñçÁÉÍÓÚÑÇ'\s]*$/),
+      ]),
+      city: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-ZáéíóúñçÁÉÍÓÚÑÇ'\s]*$/),
+      ]),
+      zip: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^\d{4,5}$/),
+      ]),
+    });
   }
 
   getProducto(): void {
@@ -104,13 +136,19 @@ export class ProductDetailComponent implements OnInit {
    */
   verDetallesProducto(productId: number) {
     window.location.href = window.location.origin + '/product/' + productId;
-    this.router.navigate(['/product', productId]);
   }
 
   add(): void {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
-        // Haz algo si el usuario está autenticado
+        const product = new Product();
+        product.id = this.productId;
+        product.quantity = this.getQuantity();
+        this.http.addProductToCart(product).subscribe();
+        this.added = true;
+        setTimeout(() => {
+          this.added = false;
+        }, 7000);
       } else {
         this.saveProductInACookie();
       }
@@ -148,8 +186,9 @@ export class ProductDetailComponent implements OnInit {
 
     // Create the product object to add
     const productToAdd = {
-      productId: this.productId,
+      id: this.productId,
       quantity: this.getQuantity(), // Convertir a número si es necesario
+      added_date: new Date().toISOString(),
     };
 
     // Verify if the cookie cart exist
@@ -159,7 +198,7 @@ export class ProductDetailComponent implements OnInit {
 
       // Verificar si el producto ya está en el carrito
       const existingProductIndex = cart.findIndex(
-        (p: any) => p.productId === this.productId
+        (p: any) => p.id === this.productId
       );
 
       if (existingProductIndex !== -1) {
@@ -188,25 +227,34 @@ export class ProductDetailComponent implements OnInit {
     this.added = false;
   }
 
-  submit(): void {
-    this.loading = true;
-    this.product.quantity = this.getQuantity();
-    this.http
-      .checkout([this.product])
-      .pipe(
-        tap((response) => {
-          if (response) {
-            window.location.href = response.data.checkout_url;
+  sendShippingAdsress(): void {
+    if (this.shippingAddress.valid) {
+      this.loading = true;
+      // Obtener todos los datos del formulario
+      const shippingData = this.shippingAddress.value;
+      this.product.quantity = this.getQuantity();
+      this.http
+        .checkout([this.product], shippingData)
+        .pipe(
+          tap((response) => {
+            if (response) {
+              window.location.href = response.data.checkout_url;
+            }
+          }),
+          finalize(() => (this.loading = false))
+        )
+        .subscribe(
+          () => {},
+          (error) => {
+            console.error('Error al iniciar la sesión de pago:', error);
+            // Manejar el error en tu aplicación
           }
-        }),
-        finalize(() => (this.loading = false))
-      )
-      .subscribe(
-        () => {},
-        (error) => {
-          console.error('Error al iniciar la sesión de pago:', error);
-          // Manejar el error en tu aplicación
-        }
-      );
+        );
+    } else {
+      // Marcar todos los controles del formulario como tocados para mostrar los errores
+      Object.values(this.shippingAddress.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+    }
   }
 }

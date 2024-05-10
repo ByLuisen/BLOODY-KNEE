@@ -16,6 +16,9 @@ class Product extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+
+    public function carts()
+    {
+        return $this->belongsToMany(Cart::class, 'cart_store_products')->withTimestamps();
+    }
 }
-
-

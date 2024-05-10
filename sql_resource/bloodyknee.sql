@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-05-2024 a las 13:18:31
+-- Tiempo de generación: 10-05-2024 a las 08:00:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -43,10 +43,10 @@ CREATE TABLE `brands` (
 --
 
 INSERT INTO `brands` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'Venum', '2024-05-04 17:14:01', '2024-05-04 17:14:01'),
-(2, 'Buddha', '2024-05-04 17:14:01', '2024-05-04 17:14:01'),
-(3, 'Rival', '2024-05-04 17:14:02', '2024-05-04 17:14:02'),
-(4, 'Nike', '2024-05-04 17:14:02', '2024-05-04 17:14:02');
+(1, 'Venum', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(2, 'Buddha', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(3, 'Rival', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(4, 'Nike', '2024-05-10 05:58:51', '2024-05-10 05:58:51');
 
 -- --------------------------------------------------------
 
@@ -74,6 +74,7 @@ CREATE TABLE `cart_store_products` (
   `product_id` bigint(20) UNSIGNED NOT NULL,
   `cart_id` bigint(20) UNSIGNED NOT NULL,
   `quantity` int(11) NOT NULL,
+  `added_date` datetime NOT NULL DEFAULT '2024-05-10 07:58:51',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -97,9 +98,9 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'Clothes', '2024-05-04 17:14:00', '2024-05-04 17:14:00'),
-(2, 'Equipment', '2024-05-04 17:14:01', '2024-05-04 17:14:01'),
-(3, 'Accessories', '2024-05-04 17:14:01', '2024-05-04 17:14:01');
+(1, 'Clothes', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(2, 'Equipment', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(3, 'Accessories', '2024-05-10 05:58:51', '2024-05-10 05:58:51');
 
 -- --------------------------------------------------------
 
@@ -129,11 +130,27 @@ CREATE TABLE `diets` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `content` longtext NOT NULL,
+  `content` varchar(255) NOT NULL,
   `author` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `diets`
+--
+
+INSERT INTO `diets` (`id`, `title`, `description`, `content`, `author`, `created_at`, `updated_at`) VALUES
+(1, 'Dieta 1a', 'Esta alimentación se fundamenta en la ingesta principalmente de alimentos de origen vegetal, como frutas, verduras, legumbres, granos enteros y frutos secos. \n                Se promueve la limitación o la eliminación del consumo de productos de origen animal y de grasas saturadas.', 'Dieta1.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(2, 'Dieta 1b', 'Esta dieta se basa en una variedad de alimentos que proporcionan los nutrientes \n                 necesarios para mantener la salud y el bienestar.', 'Dieta2.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(3, 'Dieta 1c', 'Inspirada en los patrones de alimentación de los países mediterráneos, esta dieta es rica en frutas, \n                 verduras, pescado, legumbres, frutos secos y aceite de oliva.', 'Dieta3.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(4, 'Dieta 2a', 'Esta dieta se centra en alimentos de origen vegetal como frutas, verduras, legumbres, granos enteros, nueces y semillas.', 'Dieta4.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(5, 'Dieta 2b', 'Esta dieta se centra en consumir una cantidad reducida de calorías mientras se mantienen los nutrientes esenciales.', 'Dieta5.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(6, 'Dieta 2c', 'Esta dieta combina los principios de una dieta vegetariana con la flexibilidad de consumir ocasionalmente carne o pescado.', 'Dieta6.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(7, 'Dieta 3a', ' Esta dieta prioriza el consumo de proteínas magras como carne magra, aves, pescado, huevos, productos lácteos bajos en grasa y legumbres.', 'Dieta7.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(8, 'Dieta 3b', 'Esta dieta se basa en alimentos vegetales como frutas, verduras, legumbres, granos enteros y nueces, mientras se limita o se \n                evita el consumo de productos de origen animal y grasas saturadas', 'Dieta8.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(9, 'Dieta 3c', 'Esta dieta combina los principios de la dieta mediterránea con un enfoque en la pérdida de peso.', 'Dieta9.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(10, 'Dieta 4a', 'Esta dieta se basa en intercambiar alimentos dentro de grupos de intercambio que tienen perfiles nutricionales similares.', 'Dieta10.PNG', 'Julian Ortega', '2024-05-10 05:58:51', '2024-05-10 05:58:51');
 
 -- --------------------------------------------------------
 
@@ -215,9 +232,9 @@ CREATE TABLE `modalities` (
 --
 
 INSERT INTO `modalities` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'boxeo', '2024-05-04 17:13:52', '2024-05-04 17:13:52'),
-(2, 'thai', '2024-05-04 17:13:52', '2024-05-04 17:13:52'),
-(3, 'fitness', '2024-05-04 17:13:52', '2024-05-04 17:13:52');
+(1, 'boxeo', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(2, 'thai', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(3, 'fitness', '2024-05-10 05:58:51', '2024-05-10 05:58:51');
 
 -- --------------------------------------------------------
 
@@ -255,7 +272,7 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `date` date NOT NULL DEFAULT '2024-05-04',
+  `date` date NOT NULL DEFAULT '2024-05-10',
   `total` int(11) NOT NULL,
   `status` enum('Pending','In process','Confirmed','On the way','Delivered','Cancelled','Refunded') NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -354,18 +371,18 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `brand_id`, `category_id`, `name`, `description`, `price`, `stock`, `url_img1`, `url_img2`, `url_img3`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Jogger Venum', 'Cómodos y estilosos joggers, perfectos tanto para entrenamiento como para uso casual.', 76, 50, 'VenumJogger_1', 'VenumJogger_2', 'VenumJogger_3', '2024-05-04 17:14:02', '2024-05-04 17:14:02'),
-(2, 1, 2, 'Mochila Venum', 'Mochila resistente diseñada para satisfacer todas tus necesidades de gimnasio y viaje.', 65, 50, 'VenumSportBag_1', 'VenumSportBag_2', 'VenumSportBag_3', '2024-05-04 17:14:02', '2024-05-04 17:14:02'),
-(3, 1, 2, 'Mochila Xtream Venum', 'Mochila de gran capacidad, ideal para atletas y aventureros por igual.', 130, 30, 'VenumXtreamBackpack_1', 'VenumXtreamBackpack_2', 'VenumXtreamBackpack_3', '2024-05-04 17:14:03', '2024-05-04 17:14:03'),
-(4, 1, 2, 'Bolsa deportiva Venum', 'Bolsa deportiva versátil con excelente espacio de almacenamiento y fácil acceso.', 90, 30, 'VenumBackpack_1', 'VenumBackpack_2', 'VenumBackpack_3', '2024-05-04 17:14:03', '2024-05-04 17:14:03'),
-(5, 1, 3, 'Gorra Venum Color Arena', 'Gorra elegante color arena con correa ajustable para un ajuste cómodo.', 90, 30, 'CapSand_1', 'CapSand_2', 'CapSand_3', '2024-05-04 17:14:03', '2024-05-04 17:14:03'),
-(6, 1, 3, 'Gorra Venum Marrón', 'Gorra de moda en color marrón, hecha con tela transpirable, perfecta para actividades al aire libre.', 26, 30, 'CapBrown_1', 'CapBrown_2', 'CapBrown_3', '2024-05-04 17:14:03', '2024-05-04 17:14:03'),
-(7, 1, 3, 'Gorra Venum Marrón Oscuro', 'Gorra marrón oscuro que combina estilo y comodidad, ideal para uso diario.', 26, 30, 'CapDarkBrown_1', 'CapDarkBrown_2', 'CapDarkBrown_3', '2024-05-04 17:14:03', '2024-05-04 17:14:03'),
-(8, 2, 2, 'Guantes Piel Edition', 'Guantes de boxeo de cuero premium para profesionales, ofreciendo comodidad y protección.', 80, 30, 'GuantesPiel_1', 'GuantesPiel_2', 'GuantesPiel_3', '2024-05-04 17:14:04', '2024-05-04 17:14:04'),
-(9, 2, 2, 'Guantes Fantasy Edition', 'Guantes coloridos diseñados tanto para entrenamiento como competición, ofreciendo excelente soporte de muñeca.', 50, 30, 'GuantesFantasy_1', 'GuantesFantasy_2', 'GuantesFantasy_3', '2024-05-04 17:14:04', '2024-05-04 17:14:04'),
-(10, 1, 2, 'Guantes Venum MMA', 'Guantes MMA diseñados para máxima destreza y mejora de agarre durante los combates.', 48, 50, 'GuantesVenumMMA_1', 'GuantesVenumMMA_2', 'GuantesVenumMMA_3', '2024-05-04 17:14:04', '2024-05-04 17:14:04'),
-(11, 1, 1, 'Camiseta Venum Bronze', 'Camiseta ligera y transpirable, perfecta para entrenar o para uso casual.', 30, 50, 'CamisetaVenumBronze_1', 'CamisetaVenumBronze_2', 'CamisetaVenumBronze_3', '2024-05-04 17:14:04', '2024-05-04 17:14:04'),
-(12, 1, 1, 'Camiseta Venum Negra', 'Camiseta Venum negra que combina comodidad con un diseño elegante.', 25, 50, 'CamisetaVenum_1', 'CamisetaVenum_2', 'CamisetaVenum_3', '2024-05-04 17:14:05', '2024-05-04 17:14:05');
+(1, 1, 1, 'Jogger Venum', 'Cómodos y estilosos joggers, perfectos tanto para entrenamiento como para uso casual.', 76, 50, 'VenumJogger_1', 'VenumJogger_2', 'VenumJogger_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(2, 1, 2, 'Mochila Venum', 'Mochila resistente diseñada para satisfacer todas tus necesidades de gimnasio y viaje.', 65, 50, 'VenumSportBag_1', 'VenumSportBag_2', 'VenumSportBag_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(3, 1, 2, 'Mochila Xtream Venum', 'Mochila de gran capacidad, ideal para atletas y aventureros por igual.', 130, 30, 'VenumXtreamBackpack_1', 'VenumXtreamBackpack_2', 'VenumXtreamBackpack_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(4, 1, 2, 'Bolsa deportiva Venum', 'Bolsa deportiva versátil con excelente espacio de almacenamiento y fácil acceso.', 90, 30, 'VenumBackpack_1', 'VenumBackpack_2', 'VenumBackpack_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(5, 1, 3, 'Gorra Venum Color Arena', 'Gorra elegante color arena con correa ajustable para un ajuste cómodo.', 90, 30, 'CapSand_1', 'CapSand_2', 'CapSand_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(6, 1, 3, 'Gorra Venum Marrón', 'Gorra de moda en color marrón, hecha con tela transpirable, perfecta para actividades al aire libre.', 26, 30, 'CapBrown_1', 'CapBrown_2', 'CapBrown_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(7, 1, 3, 'Gorra Venum Marrón Oscuro', 'Gorra marrón oscuro que combina estilo y comodidad, ideal para uso diario.', 26, 30, 'CapDarkBrown_1', 'CapDarkBrown_2', 'CapDarkBrown_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(8, 2, 2, 'Guantes Piel Edition', 'Guantes de boxeo de cuero premium para profesionales, ofreciendo comodidad y protección.', 80, 30, 'GuantesPiel_1', 'GuantesPiel_2', 'GuantesPiel_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(9, 2, 2, 'Guantes Fantasy Edition', 'Guantes coloridos diseñados tanto para entrenamiento como competición, ofreciendo excelente soporte de muñeca.', 50, 30, 'GuantesFantasy_1', 'GuantesFantasy_2', 'GuantesFantasy_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(10, 1, 2, 'Guantes Venum MMA', 'Guantes MMA diseñados para máxima destreza y mejora de agarre durante los combates.', 48, 50, 'GuantesVenumMMA_1', 'GuantesVenumMMA_2', 'GuantesVenumMMA_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(11, 1, 1, 'Camiseta Venum Bronze', 'Camiseta ligera y transpirable, perfecta para entrenar o para uso casual.', 30, 50, 'CamisetaVenumBronze_1', 'CamisetaVenumBronze_2', 'CamisetaVenumBronze_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(12, 1, 1, 'Camiseta Venum Negra', 'Camiseta Venum negra que combina comodidad con un diseño elegante.', 25, 50, 'CamisetaVenum_1', 'CamisetaVenum_2', 'CamisetaVenum_3', '2024-05-10 05:58:51', '2024-05-10 05:58:51');
 
 -- --------------------------------------------------------
 
@@ -405,9 +422,9 @@ CREATE TABLE `quotes` (
 --
 
 INSERT INTO `quotes` (`id`, `price`, `description`, `advantages`, `type`, `price_id`, `created_at`, `updated_at`) VALUES
-(1, 0, 'Plan inicial para los usuarios que inician y poder probar Bloody Knee gratis.', 'Acceso a videos gratis.;Acceso a dietas gratis.;Comprar productos en nuestra tienda.', 'Basic', NULL, '2024-05-04 17:13:50', '2024-05-04 17:13:50'),
-(2, 5, 'Para los usuarios que quieren difrutar la experiencia de todo lo que ofrece nuestra web.', 'Lo misimo que el plan Basic pero más.;Acceso a videos exclusivojs.;Acceso a dietas exclusivas.', 'Standard', 'price_1P66JXByhCj4S0lhBWZF1Xe0', '2024-05-04 17:13:50', '2024-05-04 17:13:50'),
-(3, 10, 'Para quien quiera disfrutar de una experiencia más personalizada.', 'Lo misimo que el plan Standard pero más.;Asistencia personalizada con dietistas.;Acceso a nuestro chatbot.', 'Premium', 'price_1P66ZDByhCj4S0lh4TjKxngd', '2024-05-04 17:13:50', '2024-05-04 17:13:50');
+(1, 0, 'Plan inicial para los usuarios que inician y poder probar Bloody Knee gratis.', 'Acceso a videos gratis.;Acceso a dietas gratis.;Comprar productos en nuestra tienda.', 'Basic', NULL, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(2, 5, 'Para los usuarios que quieren difrutar la experiencia de todo lo que ofrece nuestra web.', 'Lo misimo que el plan Basic pero más.;Acceso a videos exclusivojs.;Acceso a dietas exclusivas.', 'Standard', 'price_1P66JXByhCj4S0lhBWZF1Xe0', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(3, 10, 'Para quien quiera disfrutar de una experiencia más personalizada.', 'Lo misimo que el plan Standard pero más.;Asistencia personalizada con dietistas.;Acceso a nuestro chatbot.', 'Premium', 'price_1P66ZDByhCj4S0lh4TjKxngd', '2024-05-10 05:58:51', '2024-05-10 05:58:51');
 
 -- --------------------------------------------------------
 
@@ -438,6 +455,16 @@ CREATE TABLE `roles` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
+(1, 'Basic', 'api', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(2, 'Standard', 'api', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(3, 'Premium', 'api', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(4, 'Admin', 'api', '2024-05-10 05:58:51', '2024-05-10 05:58:51');
 
 -- --------------------------------------------------------
 
@@ -470,10 +497,10 @@ CREATE TABLE `types` (
 --
 
 INSERT INTO `types` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'con pareja', '2024-05-04 17:13:51', '2024-05-04 17:13:51'),
-(2, 'con saco', '2024-05-04 17:13:51', '2024-05-04 17:13:51'),
-(3, 'sin equipamiento', '2024-05-04 17:13:52', '2024-05-04 17:13:52'),
-(4, 'con equipamiento', '2024-05-04 17:13:52', '2024-05-04 17:13:52');
+(1, 'con pareja', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(2, 'con saco', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(3, 'sin equipamiento', '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(4, 'con equipamiento', '2024-05-10 05:58:51', '2024-05-10 05:58:51');
 
 -- --------------------------------------------------------
 
@@ -486,9 +513,9 @@ CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `province_id` bigint(20) UNSIGNED DEFAULT NULL,
   `full_name` varchar(255) DEFAULT NULL,
-  `nickname` varchar(255) DEFAULT NULL,
+  `picture` varchar(255) NOT NULL,
+  `nickname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) DEFAULT NULL,
   `connection` varchar(255) NOT NULL,
   `postal_code` varchar(255) DEFAULT NULL,
   `adress` varchar(255) DEFAULT NULL,
@@ -496,13 +523,6 @@ CREATE TABLE `users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `users`
---
-
-INSERT INTO `users` (`id`, `province_id`, `full_name`, `nickname`, `email`, `password`, `connection`, `postal_code`, `adress`, `phone`, `created_at`, `updated_at`) VALUES
-(1, NULL, NULL, NULL, 'luisenric32@gmail.com', NULL, 'google-oauth2', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -515,7 +535,7 @@ CREATE TABLE `user_comment_videos` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `video_id` bigint(20) UNSIGNED NOT NULL,
-  `date` date NOT NULL DEFAULT '2024-05-04',
+  `date` date NOT NULL DEFAULT '2024-05-10',
   `comment` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -548,7 +568,7 @@ CREATE TABLE `user_like_dislike_videos` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `video_id` bigint(20) UNSIGNED NOT NULL,
   `type` enum('Like','Dislike') NOT NULL,
-  `date` date NOT NULL DEFAULT '2024-05-04',
+  `date` date NOT NULL DEFAULT '2024-05-10',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -564,8 +584,8 @@ CREATE TABLE `user_subscribe_quotes` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `quote_id` bigint(20) UNSIGNED NOT NULL,
-  `start_date` date NOT NULL DEFAULT '2024-05-04',
-  `expiration_date` date NOT NULL DEFAULT '2024-06-04',
+  `start_date` date NOT NULL DEFAULT '2024-05-10',
+  `expiration_date` date NOT NULL DEFAULT '2024-06-10',
   `status` enum('Active','Expirated','Cancelled') NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -582,17 +602,10 @@ CREATE TABLE `user_visit_videos` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `video_id` bigint(20) UNSIGNED NOT NULL,
-  `date` date NOT NULL DEFAULT '2024-05-04',
+  `date` date NOT NULL DEFAULT '2024-05-10',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `user_visit_videos`
---
-
-INSERT INTO `user_visit_videos` (`id`, `user_id`, `video_id`, `date`, `created_at`, `updated_at`) VALUES
-(1, 1, 18, '2024-05-06', '2024-05-06 10:20:35', '2024-05-06 10:20:35');
 
 -- --------------------------------------------------------
 
@@ -610,9 +623,10 @@ CREATE TABLE `videos` (
   `description` text NOT NULL,
   `url` varchar(255) NOT NULL,
   `visits` int(11) NOT NULL,
+  `comments` int(11) NOT NULL,
   `likes` int(11) NOT NULL,
   `dislikes` int(11) NOT NULL,
-  `upload_date` date NOT NULL DEFAULT '2024-05-04',
+  `upload_date` date NOT NULL DEFAULT '2024-05-10',
   `duration` varchar(255) NOT NULL,
   `exclusive` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -623,37 +637,37 @@ CREATE TABLE `videos` (
 -- Volcado de datos para la tabla `videos`
 --
 
-INSERT INTO `videos` (`id`, `type_id`, `modality_id`, `title`, `coach`, `description`, `url`, `visits`, `likes`, `dislikes`, `upload_date`, `duration`, `exclusive`, `created_at`, `updated_at`) VALUES
-(1, 2, 1, 'Entrenamiento de boxeo #1', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 0, '2024-05-04 17:13:53', '2024-05-04 17:13:53'),
-(2, 3, 1, 'Entrenamiento de boxeo #2', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 0, '2024-05-04 17:13:53', '2024-05-04 17:13:53'),
-(3, 4, 1, 'Entrenamiento de boxeo #3', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 0, '2024-05-04 17:13:53', '2024-05-04 17:13:53'),
-(4, 1, 1, 'Entrenamiento de boxeo #4', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 1, '2024-05-04 17:13:53', '2024-05-04 17:13:53'),
-(5, 2, 1, 'Entrenamiento de boxeo #5', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 0, '2024-05-04 17:13:54', '2024-05-04 17:13:54'),
-(6, 3, 1, 'Entrenamiento de boxeo #6', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 0, '2024-05-04 17:13:54', '2024-05-04 17:13:54'),
-(7, 4, 1, 'Entrenamiento de boxeo #7', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 1, '2024-05-04 17:13:54', '2024-05-04 17:13:54'),
-(8, 1, 1, 'Entrenamiento de boxeo #8', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 1, '2024-05-04 17:13:54', '2024-05-04 17:13:54'),
-(9, 2, 1, 'Entrenamiento de boxeo #9', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 1, '2024-05-04 17:13:55', '2024-05-04 17:13:55'),
-(10, 3, 1, 'Entrenamiento de boxeo #10', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '12:00', 0, '2024-05-04 17:13:55', '2024-05-04 17:13:55'),
-(11, 2, 2, 'Entrenamiento de thai #1', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '13:00', 1, '2024-05-04 17:13:55', '2024-05-04 17:13:55'),
-(12, 3, 2, 'Entrenamiento de thai #2', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '13:00', 0, '2024-05-04 17:13:55', '2024-05-04 17:13:55'),
-(13, 4, 2, 'Entrenamiento de thai #3', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '13:00', 0, '2024-05-04 17:13:56', '2024-05-04 17:13:56'),
-(14, 1, 2, 'Entrenamiento de thai #4', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '13:00', 1, '2024-05-04 17:13:56', '2024-05-04 17:13:56'),
-(15, 2, 2, 'Entrenamiento de thai #5', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '13:00', 0, '2024-05-04 17:13:56', '2024-05-04 17:13:56'),
-(16, 3, 2, 'Entrenamiento de thai #6', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '13:00', 1, '2024-05-04 17:13:57', '2024-05-04 17:13:57'),
-(17, 4, 2, 'Entrenamiento de thai #7', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '13:00', 1, '2024-05-04 17:13:57', '2024-05-04 17:13:57'),
-(18, 1, 2, 'Entrenamiento de thai #8', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 1, 0, 0, '2024-05-04', '13:00', 0, '2024-05-04 17:13:57', '2024-05-06 10:20:35'),
-(19, 2, 2, 'Entrenamiento de thai #9', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '13:00', 1, '2024-05-04 17:13:57', '2024-05-04 17:13:57'),
-(20, 3, 2, 'Entrenamiento de thai #10', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '13:00', 0, '2024-05-04 17:13:58', '2024-05-04 17:13:58'),
-(21, 2, 3, 'Entrenamiento de fitness #1', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 0, '2024-05-04 17:13:58', '2024-05-04 17:13:58'),
-(22, 3, 3, 'Entrenamiento de fitness #2', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 1, '2024-05-04 17:13:58', '2024-05-04 17:13:58'),
-(23, 4, 3, 'Entrenamiento de fitness #3', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 1, '2024-05-04 17:13:58', '2024-05-04 17:13:58'),
-(24, 1, 3, 'Entrenamiento de fitness #4', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 0, '2024-05-04 17:13:59', '2024-05-04 17:13:59'),
-(25, 2, 3, 'Entrenamiento de fitness #5', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 0, '2024-05-04 17:13:59', '2024-05-04 17:13:59'),
-(26, 3, 3, 'Entrenamiento de fitness #6', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 1, '2024-05-04 17:13:59', '2024-05-04 17:13:59'),
-(27, 4, 3, 'Entrenamiento de fitness #7', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 0, '2024-05-04 17:13:59', '2024-05-04 17:13:59'),
-(28, 1, 3, 'Entrenamiento de fitness #8', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 0, '2024-05-04 17:14:00', '2024-05-04 17:14:00'),
-(29, 2, 3, 'Entrenamiento de fitness #9', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 1, '2024-05-04 17:14:00', '2024-05-04 17:14:00'),
-(30, 3, 3, 'Entrenamiento de fitness #10', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/941907991?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, '2024-05-04', '14:00', 1, '2024-05-04 17:14:00', '2024-05-04 17:14:00');
+INSERT INTO `videos` (`id`, `type_id`, `modality_id`, `title`, `coach`, `description`, `url`, `visits`, `comments`, `likes`, `dislikes`, `upload_date`, `duration`, `exclusive`, `created_at`, `updated_at`) VALUES
+(1, 2, 1, 'Entrenamiento de boxeo #1', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(2, 3, 1, 'Entrenamiento de boxeo #2', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(3, 4, 1, 'Entrenamiento de boxeo #3', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(4, 1, 1, 'Entrenamiento de boxeo #4', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(5, 2, 1, 'Entrenamiento de boxeo #5', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(6, 3, 1, 'Entrenamiento de boxeo #6', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(7, 4, 1, 'Entrenamiento de boxeo #7', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(8, 1, 1, 'Entrenamiento de boxeo #8', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(9, 2, 1, 'Entrenamiento de boxeo #9', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 1, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(10, 3, 1, 'Entrenamiento de boxeo #10', 'Entrenador Principal', '🥊 ¡Entrenamiento de boxeo enfocado en técnicas y movimientos para mejorar tu golpeo y defensa! ¡Sigue el ritmo y siente cómo mejora tu técnica! 💥 #Boxeo #Entrenamiento #Técnica', 'https://player.vimeo.com/video/942268982?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '12:00', 1, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(11, 2, 2, 'Entrenamiento de thai #1', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(12, 3, 2, 'Entrenamiento de thai #2', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 1, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(13, 4, 2, 'Entrenamiento de thai #3', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(14, 1, 2, 'Entrenamiento de thai #4', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(15, 2, 2, 'Entrenamiento de thai #5', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(16, 3, 2, 'Entrenamiento de thai #6', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(17, 4, 2, 'Entrenamiento de thai #7', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(18, 1, 2, 'Entrenamiento de thai #8', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(19, 2, 2, 'Entrenamiento de thai #9', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(20, 3, 2, 'Entrenamiento de thai #10', 'Entrenador Principal', '🥊 ¡Entrenamiento de thai que combina movimientos tradicionales con técnicas modernas! ¡Mejora tu flexibilidad, fuerza y resistencia con esta rutina! 🥊 #Thai #Entrenamiento #Flexibilidad', 'https://player.vimeo.com/video/942268879?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '13:00', 1, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(21, 2, 3, 'Entrenamiento de fitness #1', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 1, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(22, 3, 3, 'Entrenamiento de fitness #2', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(23, 4, 3, 'Entrenamiento de fitness #3', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 1, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(24, 1, 3, 'Entrenamiento de fitness #4', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 1, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(25, 2, 3, 'Entrenamiento de fitness #5', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(26, 3, 3, 'Entrenamiento de fitness #6', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 1, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(27, 4, 3, 'Entrenamiento de fitness #7', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(28, 1, 3, 'Entrenamiento de fitness #8', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(29, 2, 3, 'Entrenamiento de fitness #9', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 1, '2024-05-10 05:58:51', '2024-05-10 05:58:51'),
+(30, 3, 3, 'Entrenamiento de fitness #10', 'Entrenador Principal', '🥊 ¡Entrenamiento de fitness que combina ejercicios aeróbicos con ejercicios de fuerza! ¡Quema calorías, fortalece tu cuerpo y mejora tu condición física con esta rutina! 💪 #Fitness #Entrenamiento #Salud', 'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479', 0, 0, 0, 0, '2024-05-10', '14:00', 0, '2024-05-10 05:58:51', '2024-05-10 05:58:51');
 
 --
 -- Índices para tablas volcadas
@@ -908,7 +922,7 @@ ALTER TABLE `countries`
 -- AUTO_INCREMENT de la tabla `diets`
 --
 ALTER TABLE `diets`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
@@ -980,7 +994,7 @@ ALTER TABLE `regions`
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `types`
@@ -992,7 +1006,7 @@ ALTER TABLE `types`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `user_comment_videos`
@@ -1022,7 +1036,7 @@ ALTER TABLE `user_subscribe_quotes`
 -- AUTO_INCREMENT de la tabla `user_visit_videos`
 --
 ALTER TABLE `user_visit_videos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `videos`

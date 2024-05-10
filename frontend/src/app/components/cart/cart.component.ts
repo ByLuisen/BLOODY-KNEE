@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { CookieService } from 'ngx-cookie-service';
-import { catchError, finalize, of, switchMap } from 'rxjs';
+import { catchError, finalize, of, switchMap, tap } from 'rxjs';
 import { Product } from 'src/app/models/Product';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -27,7 +27,7 @@ export class CartComponent {
   toggleCart() {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
-        // Haz algo si el usuario está autenticado
+        this.getProductsFromBBDD();
       } else {
         this.getProductsFromACookie();
       }
@@ -42,24 +42,33 @@ export class CartComponent {
       // Get the cart cookie value parsing it
       this.cart = JSON.parse(this.cookie.get('cart'));
       // Obtener solo los IDs de los productos
-      const ids = this.cart.map((product: any) => product.productId);
+      const ids = this.cart.map((product: any) => product.id);
       this.http
         .getProductsById(ids)
         .pipe(
           switchMap((products: Product[]) => {
-            this.products = products.map((product) => {
-              const cartItem = this.cart.find(
-                (cart) => cart.productId === product.id
-              );
-              if (cartItem) {
-                product.quantity = cartItem.quantity;
-              }
-              return product;
-            });
+            this.products = products
+              .map((product) => {
+                const cartItem = this.cart.find(
+                  (cart) => cart.id === product.id
+                );
+                if (cartItem) {
+                  product.quantity = cartItem.quantity;
+                  product.added_date = cartItem.added_date;
+                }
+                return product;
+              })
+              .sort((a, b) => {
+                // Ordena por fecha de forma descendente (más reciente primero)
+                return (
+                  new Date(b.added_date).getTime() -
+                  new Date(a.added_date).getTime()
+                );
+              });
             return of(products);
           }),
           catchError((error) => {
-            console.error('Error al obtener el producto:', error);
+            console.error('Error al obtener los productos:', error);
             return of([]); // Devolver un observable vacío o un valor por defecto
           }),
           finalize(() => {
@@ -70,39 +79,73 @@ export class CartComponent {
     }
   }
 
+  getProductsFromBBDD(): void {
+    this.loading = true;
+    this.http
+      .getCartFromDDBB()
+      .pipe(
+        switchMap((products: Product[]) => {
+          this.products = products;
+          console.log('Productos obtenidos:', this.products);
+          return of((this.loading = false));
+        })
+      )
+      .subscribe();
+  }
+
   deleteProduct(index: number): void {
-    // Eliminar el producto del array products
-    this.products.splice(index, 1);
-
-    // Eliminar el producto del array cart
-    this.cart.splice(index, 1);
-
-    // Verificar si todavía hay productos en el carrito
-    if (this.cart.length === 0) {
-      // Si no hay productos en el carrito, eliminar la cookie
-      this.cookie.delete('cart');
+    if (this.auth.isAuthenticated$) {
+      this.http.deleteProductCart(this.products[index].id).subscribe();
+      // Eliminar el producto del array products
+      this.products.splice(index, 1);
     } else {
-      // Si todavía hay productos en el carrito, actualizar la cookie
-      this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+      // Eliminar el producto del array products
+      this.products.splice(index, 1);
+
+      // Eliminar el producto del array cart
+      this.cart.splice(index, 1);
+
+      // Verificar si todavía hay productos en el carrito
+      if (this.cart.length === 0) {
+        // Si no hay productos en el carrito, eliminar la cookie
+        this.cookie.delete('cart', '/');
+      } else {
+        // Si todavía hay productos en el carrito, actualizar la cookie
+        this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+      }
     }
   }
 
   calculateTotalProducts(): number {
-    // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
-    const totalProducts = this.cart.reduce(
-      (total, product) => total + product.quantity,
-      0
-    );
-    return totalProducts;
+    if (this.auth.isAuthenticated$) {
+      // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
+      const totalProducts = this.products.reduce(
+        (total, product) => total + product.quantity,
+        0
+      );
+      return totalProducts;
+    } else {
+      // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
+      const totalProducts = this.cart.reduce(
+        (total, product) => total + product.quantity,
+        0
+      );
+      return totalProducts;
+    }
   }
 
   calculateTotalAmount(): number {
-    // Usar la función map para calcular el precio total
-    const totalAmount = this.products
-      .map((product, index) => product.price * this.cart[index].quantity)
-      .reduce((total, current) => total + current, 0);
-
-    return totalAmount;
+    if (this.auth.isAuthenticated$) {
+      // Si el usuario está autenticado, calcular el precio total utilizando this.products
+      return this.products
+        .map((product) => product.price * product.quantity)
+        .reduce((total, current) => total + current, 0);
+    } else {
+      // Si el usuario no está autenticado, calcular el precio total utilizando this.cart
+      return this.products
+        .map((product, index) => product.price * this.cart[index].quantity)
+        .reduce((total, current) => total + current, 0);
+    }
   }
 
   closeCart() {
@@ -111,9 +154,7 @@ export class CartComponent {
 
   verDetallesProducto(productId: number) {
     // Navegar a la vista de detalles del producto con el ID del producto como parámetro
-    this.router.navigate(['/product', productId]).then(() => {
-      this.closeCart();
-    });
+    window.location.href = window.location.origin + '/product/' + productId;
   }
 
   loginOrAdressForm(): void {

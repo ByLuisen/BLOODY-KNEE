@@ -10,7 +10,7 @@ class Cart extends Model
     use HasFactory;
 
     public function products()
-{
-    return $this->hasMany(CartStoreProduct::class);
-}
+    {
+        return $this->belongsToMany(Product::class, 'cart_store_products')->withTimestamps();
+    }
 }
