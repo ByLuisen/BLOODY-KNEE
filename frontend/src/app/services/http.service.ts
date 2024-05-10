@@ -22,8 +22,8 @@ import { FormGroup } from '@angular/forms';
 })
 export class HttpService {
   private jwtHelper: JwtHelperService = new JwtHelperService(); // Servicio para manejar JWT
-  // url: string = 'http://localhost:8000/api'; // URL base para las solicitudes HTTP
-  url: string = 'https://bloodyknee.es/api'; // URL del servidor
+  url: string = 'http://localhost:8000/api'; // URL base para las solicitudes HTTP
+  // url: string = 'https://bloodyknee.es/api'; // URL del servidor
 
   constructor(
     private _http: HttpClient,
