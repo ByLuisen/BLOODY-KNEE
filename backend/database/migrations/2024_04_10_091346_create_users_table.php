@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('province_id')->nullable();
             $table->string('full_name')->nullable();
-            $table->string('nickname')->nullable();
+            $table->string('picture');
+            $table->string('nickname');
             $table->string('email');
-            $table->string('password')->nullable();
             $table->string('connection');
             $table->string('postal_code')->nullable();
             $table->string('adress')->nullable();
