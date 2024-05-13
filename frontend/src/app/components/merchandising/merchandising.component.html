@@ -1,72 +1,76 @@
 <div class="sm:text-center aclonica-font fondo_bk overflow-auto">
   <!-- Banner -->
   <div
-    class="sticky top-0 z-10 isolate flex items-center gap-x-6 overflow-hidden bg-red-200 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
-    <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      aria-hidden="true">
-      <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff4d4d] to-[#fc8989] opacity-30"
+    class="sticky top-0 z-10 isolate flex flex-col sm:flex-row items-center gap-x-6 overflow-hidden bg-red-200 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
+    <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl">
+      <div
+        class="aspect-[577/310] w-[36.0625rem] sm:w-[22.5rem] bg-gradient-to-r from-[#ff4d4d] to-[#fc8989] opacity-30"
         style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)">
       </div>
     </div>
-    <div class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      aria-hidden="true">
-      <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff4d4d] to-[#ff1111] opacity-30"
+    <div class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl">
+      <div
+        class="aspect-[577/310] w-[36.0625rem] sm:w-[22.5rem] bg-gradient-to-r from-[#ff4d4d] to-[#ff1111] opacity-30"
         style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)">
       </div>
     </div>
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
       <p class="text-sm leading-6 text-gray-900">
-        <strong class="font-semibold">Bloody Knee 2024</strong><svg viewBox="0 0 2 2"
-          class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true">
+        <strong class="font-semibold">Bloody Knee 2024</strong>
+        <svg viewBox="0 0 2 2" class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true">
           <circle cx="1" cy="1" r="1" />
-        </svg>Actualmente sólo ofrecemos entregas a direcciones dentro de España.
+        </svg>
+        Actualmente sólo ofrecemos entregas a direcciones dentro de España.
       </p>
     </div>
     <div class="flex flex-1 justify-end">
     </div>
   </div>
-  <!-- Products -->
-  <h1 class="text-center mt-5">MERCHAN<span class="text-red-600">DISING</span></h1>
-  <div class="grid grid-cols-2 px-96 text-center">
-    <div class="pl-52 pt-4 text-start">
-      <h2>Disponibilidad</h2>
-      <div class="flex items-center">
-        <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
-          (change)="mostrarEnStock = !mostrarEnStock">
-        <p>En Stock ({{ contarProductosEnStock() }})</p>
-      </div>
-      <div class="flex">
-        <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
-          (change)="mostrarFueraDeStock = !mostrarFueraDeStock">
-        <p>Fuera de Stock ({{ contarProductosFueraDeStock() }})</p>
-      </div>
-    </div>
-    <div class="text-start pl-36 pt-4">
-      <h2>Precio</h2>
-      <input type="range" min="0" max="150" value="0" class="range-input" #priceRangeInput (input)="onPriceChange()">
-      <p>Rango de precio: $0 - ${{priceRangeInput.value }}</p>
-    </div>
-  </div>
-  <!-- Iterar sobre los productos utilizando *ngFor -->
-  <div class="grid grid-cols-4 px-56 pt-10 gap-32">
-    <!-- Pantalla de carga mientras se obtienen los productos del merch -->
-    <div class="fixed inset-0 flex items-center justify-center shadow-xl" *ngIf="loading; else merchContainer">
-      <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
-      <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-red-500 animate-spin"></div>
-      <img src="../../../assets/img/my_logo.webp" class="rounded-full h-8 w-8">
-    </div>
-    <ng-template #merchContainer>
-      <div *ngFor="let producto of productosFiltrados()"
-        class="w-auto h-auto justify-center hover:transform hover:scale-105 cursor-pointer"
-        (click)="verDetallesProducto(producto.id)">
+  <div class="px-5 sm:px-10 md:px-20 pt-10">
 
-        <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.webp'"
-          class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto">
-        <p>{{producto.name}}</p>
-        <p class="text-red-600">€{{producto.price}}</p>
+    <!-- Products -->
+    <h1 class="text-center mt-5">MERCHAN<span class="text-red-600">DISING</span></h1>
+    <div
+      class="grid grid-cols-1 self-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 px-5 sm:px-10 md:px-20 text-center">
+      <div class="pl-2 sm:pl-10 pt-4 text-center">
+        <h2>Disponibilidad</h2>
+        <div class="flex items-center">
+          <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
+            (change)="mostrarEnStock = !mostrarEnStock">
+          <p>En Stock ({{ contarProductosEnStock() }})</p>
+        </div>
+        <div class="flex">
+          <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
+            (change)="mostrarFueraDeStock = !mostrarFueraDeStock">
+          <p>Fuera de Stock ({{ contarProductosFueraDeStock() }})</p>
+        </div>
       </div>
-    </ng-template>
+      <div class="text-start pt-4">
+        <h2>Precio</h2>
+        <input type="range" min="0" max="150" value="0" class="range-input" #priceRangeInput (input)="onPriceChange()">
+        <p>Rango de precio: $0 - ${{priceRangeInput.value }}</p>
+      </div>
+    </div>
+    <!-- Iterar sobre los productos utilizando *ngFor -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 text-center md:grid-cols-4 lg:grid-cols-4 px-5 sm:px-10 md:px-20 pt-10 gap-4">
+      <!-- Pantalla de carga mientras se obtienen los productos del merch -->
+      <div class="fixed inset-0 flex items-center justify-center shadow-xl" *ngIf="loading; else merchContainer">
+        <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
+        <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-red-500 animate-spin"></div>
+        <img src="../../../assets/img/my_logo.webp" class="rounded-full h-8 w-8">
+      </div>
+      <ng-template #merchContainer>
+        <div *ngFor="let producto of productosFiltrados()"
+          class="justify-center hover:transform hover:scale-105 cursor-pointer"
+          (click)="verDetallesProducto(producto.id)">
+          <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.webp'"
+            class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto mx-auto">
+          <p>{{producto.name}}</p>
+          <p class="text-red-600">€{{producto.price}}</p>
+        </div>
+      </ng-template>
+    </div>
+    <app-cart></app-cart>
   </div>
-
-  <app-cart></app-cart>
 </div>
