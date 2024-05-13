@@ -11,8 +11,6 @@ class StripeController extends Controller
 {
     public function payment(Request $request)
     {
-        Session::put('shippingData', $request->shippingData);
-
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
 
         $products = $request->input('products');

@@ -40,6 +40,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/new-user', [UserController::class, 'newUser']);
     Route::put('/update-role', [UserController::class, 'updateRole']);
     Route::post('/get-role', [UserController::class, 'getRole']);
+    Route::post('/store-address', [UserController::class, 'storeUserAddress']);
     Route::post('/store-cart', [CartController::class, 'storeProductFromACookie']);
     Route::post('/get-cart', [CartController::class, 'getCartProducts']);
     Route::post('/add-product-to-cart', [CartController::class, 'addProductToCart']);

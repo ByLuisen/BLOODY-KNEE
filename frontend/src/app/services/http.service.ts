@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
 import { Diet } from '../models/Diet';
@@ -117,7 +117,7 @@ export class HttpService {
     );
   }
 
-  addProductToCart(product: Product): Observable<Product[]> {
+  addProductToCart(product: Product): Observable<any> {
     const url = `${this.url}/add-product-to-cart`;
     return this.auth.user$.pipe(
       switchMap((user) => {
@@ -125,10 +125,9 @@ export class HttpService {
           const email = user.email;
           const connection = user.sub.split('|')[0]; // Obtiene la conexión del usuario actual
           const body = { product, email, connection };
+          console.log(body);
           // Realiza la solicitud POST al servidor con el cuerpo construido
-          return this._http
-            .post<{ data: Product[] }>(url, body)
-            .pipe(map((response) => response.data));
+          return this._http.post(url, body).pipe(map((response) => response));
         } else {
           // Si el usuario no está autenticado o no tiene sub, devuelve un Observable vacío
           return of([]);
@@ -157,6 +156,23 @@ export class HttpService {
       })
     );
   }
+
+  storeUserAddress(shippingAddress: any): Observable<any> {
+    const url = `${this.url}/store-address`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          shippingAddress: shippingAddress,
+          email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
+          connection: user ? user.sub?.split('|')[0] : '', // Obtén la conexión del usuario actual
+        };
+        console.log(body);
+        // Realiza la solicitud PUT al servidor con el cuerpo construido
+        return this._http.post(url, body).pipe(map((response) => response));
+      })
+    );
+  }
+
   /**
    * Retrieves an access token for authorization.
    * @returns An observable that emits the access token after the request is completed.
@@ -412,7 +428,7 @@ export class HttpService {
     );
   }
 
-  checkout(products: Product[], shippingData: FormGroup): Observable<any> {
+  checkout(products: Product[]): Observable<any> {
     return this.auth.user$.pipe(
       switchMap((user) => {
         if (!user) {
@@ -421,7 +437,6 @@ export class HttpService {
 
         const url = `${this.url}/payment`;
         const body = {
-          shippingData: shippingData,
           user_email: user.email ?? '',
           products: products,
           href: window.location.href,

@@ -49,7 +49,7 @@
         <hr>
       </div>
       <li class="cursor-pointer" (click)="expandDiv()">
-        <a class="flex" (click)="auth.logout()">
+        <a class="flex" (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })">
           <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
             <img src="../../../assets/img/logout.webp" alt="Logout Image" class="icon">
             <p>Logout</p>

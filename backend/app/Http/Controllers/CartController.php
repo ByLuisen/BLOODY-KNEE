@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Type\Integer;
 
 class CartController extends Controller
 {
@@ -46,9 +47,6 @@ class CartController extends Controller
                 $cartProduct->product_id = $product->id;
                 $cartProduct->quantity = $productData['quantity'];
 
-                $addedDate = Carbon::createFromFormat('Y-m-d\TH:i:s.u\Z', $productData['added_date']);
-                $formattedDate = $addedDate->format('Y-m-d H:i:s');
-                $cartProduct->added_date = $formattedDate;
                 $cartProduct->save();
             }
         }
@@ -71,7 +69,7 @@ class CartController extends Controller
 
         // Obtener los productos en el carrito con información adicional, ordenados por added_date en orden descendente
         $cartProducts = CartStoreProduct::where('cart_id', $cart->id)
-            ->orderBy('added_date', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->with('product') // Cargar la relación 'product' para obtener información sobre los productos
             ->get();
 
@@ -101,9 +99,13 @@ class CartController extends Controller
     public function addProductToCart(Request $request)
     {
         // Obtener el ID del producto y el ID del usuario del cuerpo de la solicitud
-        $product = Product::where('id', $request->product['id'])->first();
+        $productId = $request->product['id'];
+        $productQuantity = $request->product['quantity'];
+        $userEmail = $request->email;
+        $userConnection = $request->connection;
+
         // Obtener el usuario y su carrito asociado
-        $user = User::where('email', $request->email)->where('connection', $request->connection)->first();
+        $user = User::where('email', $userEmail)->where('connection', $userConnection)->first();
         $cart = $user->cart;
 
         // Si no hay un carrito, crear uno nuevo
@@ -113,10 +115,17 @@ class CartController extends Controller
             $cart->save();
         }
 
-        // Agregar el producto al carrito
-        $cart->products()->attach($product, ['quantity' => $request->product['quantity']]);
+        // Verificar si el producto ya está en el carrito
+        $existingProduct = $cart->products()->where('product_id', $productId)->first();
 
-        // Puedes retornar una respuesta JSON si lo deseas
-        return response()->json(['message' => 'Producto agregado al carrito con éxito']);
+        if ($existingProduct) {
+            // Increment the quantity product if the product exist in the cart
+            $existingProduct->pivot->increment('quantity', $productQuantity);
+        } else {
+            // Si el producto no está en el carrito, agrégalo
+            $cart->products()->attach($productId, ['quantity' => $productQuantity]);
+        }
+
+        return ApiResponse::success(null, 'Producto agregado al carrito con éxito');
     }
 }

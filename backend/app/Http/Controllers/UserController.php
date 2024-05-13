@@ -36,7 +36,8 @@ class UserController extends Controller
         }
     }
 
-    public function getRole(Request $request){
+    public function getRole(Request $request)
+    {
         $user = User::where('email', $request->email)->where('connection', $request->connection)->first();
 
         $role = $user->getRoleNames();
@@ -44,7 +45,8 @@ class UserController extends Controller
         return ApiResponse::success($role[0], 'Role obtenido correctamente');
     }
 
-    public function updateRole(Request $request) {
+    public function updateRole(Request $request)
+    {
         $user = User::where('email', $request->email)->where('connection', $request->connection)->first();
 
         $roles = $user->getRoleNames(); // Elimina todos los roles del usuario
@@ -56,5 +58,28 @@ class UserController extends Controller
         $user->assignRole($request->role); // Asigna el nuevo rol al usuario
 
         return ApiResponse::success($request->role, 'Role actualizado correctamente');
+    }
+
+    public function storeUserAddress(Request $request)
+    {
+        $shippingAddress = $request->shippingAddress;
+
+        $user = User::where('email', $request->email)->where('connection', $request->connection)->first();
+
+        if ($user) {
+            $user->country = $shippingAddress['country'];
+            $user->full_name = $shippingAddress['fullName'];
+            $user->phone = $shippingAddress['phone'];
+            $user->address = $shippingAddress['address'];
+            $user->province = $shippingAddress['province'];
+            $user->city = $shippingAddress['city'];
+            $user->zip = $shippingAddress['zip'];
+
+            $user->save();
+
+            return ApiResponse::success($user, 'Dirección guardada correctamente');
+        } else {
+            return ApiResponse::error(null, 'Usuario no encontrado');
+        }
     }
 }

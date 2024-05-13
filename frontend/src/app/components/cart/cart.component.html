@@ -1,4 +1,4 @@
-<div (click)="toggleCart()" class="absolute bottom-7 right-5 cursor-pointer">
+<div id="button-cart" (click)="toggleCart()" class="absolute bottom-7 right-5 cursor-pointer">
   <img src="../../../assets/img/compras3.webp"
     class="rounded-full w-16 h-16 transition-transform duration-300 transform bg-red-600 hover:scale-110 hover:bg-red-500">
 </div>
@@ -11,7 +11,7 @@
     <div class="absolute inset-0 overflow-hidden">
       <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
         [ngClass]="{ 'slide-over': cartOpen}">
-        <div class="pointer-events-auto w-screen max-w-md">
+        <div id="expandableCart" class="pointer-events-auto w-screen max-w-md">
 
           <!-- Pantalla de carga mientras se obtienen los productos de la cesta -->
           <div class="h-full w-full flex items-center justify-center bg-white shadow-xl"

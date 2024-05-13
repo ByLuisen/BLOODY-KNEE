@@ -13,6 +13,7 @@ import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { AuthService } from '@auth0/auth0-angular';
 import { catchError, finalize, of, switchMap, tap } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { User } from 'src/app/models/User';
 
 @Component({
   selector: 'app-product-detail',
@@ -62,7 +63,7 @@ export class ProductDetailComponent implements OnInit {
       ]),
       address: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚªº'·\s\-\.\,]*$/),
+        Validators.pattern(/^[a-zA-Z0-9ñáéíóúÑÁÉÍÓÚªº'·\s\-\.\,]*$/),
       ]),
       province: new FormControl('', [
         Validators.pattern(/^[a-zA-ZáéíóúñçÁÉÍÓÚÑÇ'\s]*$/),
@@ -203,7 +204,8 @@ export class ProductDetailComponent implements OnInit {
 
       if (existingProductIndex !== -1) {
         // Si el producto ya está en el carrito, actualizar su cantidad
-        cart[existingProductIndex].quantity += this.getQuantity();
+        cart[existingProductIndex].quantity += productToAdd.quantity;
+        cart[existingProductIndex].added_date = productToAdd.added_date;
       } else {
         // Si el producto no está en el carrito, agregarlo
         cart.push(productToAdd);
@@ -227,14 +229,28 @@ export class ProductDetailComponent implements OnInit {
     this.added = false;
   }
 
-  sendShippingAdsress(): void {
+  sendShippingAddress(): void {
     if (this.shippingAddress.valid) {
       this.loading = true;
       // Obtener todos los datos del formulario
-      const shippingData = this.shippingAddress.value;
+      const shippingData = Object.values(this.shippingAddress.value).map(
+        (value: any) => value.trim()
+      );
+      const shippingAddress = new User();
+      shippingAddress.country = shippingData[0];
+      shippingAddress.fullName = shippingData[1] + ' ' + shippingData[2];
+      shippingAddress.phone = shippingData[3];
+      shippingAddress.address = shippingData[4];
+      shippingAddress.province = shippingData[5] ?? '';
+      shippingAddress.city = shippingData[6];
+      shippingAddress.zip = shippingData[7];
+
+      this.http.storeUserAddress(shippingAddress).subscribe();
+
       this.product.quantity = this.getQuantity();
+
       this.http
-        .checkout([this.product], shippingData)
+        .checkout([this.product])
         .pipe(
           tap((response) => {
             if (response) {

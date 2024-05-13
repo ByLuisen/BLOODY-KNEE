@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize, of, switchMap, tap } from 'rxjs';
 import { Product } from 'src/app/models/Product';
+import { User } from 'src/app/models/User';
 import { HttpService } from 'src/app/services/http.service';
 
 @Component({
@@ -33,7 +34,7 @@ export class ShippingAddressPageComponent implements OnInit {
       ]),
       address: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚªº'·\s\-\.\,]*$/),
+        Validators.pattern(/^[a-zA-Z0-9ñáéíóúÑÁÉÍÓÚªº'·\s\-\.\,]*$/),
       ]),
       province: new FormControl('', [
         Validators.pattern(/^[a-zA-ZáéíóúñçÁÉÍÓÚÑÇ'\s]*$/),
@@ -53,13 +54,22 @@ export class ShippingAddressPageComponent implements OnInit {
     if (this.shippingAddress.valid) {
       this.loading = true;
       // Obtener todos los datos del formulario
-      const shippingData = this.shippingAddress.value;
+      const shippingData = Object.values(this.shippingAddress.value).map((value:any) => value.trim());
+      const shippingAddress = new User;
+      shippingAddress.country = shippingData[0];
+      shippingAddress.fullName = shippingData[1] + ' ' + shippingData[2];
+      shippingAddress.phone = shippingData[3];
+      shippingAddress.address = shippingData[4];
+      shippingAddress.province = shippingData[5] ?? '';
+      shippingAddress.city = shippingData[6];
+      shippingAddress.zip = shippingData[7];
 
+      this.http.storeUserAddress(shippingAddress).subscribe();
       this.http
         .getCartFromDDBB()
         .pipe(
           switchMap((products: Product[]) => {
-            return this.http.checkout(products, shippingData).pipe(
+            return this.http.checkout(products).pipe(
               tap((response) => {
                 if (response) {
                   window.location.href = response.data.checkout_url;

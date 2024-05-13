@@ -13,18 +13,19 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('province_id')->nullable();
+            $table->string('picture')->unique()->nullable();
+            $table->string('nickname')->unique()->nullable();
+            $table->string('email')->unique();
+            $table->string('connection')->nullable();
+            $table->string('country')->nullable();
             $table->string('full_name')->nullable();
-            $table->string('picture');
-            $table->string('nickname');
-            $table->string('email');
-            $table->string('connection');
-            $table->string('postal_code')->nullable();
-            $table->string('adress')->nullable();
             $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('province')->nullable();
+            $table->string('city')->nullable();
+            $table->string('zip')->nullable();
             $table->timestamps();
 
-            $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade');
         });
     }
 

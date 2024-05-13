@@ -43,9 +43,6 @@ export class PricingComponent {
     // Obtén los parámetros de la URL
     this.route.queryParams.subscribe((params) => {
       if (params['session_id'] && params['success']) {
-        this.http.getCheckoutSession(params['session_id']).subscribe((data) => {
-          console.log(data);
-        });
         this.http.getLineItems(params['session_id']).subscribe((data) => {
           const subscriptionItem = data.data.line_items.data[0];
           this.http.updateRole(subscriptionItem.description).subscribe();

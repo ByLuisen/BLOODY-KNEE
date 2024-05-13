@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('cart_id');
             $table->integer('quantity');
-            $table->dateTime('added_date')->default(now()); // Establece la fecha actual como valor predeterminado
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
