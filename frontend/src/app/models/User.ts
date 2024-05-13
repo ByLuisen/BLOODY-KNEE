@@ -1,41 +1,47 @@
 export class User {
   #id: number;
-  #provinceId: number | null;
-  #fullName: string | null;
   #picture: string;
   #nickname: string;
   #email: string;
   #connection: string;
-  #postalCode: string | null;
-  #address: string | null;
+  #country: string | null;
+  #fullName: string | null;
   #phone: string | null;
+  #address: string | null;
+  #province: string | null;
+  #city: string | null;
+  #zip: string | null;
   #createdAt: Date;
   #updatedAt: Date;
 
   constructor(
     id: number = 0,
-    provinceId: number | null = null,
-    fullName: string | null = null,
     picture: string = '',
     nickname: string = '',
     email: string = '',
     connection: string = '',
-    postalCode: string | null = null,
-    address: string | null = null,
+    country: string | null = null,
+    fullName: string | null = null,
     phone: string | null = null,
+    address: string | null = null,
+    province: string | null = null,
+    city: string | null = null,
+    zip: string | null = null,
     createdAt: Date = new Date(),
     updatedAt: Date = new Date()
   ) {
     this.#id = id;
-    this.#provinceId = provinceId;
-    this.#fullName = fullName;
     this.#picture = picture;
     this.#nickname = nickname;
     this.#email = email;
     this.#connection = connection;
-    this.#postalCode = postalCode;
-    this.#address = address;
+    this.#country = country;
+    this.#fullName = fullName;
     this.#phone = phone;
+    this.#address = address;
+    this.#province = province;
+    this.#city = city;
+    this.#zip = zip;
     this.#createdAt = createdAt;
     this.#updatedAt = updatedAt;
   }
@@ -43,12 +49,6 @@ export class User {
   // Getters
   get id(): number {
     return this.#id;
-  }
-  get provinceId(): number | null {
-    return this.#provinceId;
-  }
-  get fullName(): string | null {
-    return this.#fullName;
   }
   get picture(): string {
     return this.#picture;
@@ -62,14 +62,26 @@ export class User {
   get connection(): string {
     return this.#connection;
   }
-  get postalCode(): string | null {
-    return this.#postalCode;
+  get country(): string | null {
+    return this.#country;
+  }
+  get fullName(): string | null {
+    return this.#fullName;
+  }
+  get phone(): string | null {
+    return this.#phone;
   }
   get address(): string | null {
     return this.#address;
   }
-  get phone(): string | null {
-    return this.#phone;
+  get province(): string | null {
+    return this.#province;
+  }
+  get city(): string | null {
+    return this.#city;
+  }
+  get zip(): string | null {
+    return this.#zip;
   }
   get createdAt(): Date {
     return this.#createdAt;
@@ -78,21 +90,59 @@ export class User {
     return this.#updatedAt;
   }
 
+  // Setters
+  set id(id: number) {
+    this.#id = id;
+  }
+  set picture(picture: string) {
+    this.#picture = picture;
+  }
+  set nickname(nickname: string) {
+    this.#nickname = nickname;
+  }
+  set email(email: string) {
+    this.#email = email;
+  }
+  set connection(connection: string) {
+    this.#connection = connection;
+  }
+  set country(country: string) {
+    this.#country = country;
+  }
+  set fullName(fullName: string) {
+    this.#fullName = fullName;
+  }
+  set phone(phone: string) {
+    this.#phone = phone;
+  }
+  set address(address: string) {
+    this.#address = address;
+  }
+  set province(province: string) {
+    this.#province = province;
+  }
+  set city(city: string) {
+    this.#city = city;
+  }
+  set zip(zip: string) {
+    this.#zip = zip;
+  }
+
   // Convertir objeto a JSON
   toJSON(): any {
     return {
       id: this.#id,
-      provinceId: this.#provinceId,
-      fullName: this.#fullName,
       picture: this.#picture,
       nickname: this.#nickname,
       email: this.#email,
       connection: this.#connection,
-      postalCode: this.#postalCode,
-      address: this.#address,
+      country: this.#country,
+      fullName: this.#fullName,
       phone: this.#phone,
-      createdAt: this.#createdAt.toISOString(), // Convertir fecha a formato ISO
-      updatedAt: this.#updatedAt.toISOString(), // Convertir fecha a formato ISO
+      address: this.#address,
+      province: this.#province,
+      city: this.#city,
+      zip: this.#zip,
     };
   }
 }

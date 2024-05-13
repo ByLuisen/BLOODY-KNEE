@@ -10,7 +10,7 @@ import { AuthService } from '@auth0/auth0-angular';
 export class MenuMovileComponent {
   expanded: boolean = false;
 
-  constructor(@Inject(DOCUMENT) private document: Document, private elementRef: ElementRef, public auth: AuthService) {}
+  constructor(@Inject(DOCUMENT) public document: Document, private elementRef: ElementRef, public auth: AuthService) {}
 
   expandDiv() {
     const div = this.document.getElementById("expandibleDiv")!;

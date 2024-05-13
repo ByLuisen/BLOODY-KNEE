@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
 import { Diet } from '../models/Diet';
@@ -15,6 +15,7 @@ import { Product } from '../models/Product';
 import { Comment } from '../models/Comment';
 
 import { CookieService } from 'ngx-cookie-service';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -35,10 +36,45 @@ export class HttpService {
       if (user) {
         this.addNewUserAndRole(user).subscribe();
         if (this.cookie.check('cart')) {
-          this.storeCartInDDBB(user).subscribe();
+          this.storeCartInDDBB(user).subscribe(() => {
+            this.cookie.delete('cart', '/');
+          });
         }
       }
     });
+  }
+
+  getRole(): Observable<any> {
+    const url = `${this.url}/get-role`;
+    return this.auth.idTokenClaims$.pipe(
+      switchMap((user) => {
+        // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
+        const body = {
+          email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
+          connection: user ? user['sub'].split('|')[0] : '', // Obtén la conexión del usuario actual
+        };
+
+        // Realiza la solicitud PUT al servidor con el cuerpo construido
+        return this._http.post(url, body);
+      })
+    );
+  }
+
+  updateRole(role: string): Observable<any> {
+    const url = `${this.url}/update-role`;
+    return this.auth.idTokenClaims$.pipe(
+      switchMap((user) => {
+        // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
+        const body = {
+          role: role,
+          email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
+          connection: user ? user['sub'].split('|')[0] : '', // Obtén la conexión del usuario actual
+        };
+
+        // Realiza la solicitud PUT al servidor con el cuerpo construido
+        return this._http.put(url, body);
+      })
+    );
   }
 
   /**
@@ -57,13 +93,84 @@ export class HttpService {
    */
   storeCartInDDBB(user: User): Observable<any> {
     const url = `${this.url}/store-cart`;
-
     const body = {
       user: user,
       cart: JSON.parse(this.cookie.get('cart')),
     };
 
-    return this._http.post(url, user);
+    return this._http.post(url, body);
+  }
+
+  getCartFromDDBB(): Observable<Product[]> {
+    const url = `${this.url}/get-cart`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
+          connection: user ? user.sub?.split('|')[0] : '', // Obtén la conexión del usuario actual
+        };
+        // Realiza la solicitud PUT al servidor con el cuerpo construido
+        return this._http
+          .post<{ data: Product[] }>(url, body)
+          .pipe(map((response) => response.data));
+      })
+    );
+  }
+
+  addProductToCart(product: Product): Observable<any> {
+    const url = `${this.url}/add-product-to-cart`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (user && user.sub) {
+          const email = user.email;
+          const connection = user.sub.split('|')[0]; // Obtiene la conexión del usuario actual
+          const body = { product, email, connection };
+          console.log(body);
+          // Realiza la solicitud POST al servidor con el cuerpo construido
+          return this._http.post(url, body).pipe(map((response) => response));
+        } else {
+          // Si el usuario no está autenticado o no tiene sub, devuelve un Observable vacío
+          return of([]);
+        }
+      })
+    );
+  }
+
+  deleteProductCart(productId: number): Observable<Product[]> {
+    const url = `${this.url}/delete-product-cart`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (user && user.sub) {
+          const email = user.email;
+          const connection = user.sub.split('|')[0]; // Obtiene la conexión del usuario actual
+          const body = { productId, email, connection };
+
+          // Realiza la solicitud DELETE al servidor con el cuerpo construido
+          return this._http
+            .delete<{ data: Product[] }>(url, { body })
+            .pipe(map((response) => response.data));
+        } else {
+          // Si el usuario no está autenticado o no tiene sub, devuelve un Observable vacío
+          return of([]);
+        }
+      })
+    );
+  }
+
+  storeUserAddress(shippingAddress: any): Observable<any> {
+    const url = `${this.url}/store-address`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          shippingAddress: shippingAddress,
+          email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
+          connection: user ? user.sub?.split('|')[0] : '', // Obtén la conexión del usuario actual
+        };
+        console.log(body);
+        // Realiza la solicitud PUT al servidor con el cuerpo construido
+        return this._http.post(url, body).pipe(map((response) => response));
+      })
+    );
   }
 
   /**
@@ -300,6 +407,7 @@ export class HttpService {
   getProductBrand(productId: number): Observable<any> {
     return this._http.get<any>(`${this.url}/products/${productId}/brand`);
   }
+
   subscribeQuote(quotePriceId: string): Observable<any> {
     return this.auth.user$.pipe(
       switchMap((user) => {
@@ -337,6 +445,50 @@ export class HttpService {
           products: products,
           href: window.location.href,
           origin: window.location.origin,
+        };
+        return this._http.post(url, body).pipe(
+          catchError((error) => {
+            // Manejar errores aquí
+            console.error('Error en la solicitud HTTP:', error);
+            return of(null); // Emite un valor nulo si hay un error
+          })
+        );
+      })
+    );
+  }
+
+  getCheckoutSession(id: string): Observable<any> {
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of(null); // Emite un valor nulo si el usuario no está autenticado
+        }
+
+        const url = `${this.url}/retrieve-checkout`;
+        const body = {
+          checkout_session_id: id,
+        };
+        return this._http.post(url, body).pipe(
+          catchError((error) => {
+            // Manejar errores aquí
+            console.error('Error en la solicitud HTTP:', error);
+            return of(null); // Emite un valor nulo si hay un error
+          })
+        );
+      })
+    );
+  }
+
+  getLineItems(id: string): Observable<any> {
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return of(null); // Emite un valor nulo si el usuario no está autenticado
+        }
+
+        const url = `${this.url}/retrieve-line-items`;
+        const body = {
+          checkout_session_id: id,
         };
         return this._http.post(url, body).pipe(
           catchError((error) => {

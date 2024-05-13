@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->date('date')->default(now()); // Establece la fecha actual como valor predeterminado
-            $table->integer('total');
-            $table->enum('status', ['Pending', 'In process', 'Confirmed', 'On the way', 'Delivered', 'Cancelled', 'Refunded']);
+            $table->date('order_date')->default(now());
+            $table->date('date_delivery')->default(now());
+            $table->string('shipping_address');
+            $table->decimal('total_amount');
+            $table->string('payment_method');
+            $table->enum('status', ['Pendiente', 'En Proceso', 'Enviado', 'Entregado', 'Cancelado', 'Devuelto']);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -24,6 +24,8 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function carts()
+    {
+        return $this->belongsToMany(Cart::class, 'cart_store_products')->withTimestamps();
+    }
 }
-
-
