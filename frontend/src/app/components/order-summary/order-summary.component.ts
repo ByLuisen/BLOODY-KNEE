@@ -16,7 +16,12 @@ export class OrderSummaryComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       if (params['session_id'] && params['success']) {
         this.http.getCheckoutSession(params['session_id']).subscribe((data) => {
-          console.log(data)
+          const checkout_session = data.data.checkout_session
+          console.log(checkout_session)
+        });
+        this.http.getLineItems(params['session_id']).subscribe((data) => {
+          const line_items = data.data.line_items.data;
+          console.log(line_items)
         });
       }
     });

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class UserVisitVideo extends Pivot
 {
@@ -16,6 +17,6 @@ class UserVisitVideo extends Pivot
         'video_id',
         'date'
     ];
-    
+
 }
 
