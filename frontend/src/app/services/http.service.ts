@@ -153,14 +153,6 @@ export class HttpService {
           (response) => {
             observer.next(response.data);
             observer.complete();
-            this.countAndUpdateComments(id).subscribe(
-              () => {
-                console.log('Comentarios actualizados');
-              },
-              (error) => {
-                console.error('Error al actualizar los comentarios', error);
-              }
-            );
           },
           (error) => {
             observer.error(error);
@@ -362,7 +354,6 @@ export class HttpService {
           comment: comment,
         };
         console.log(body);
-
         return this._http.post(url, body).pipe(
           catchError((error) => {
             // Manejar errores aquí
@@ -370,6 +361,26 @@ export class HttpService {
             return of(null); // Emite un valor nulo si hay un error
           })
         );
+      })
+    );
+  }
+
+  editComment(commentId: number, comment: string): Observable<any> {
+    const url = `${this.url}/comments/${commentId}`;
+    return this._http.put(url, { comment }).pipe(
+      catchError((error) => {
+        console.error('Error en la solicitud HTTP:', error);
+        return of(null);
+      })
+    );
+  }
+
+  deleteComment(commentId: number): Observable<any> {
+    const url = `${this.url}/comments/${commentId}`;
+    return this._http.delete(url).pipe(
+      catchError((error) => {
+        console.error('Error en la solicitud HTTP:', error);
+        return of(null);
       })
     );
   }
