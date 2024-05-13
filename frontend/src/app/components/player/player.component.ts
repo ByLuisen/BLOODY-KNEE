@@ -23,7 +23,7 @@ export class PlayerComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private router: Router,
     public auth: AuthService
-  ) {}
+  ) { }
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
   videoId!: number;
@@ -89,7 +89,6 @@ export class PlayerComponent implements OnInit {
         console.log('Comentarios obtenidos:', comments);
         // Aquí puedes manejar los comentarios obtenidos, por ejemplo, asignarlos a una propiedad del componente
         this.comments = comments;
-        this.video.comments += 1;
         this.loadInitialComments();
       },
       (error) => {
@@ -107,6 +106,7 @@ export class PlayerComponent implements OnInit {
             // Actualizar la lista de comentarios después de agregar uno nuevo
             this.getCommentsByVideoId(this.videoId);
             this.commentInput.nativeElement.value = '';
+            this.video.comments += 1;
             // También podrías mostrar un mensaje de éxito o realizar otras acciones necesarias
           },
           (error) => {
