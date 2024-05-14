@@ -8,6 +8,11 @@ use App\Models\Modality;
 
 class ModalitySeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run(): void
     {
 

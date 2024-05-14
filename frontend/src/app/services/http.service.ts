@@ -261,14 +261,6 @@ export class HttpService {
           (response) => {
             observer.next(response.data);
             observer.complete();
-            this.countAndUpdateComments(id).subscribe(
-              () => {
-                console.log('Comentarios actualizados');
-              },
-              (error) => {
-                console.error('Error al actualizar los comentarios', error);
-              }
-            );
           },
           (error) => {
             observer.error(error);
@@ -339,7 +331,6 @@ export class HttpService {
    */
   updateVideoVisits(videoId: number): Observable<any> {
     const url = `${this.url}/videos/${videoId}/visit`;
-
     // Utiliza switchMap para combinar el resultado del observable user$ con la solicitud HTTP put
     return this.auth.user$.pipe(
       switchMap((user) => {
@@ -361,6 +352,11 @@ export class HttpService {
       .pipe(map((response) => response.data as Product[]));
   }
 
+  /**
+   *
+   * @param id
+   * @returns
+   */
   getProductsById(id: number[]): Observable<Product[]> {
     // Construye la URL con los IDs como parámetros de consulta
     const params = new HttpParams().set('id', id.join(',')); // Unir los IDs en una cadena separada por comas
@@ -511,7 +507,6 @@ export class HttpService {
           comment: comment,
         };
         console.log(body);
-
         return this._http.post(url, body).pipe(
           catchError((error) => {
             // Manejar errores aquí
@@ -523,6 +518,16 @@ export class HttpService {
     );
   }
 
+  editComment(commentId: number, comment: string): Observable<any> {
+    const url = `${this.url}/comments/${commentId}`;
+    return this._http.put(url, { comment }).pipe(
+      catchError((error) => {
+        console.error('Error en la solicitud HTTP:', error);
+        return of(null);
+      })
+    );
+  }
+  
   makeOrder(checkout_session: any, line_items: any): Observable<Order> {
     const url = `${this.url}/make-order`;
     return this.auth.user$.pipe(
@@ -539,6 +544,17 @@ export class HttpService {
       })
     );
   }
+
+  deleteComment(commentId: number): Observable<any> {
+    const url = `${this.url}/comments/${commentId}`;
+    return this._http.delete(url).pipe(
+      catchError((error) => {
+        console.error('Error en la solicitud HTTP:', error);
+        return of(null);
+      })
+    );
+  }
+
 
   getOrders(): Observable<Order[]> {
     const url = `${this.url}/get-orders`;

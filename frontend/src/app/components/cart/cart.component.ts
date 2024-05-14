@@ -12,34 +12,39 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./cart.component.css'],
 })
 export class CartComponent {
-  cartOpen = false;
-  products: Product[] = [];
-  cart!: any[];
-  loading: boolean = false;
+  cartOpen = false; // Flag to control cart visibility
+  products: Product[] = []; // Array to hold cart products
+  cart!: any[]; // Array to hold cart items
+  loading: boolean = false; // Flag to indicate loading state
 
   constructor(
-    private auth: AuthService,
-    private http: HttpService,
-    private cookie: CookieService,
-    private router: Router
-  ) {}
+    private auth: AuthService, // Instance of AuthService
+    private http: HttpService, // Instance of HttpService
+    private cookie: CookieService, // Instance of CookieService
+    private router: Router // Instance of Router
+  ) { }
 
+  // Function to toggle cart visibility
   toggleCart() {
+    // Check if user is authenticated
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
         this.getProductsFromBBDD();
       } else {
+        // Retrieve products from cookie if user is not authenticated
         this.getProductsFromACookie();
       }
     });
+    // Toggle cart visibility
     this.cartOpen = !this.cartOpen;
   }
 
+  // Function to retrieve products from a cookie
   getProductsFromACookie(): void {
-    // Verify if the cookie cart exist
+    // Verify if the cart cookie exists
     if (this.cookie.check('cart')) {
-      this.loading = true;
-      // Get the cart cookie value parsing it
+      this.loading = true;// Set loading flag to true
+      // Parse the cart cookie value
       this.cart = JSON.parse(this.cookie.get('cart'));
       // Obtener solo los IDs de los productos
       const ids = this.cart.map((product: any) => product.id);
@@ -72,7 +77,7 @@ export class CartComponent {
             return of([]); // Devolver un observable vacío o un valor por defecto
           }),
           finalize(() => {
-            this.loading = false;
+            this.loading = false;// Set loading flag to false after completion
           })
         )
         .subscribe();
@@ -115,7 +120,10 @@ export class CartComponent {
       }
     }
   }
-
+  /**
+   * Function to calculate the total number of products in the cart
+   * @returns
+   */
   calculateTotalProducts(): number {
     if (this.auth.isAuthenticated$) {
       // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
@@ -134,6 +142,10 @@ export class CartComponent {
     }
   }
 
+  /**
+   * Function to calculate the total amount of the cart
+   * @returns
+   */
   calculateTotalAmount(): number {
     if (this.auth.isAuthenticated$) {
       // Si el usuario está autenticado, calcular el precio total utilizando this.products
@@ -148,34 +160,45 @@ export class CartComponent {
     }
   }
 
+  /**
+   * Function to close the cart
+   */
   closeCart() {
     this.cartOpen = false;
   }
 
+  /**
+   * Function to view product details
+   * @param productId
+   */
   verDetallesProducto(productId: number) {
     // Navegar a la vista de detalles del producto con el ID del producto como parámetro
     window.location.href = window.location.origin + '/product/' + productId;
   }
-
+  /**
+   * Function to handle login or address form submission
+   */
   loginOrAdressForm(): void {
+
+    // Check if user is authenticated
     this.auth.isAuthenticated$
       .pipe(
         switchMap((logged) => {
           if (!logged) {
-            return this.auth.loginWithPopup();
+            return this.auth.loginWithPopup();// Redirect to login if not authenticated
           }
-          return of(null); // Emite un valor nulo si ya está autenticado
+          return of(null); // Emit null if already authenticated
         }),
         switchMap(() => {
-          this.router.navigate(['/address-form']);
-          return of(null);
+          this.router.navigate(['/address-form']); // Navigate to address form
+          return of(null); // Emit null
         })
       )
       .subscribe(
-        () => {},
+        () => { },// Do nothing on success
         (error) => {
           console.error(error);
-          // Manejar el error en tu aplicación
+          // Handle error in your application
         }
       );
   }

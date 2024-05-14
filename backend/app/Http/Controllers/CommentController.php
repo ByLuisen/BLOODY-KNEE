@@ -113,4 +113,44 @@ class CommentController extends Controller
         }
     }
 
+
+    public function editComment(Request $request, $commentId)
+{
+    try {
+        // Validar los datos del comentario
+        $request->validate([
+            'comment' => 'required|string|max:255',
+        ]);
+
+        // Buscar el comentario por su ID
+        $comment = UserCommentVideo::findOrFail($commentId);
+
+        // Actualizar el comentario con los nuevos datos
+        $comment->comment = $request->comment;
+        $comment->save();
+
+        return ApiResponse::success($comment, 'Comentario editado correctamente');
+    } catch (\Exception $e) {
+        // Loguear el error o realizar otras acciones según tus necesidades
+        return ApiResponse::error($e->getMessage());
+    }
+}
+
+public function deleteComment($commentId)
+{
+    try {
+        // Buscar el comentario por su ID
+        $comment = UserCommentVideo::findOrFail($commentId);
+
+        // Eliminar el comentario
+        $comment->delete();
+
+        return ApiResponse::success(null, 'Comentario eliminado correctamente');
+    } catch (\Exception $e) {
+        // Loguear el error o realizar otras acciones según tus necesidades
+        return ApiResponse::error($e->getMessage());
+    }
+}
+
+
 }

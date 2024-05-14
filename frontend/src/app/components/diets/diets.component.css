@@ -15,7 +15,6 @@ h1 {
   @apply text-white rounded-lg sm:w-full md:w-4/5 lg:w-3/5 xl:w-2/5 mr-2 ml-2 sm:mx-auto p-4 sm:p-8;
 }
 
-
 @keyframes flash {
   0% {
     opacity: 1;

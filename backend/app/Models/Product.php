@@ -11,13 +11,21 @@ class Product extends Model
     use HasFactory;
 
     /**
-     * Obtiene la marca asociada al producto.
+     * Get the brand associated with the product.
      */
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
 
+    /**
+     * Get the category associated with the product.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    
     public function carts()
     {
         return $this->belongsToMany(Cart::class, 'cart_store_products')->withTimestamps();

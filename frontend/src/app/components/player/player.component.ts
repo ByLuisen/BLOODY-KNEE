@@ -29,6 +29,11 @@ export class PlayerComponent implements OnInit {
   batchSize: number = 5;
   comments: Comment[] = [];
   videoUrl!: SafeResourceUrl;
+  editingCommentId: number | null = null;
+  editedCommentText: string = '';
+  commentInputValue: string = ''; // Propiedad para almacenar el valor del campo de entrada
+  isCommentInputEmpty: boolean = true; // Propiedad para controlar si el campo de entrada está vacío
+  currentUser: User | null = null;
   @ViewChild('commentInput') commentInput!: ElementRef;
   constructor(
     private elementRef: ElementRef,
@@ -99,7 +104,6 @@ export class PlayerComponent implements OnInit {
         console.log('Comentarios obtenidos:', comments);
         // Aquí puedes manejar los comentarios obtenidos, por ejemplo, asignarlos a una propiedad del componente
         this.comments = comments;
-        this.video.comments += 1;
         this.loadInitialComments();
       },
       (error) => {
@@ -116,6 +120,7 @@ export class PlayerComponent implements OnInit {
             console.log('Comentario agregado correctamente');
             // Actualizar la lista de comentarios después de agregar uno nuevo
             this.getCommentsByVideoId(this.videoId);
+            this.countAndUpdateComments(this.videoId); // Llamar a la función countAndUpdateComments
             this.commentInput.nativeElement.value = '';
             // También podrías mostrar un mensaje de éxito o realizar otras acciones necesarias
           },
@@ -125,9 +130,7 @@ export class PlayerComponent implements OnInit {
           }
         );
       } else {
-        console.log(
-          'El usuario debe estar autenticado para agregar un comentario.'
-        );
+        console.log('El usuario debe estar autenticado para agregar un comentario.');
         this.auth.loginWithRedirect();
         // Aquí podrías mostrar un mensaje al usuario indicando que necesita iniciar sesión para agregar un comentario
       }
@@ -153,7 +156,12 @@ export class PlayerComponent implements OnInit {
       } else {
         this.likeOpenModal();
       }
+    });this.auth.user$.subscribe((user) => {
+      if (user) {
+        this.currentUser = user; // Almacena la información del usuario autenticado
+      }
     });
+    
   }
 
   likeVideo(videoId: number): void {
@@ -356,4 +364,59 @@ export class PlayerComponent implements OnInit {
       // Navega al componente de reproductor si el usuario tiene permiso para ver el video
     }
   }
+
+  deleteComment(commentId: number): void {
+    this.http.deleteComment(commentId).subscribe(
+      () => {
+        console.log('Comentario eliminado correctamente');
+        this.getCommentsByVideoId(this.videoId);
+        this.countAndUpdateComments(this.videoId); // Llamar a la función countAndUpdateComments
+      },
+      (error) => {
+        console.error('Error al eliminar el comentario', error);
+        // Manejar el error, mostrar un mensaje de error, o realizar otras acciones según sea necesario
+      }
+    );
+  }
+  startEditingComment(commentId: number, commentText: string): void {
+    // Establece el ID del comentario y el texto editado en las propiedades correspondientes
+    this.editingCommentId = commentId;
+    this.editedCommentText = commentText;
+  }
+
+  saveEditedComment(commentId: number, editedText: string): void {
+    this.http.editComment(commentId, editedText).subscribe(
+      () => {
+        console.log('Comentario editado correctamente');
+        // Update the comment locally in the comments list
+        const editedCommentIndex = this.comments.findIndex(comment => comment.id === commentId);
+        if (editedCommentIndex !== -1) {
+          this.comments[editedCommentIndex].comment = editedText;
+        }
+        this.editingCommentId = null; // To stop editing after saving changes
+        this.countAndUpdateComments(this.videoId); // Llamar a la función countAndUpdateComments
+      },
+      (error) => {
+        console.error('Error al editar el comentario:', error);
+        // Handle the error, display an error message, or take other necessary actions
+      }
+    );
+  }
+  updateCommentInputState(): void {
+    this.isCommentInputEmpty = this.commentInputValue.trim() === '';
+  }
+
+  countAndUpdateComments(videoId: number): void {
+    this.http.countAndUpdateComments(videoId).subscribe(
+      () => {
+        console.log('Conteo de comentarios actualizado correctamente');
+        // Aquí puedes realizar otras acciones después de actualizar el conteo de comentarios, si es necesario
+      },
+      (error) => {
+        console.error('Error al contar y actualizar comentarios:', error);
+        // Manejar el error, mostrar un mensaje de error, o realizar otras acciones según sea necesario
+      }
+    );
+  }
+
 }
