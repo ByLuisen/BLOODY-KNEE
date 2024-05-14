@@ -63,6 +63,7 @@ class OrderController extends Controller
 
                     $orderDetail = new OrderDetail();
                     $orderDetail->order_id = $order->id;
+                    $orderDetail->product_id = $product->id;
                     $orderDetail->img = $product->url_img1;
                     $orderDetail->name = $product->name;
                     $orderDetail->brand = $product->brand->name;

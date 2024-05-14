@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('product_id');
             $table->text('img');
             $table->string('name');
             $table->string('brand');
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 
