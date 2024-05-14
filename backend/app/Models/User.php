@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -46,7 +47,7 @@ class User extends Authenticatable
     public function quotes()
     {
         return $this->belongsToMany(Quote::class)
-        ->withTimestamps();
+            ->withTimestamps();
     }
 
     public function videos()
@@ -60,7 +61,15 @@ class User extends Authenticatable
     }
 
     public function cart()
-{
-    return $this->hasOne(Cart::class);
-}
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    /**
+     * Get the orders.
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }

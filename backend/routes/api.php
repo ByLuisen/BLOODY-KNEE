@@ -9,6 +9,7 @@ use App\Http\Controllers\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OpenAIController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 
@@ -67,6 +68,9 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/subscription', [StripeController::class, 'subscription']);
     Route::post('/retrieve-checkout', [StripeController::class, 'retrieveCheckoutSession']);
     Route::post('/retrieve-line-items', [StripeController::class, 'retrieveLineItems']);
+
+    Route::post('/make-order', [OrderController::class, 'makeOrder']);
+    Route::post('/get-orders', [OrderController::class, 'getOrders']);
 
     Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
 });

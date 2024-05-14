@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
@@ -16,6 +16,7 @@ import { Comment } from '../models/Comment';
 
 import { CookieService } from 'ngx-cookie-service';
 import { FormGroup } from '@angular/forms';
+import { Order } from '../models/Order';
 
 @Injectable({
   providedIn: 'root',
@@ -518,6 +519,38 @@ export class HttpService {
             return of(null); // Emite un valor nulo si hay un error
           })
         );
+      })
+    );
+  }
+
+  makeOrder(checkout_session: any, line_items: any): Observable<Order> {
+    const url = `${this.url}/make-order`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          checkout_session: checkout_session,
+          line_items: line_items,
+          email: user ? user.email : '',
+          connection: user ? user.sub?.split('|')[0] : '',
+        };
+        return this._http
+          .post<{ data: Order }>(url, body)
+          .pipe(map((response) => response.data));
+      })
+    );
+  }
+
+  getOrders(): Observable<Order[]> {
+    const url = `${this.url}/get-orders`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          email: user ? user.email : '',
+          connection: user ? user.sub?.split('|')[0] : '',
+        };
+        return this._http
+          .post<{ data: Order[] }>(url, body)
+          .pipe(map((response) => response.data));
       })
     );
   }

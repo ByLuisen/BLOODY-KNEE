@@ -14,11 +14,17 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->string('payment_id')->unique();
             $table->date('order_date')->default(now());
             $table->date('date_delivery')->default(now());
-            $table->string('shipping_address');
-            $table->decimal('total_amount');
-            $table->string('payment_method');
+            $table->string('country');
+            $table->string('full_name');
+            $table->string('phone');
+            $table->string('address');
+            $table->string('province')->nullable();
+            $table->string('city');
+            $table->string('zip');
+            $table->decimal('amount_total', 10, 2);
             $table->enum('status', ['Pendiente', 'En Proceso', 'Enviado', 'Entregado', 'Cancelado', 'Devuelto']);
             $table->timestamps();
 

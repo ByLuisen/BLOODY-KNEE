@@ -12,8 +12,8 @@
 
 <app-profile-menu class="pb-20"></app-profile-menu>
 
-<div class="sm:text-center text-center aclonica-font overflow-auto mt-10 fondo_bk" *ngIf="auth.user$ | async as user">
-  <div *ngIf="selectedOption === 'editProfile'"
+<div class="aclonica-font mt-10 fondo_bk" *ngIf="auth.user$ | async as user">
+  <div class="sm:text-center text-center" *ngIf="selectedOption === 'editProfile'"
     class="mx-52 items-center justify-start bg-gradient-to-r from-red-500 to-red-900 text-white perfil">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 justify-center mx-28 mt-5 mb-5">
       <!-- Foto de perfil -->
