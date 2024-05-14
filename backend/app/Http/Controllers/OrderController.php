@@ -56,13 +56,14 @@ class OrderController extends Controller
                 if ($product) {
                     $product->stock -= $item['quantity'];
                     $product->save();
-                    if (explode('/', $checkout_session['cancel_url'])[3] != 'address-form') {
+                    if (explode('/', $checkout_session['cancel_url'])[3] == 'address-form') {
                         // Delete the product from cart
                         $user->cart->products()->detach($product->id);
                     }
 
                     $orderDetail = new OrderDetail();
                     $orderDetail->order_id = $order->id;
+                    $orderDetail->product_id = $product->id;
                     $orderDetail->img = $product->url_img1;
                     $orderDetail->name = $product->name;
                     $orderDetail->brand = $product->brand->name;
