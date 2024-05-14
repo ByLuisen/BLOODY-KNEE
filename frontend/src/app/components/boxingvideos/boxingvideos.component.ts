@@ -4,6 +4,7 @@ import { Video } from 'src/app/models/Video';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { finalize, of, switchMap, tap } from 'rxjs';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-boxingvideos',
@@ -29,16 +30,26 @@ export class BoxingvideosComponent implements OnInit {
   selectedType: string = 'Todos';
   // Flag to control modal visibility
   modalOpen: boolean = false;
-  role: string = 'admin';
+  role!: string;
 
   // Edit form
   editForm: FormGroup;
 
-  constructor(private http: HttpService, private router: Router) {
+  constructor(private http: HttpService, private router: Router, private auth: AuthService) {
     this.editForm = new FormGroup({
       title: new FormControl('', Validators.required),
       coach: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
+    });
+    this.auth.isAuthenticated$.subscribe((isauth) => {
+      if (isauth) {
+        this.http.getRole().subscribe((role) => {
+          console.log(role.data);
+          this.role = role.data;
+        });
+      } else {
+        this.role = 'Basic';
+      }
     });
   }
   /**
@@ -131,7 +142,7 @@ export class BoxingvideosComponent implements OnInit {
    */
   selectVideo(video: Video) {
     // Check if video is exclusive and user role permits access
-    if (video.exclusive && this.role != 'standard' && this.role != 'premium') {
+    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
       // Open modal if access is restricted
       this.openModal();
     } else {

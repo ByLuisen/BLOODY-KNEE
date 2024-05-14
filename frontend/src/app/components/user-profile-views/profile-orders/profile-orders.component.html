@@ -1,45 +1,96 @@
-<h1>MIS PEDIDOS</h1>
-<div class="px-96">
-    <div *ngFor="let order of orders"
-        class="rounded-lg bg-white align-center text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-whitew-px mb-10 grid grid-cols-1 border-4 border-solid border-black ">
-        <div class="border-b-4 border-neutral-100 px-6 py-3 flex justify-between dark:border-white/10">
-            <div>
-                <p class="font-semibold">Fecha de compra:</p>
-                <p>{{ order.fecha_compra }}</p>
-            </div>
-            <div>
-                <p class="font-semibold">Total:</p>
-                <p>{{ order.total }} €</p>
-            </div>
-            <div>
-                <p class="font-semibold">Factura enviada a:</p>
-                <p>{{ order.comprador }}</p>
-            </div>
-            <div>
-                <p class="font-semibold">Número del pedido:</p>
-                <p>56565656156</p>
-            </div>
+<h1 class="sm:text-center text-center">MIS PEDIDOS</h1>
+<section *ngIf="orders">
+  <div class="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto">
+    <div class="bg-white main-box border border-gray-200 rounded-xl pt-6 max-w-xl max-lg:mx-auto lg:max-w-full my-14" *ngFor="let order of orders">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between px-6 pb-6 border-b border-gray-200">
+        <div class="data">
+          <p class="font-semibold text-base leading-7 text-black">Pedido Nº <span class="text-red-600 font-medium">#{{
+              order.id }}</span></p>
+          <p class="font-semibold text-base leading-7 text-black mt-4">Pedido realizado: <span
+              class="text-gray-400 font-medium">{{ order.order_date}}</span></p>
         </div>
-        <div class="mx-4 mt-2">
-            <h5 class="mb-2 text-xl font-medium leading-tight">
-                Detalles del pedido
-            </h5>
-            <div>
-                <ul>
-                    <li *ngFor="let product of order.productos"
-                        class="flex justify-between items-center mb-2 border-t-2 border-neutral-100">
-                        <img class="w-12 h-12 mr-2 mt-2" src="{{ product.thumbnail }}" alt="{{ product.nombre }}" />
-                        <span>{{ product.nombre }} - {{ product.precio }} €</span>
-                    </li>
-                </ul>
-            </div>
+        <div class="col-span-5 lg:col-span-2 flex items-center max-lg:mt-3 ">
+          <div class="flex gap-3 lg:block">
+            <p class="font-semibold text-base leading-7 text-black">Enviar a
+            </p>
+            <p>{{ order.full_name }}</p>
+            <p>{{ order.address }}</p>
+            <p>{{ order.city }}, {{ order.zip }}</p>
+            <p>{{ order.country }}</p>
+          </div>
         </div>
 
+        <div class="col-span-5 lg:col-span-2 flex items-center max-lg:mt-3">
+          <div class="flex gap-3 lg:block">
+            <p class="font-semibold text-base leading-7 text-black">
+              Fecha de entrega</p>
+            <p class="font-medium text-base whitespace-nowrap leading-7 lg:mt-3 text-emerald-500">
+              23rd March 2021</p>
+          </div>
+        </div>
+        <div class="col-span-5 lg:col-span-2 flex items-center max-lg:mt-3 ">
+          <div class="flex gap-3 lg:block">
+            <p class="font-semibold text-base leading-7 text-black">Status
+            </p>
+            <p
+              class="font-medium text-sm leading-6 whitespace-nowrap py-0.5 px-3 rounded-full lg:mt-3 bg-emerald-50 text-emerald-600">
+              {{ order.status }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="w-full px-3 min-[400px]:px-6">
+        <div class="flex flex-col lg:flex-row items-center py-6 border-b border-gray-200 gap-6 w-full"
+          *ngFor="let product of order.order_details">
+          <div class="img-box max-lg:w-full">
+            <img [src]="'../../../assets/img/imgs_productos/' + product.img + '.webp'" alt="Product image"
+              class="aspect-square w-32 lg:max-w-[140px]">
+          </div>
+          <div class="flex flex-row items-center w-full ">
+            <div class="grid grid-cols-1 lg:grid-cols-2 w-full">
+              <div class="flex items-center">
+                <div class="">
+                  <h2 class="font-semibold text-xl leading-8 text-black mb-3">
+                    {{ product.name }}</h2>
+                  <p class="font-normal text-lg leading-8 text-gray-500 mb-3 ">
+                    By: {{ product.brand }}</p>
+                  <div class="flex items-center ">
+                    <p class="font-medium text-base leading-7 text-black ">Cantidad: <span class="text-gray-500">{{
+                        product.quantity }}</span></p>
+                  </div>
+                </div>
 
-        <hr>
-        <!-- <div class="border-t-2 border-neutral-100 px-6 py-3 text-surface/75 dark:border-white/10 dark:text-neutral-300"> -->
-        <!-- {{ calculateDaysAgo(order.fecha_compra) }} -->
-        <!-- 12345 -->
-        <!-- </div> -->
+              </div>
+              <div class="grid grid-cols-5">
+                <div class="col-span-5 lg:col-span-1 flex items-center max-lg:mt-3">
+                  <div class="flex gap-3 lg:block">
+                    <p class="font-medium text-sm leading-7 text-black">Price</p>
+                    <p class="lg:mt-4 font-medium text-sm leading-7 text-red-600">{{ product.unit_price }}€</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+      <div class="w-full border-t border-gray-200 px-6 flex flex-col lg:flex-row items-center justify-between ">
+        <div class="flex flex-col sm:flex-row items-center max-lg:border-b border-gray-200">
+          <button
+            class="flex outline-0 py-6 sm:pr-6  sm:border-r border-gray-200 whitespace-nowrap gap-2 items-center justify-center font-semibold group text-lg text-black bg-white transition-all duration-500 hover:text-red-600">
+            <svg class="stroke-black transition-all duration-500 group-hover:stroke-red-600"
+              xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M5.5 5.5L16.5 16.5M16.5 5.5L5.5 16.5" stroke="" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+            Cancelar pedido
+          </button>
+        </div>
+        <p class="font-semibold text-lg text-black py-6">Precio total: <span class="text-red-600">{{ order.amount_total
+            }}€</span></p>
+      </div>
+
     </div>
-</div>
+  </div>
+</section>

@@ -15,15 +15,6 @@ import { ViewChild } from '@angular/core';
   styleUrls: ['./player.component.css'],
 })
 export class PlayerComponent implements OnInit {
-  constructor(
-    private elementRef: ElementRef,
-    private http: HttpService,
-    public sanitizer: DomSanitizer,
-    private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef,
-    private router: Router,
-    public auth: AuthService
-  ) { }
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
   videoId!: number;
@@ -44,7 +35,26 @@ export class PlayerComponent implements OnInit {
   isCommentInputEmpty: boolean = true; // Propiedad para controlar si el campo de entrada está vacío
   currentUser: User | null = null;
   @ViewChild('commentInput') commentInput!: ElementRef;
-
+  constructor(
+    private elementRef: ElementRef,
+    private http: HttpService,
+    public sanitizer: DomSanitizer,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    public auth: AuthService
+  ) {
+    this.auth.isAuthenticated$.subscribe((isauth) => {
+      if (isauth) {
+        this.http.getRole().subscribe((role) => {
+          console.log(role.data);
+          this.role = role.data;
+        });
+      } else {
+        this.role = 'Basic';
+      }
+    });
+  }
   ngOnInit() {
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
@@ -346,7 +356,7 @@ export class PlayerComponent implements OnInit {
   }
 
   getExclusive(video: Video) {
-    if (video.exclusive && this.role != 'standard' && this.role != 'premium') {
+    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
       this.openModal();
       // Abre el modal si el video es premium y el usuario no tiene un rol premium
     } else {

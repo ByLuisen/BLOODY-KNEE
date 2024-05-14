@@ -150,94 +150,138 @@
 
 <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20" *ngIf="openModal">
   <div tabindex="-1" class="relative w-full max-w-lg bg-white rounded-xl shadow">
-    <!-- Modal content -->
-    <div class="relative">
-      <!-- Modal header -->
-      <div class="flex items-center justify-between bg-gray-200 p-4 border-b rounded-t-xl">
-        <h3 class="text-base font-black text-gray-900">
-          Comprar ahora: {{ product.name }}
-        </h3>
-        <button type="button" (click)="openModal = false"
-          class="text-gray-400 bg-transparent hover:bg-gray-300 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
-          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-            <path stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-          </svg>
-        </button>
-      </div>
-      <!-- Modal body -->
-      <div class="bg-white dark:bg-gray-800 p-4 border dark:border-gray-700 max-h-[40vh] overflow-y-scroll">
-        <h1 class="text-2xl font-medium text-red-600 mb-4">Enviar a</h1>
-
-        <!-- Shipping Address -->
-        <div>
-          <div class="mt-4">
-            <label for="address" class="block text-gray-700 dark:text-white mb-1">País/Región</label>
-            <input type="text" id="address"
-              class="w-full rounded-lg border py-2 px-3 bg-gray-200 dark:bg-gray-700 dark:text-white dark:border-none"
-              value="España" readonly disabled>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4 mt-4">
-            <div>
-              <label for="first_name" class="block mb-1">First Name</label>
-              <input type="text" id="first_name"
-                class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none">
+    <form [formGroup]="shippingAddress" (ngSubmit)="sendShippingAddress()">
+      <!-- Modal content -->
+      <div class="relative">
+        <!-- Modal header -->
+        <div class="flex items-center justify-between bg-gray-200 p-4 border-b rounded-t-xl">
+          <h3 class="text-base font-black text-gray-900">
+            Comprar ahora: {{ product.name }}
+          </h3>
+          <button type="button" (click)="openModal = false"
+            class="text-gray-400 bg-transparent hover:bg-gray-300 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="bg-white dark:bg-gray-800 p-4 border dark:border-gray-700 max-h-[40vh] overflow-y-scroll">
+          <h1 class="text-2xl font-medium text-red-600">Enviar a</h1>
+          <small>Los campos con este símbolo (*) són requeridos.</small>
+          <!-- Shipping Address -->
+          <div>
+            <div class="mt-4">
+              <label for="country" class="block text-gray-700 dark:text-white mb-1">País/Región</label>
+              <input type="text" id="address" name="country" formControlName="country"
+                class="w-full rounded-lg border py-2 px-3 bg-gray-200 dark:bg-gray-700 dark:text-white dark:border-none"
+                readonly>
             </div>
-            <div>
-              <label for="last_name" class="block text-gray-700 dark:text-white mb-1">Last Name</label>
-              <input type="text" id="last_name"
-                class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none">
+
+            <div class="grid grid-cols-2 gap-4 mt-4 h-24">
+              <div>
+                <label for="first_name" class="block mb-1">Nombre*</label>
+                <input type="text" id="first_name" name="first_name" formControlName="first_name" maxlength="50"
+                  class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none"
+                  [class.border-red-500]="shippingAddress.get('first_name')?.invalid && shippingAddress.get('first_name')?.touched">
+                <small
+                  *ngIf="shippingAddress.get('first_name')?.errors?.['required'] && shippingAddress.get('first_name')?.touched"
+                  class="text-red-500">Introduce un nombre.</small>
+                <small
+                  *ngIf="shippingAddress.get('first_name')?.errors?.['pattern'] && shippingAddress.get('first_name')?.touched"
+                  class="text-red-500">Ingrese un nombre válido.</small>
+              </div>
+              <div>
+                <label for="last_name" class="block text-gray-700 dark:text-white mb-1">Apellidos*</label>
+                <input type="text" id="last_name" name="last_name" formControlName="last_name" maxlength="50"
+                  class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none"
+                  [class.border-red-500]="shippingAddress.get('last_name')?.invalid && shippingAddress.get('last_name')?.touched">
+                <small
+                  *ngIf="shippingAddress.get('last_name')?.errors?.['required'] && shippingAddress.get('last_name')?.touched"
+                  class="text-red-500">Introduce los apellidos.</small>
+                <small
+                  *ngIf="shippingAddress.get('last_name')?.errors?.['pattern'] && shippingAddress.get('last_name')?.touched"
+                  class="text-red-500">Ingrese apellidos válidos.</small>
+              </div>
             </div>
-          </div>
 
-          <div class="mt-4">
-            <label for="address" class="block text-gray-700 dark:text-white mb-1">Número de teléfono</label>
-            <input type="text" id="address"
-              class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none">
-          </div>
-
-          <div class="mt-4">
-            <label for="address" class="block text-gray-700 dark:text-white mb-1">Línea de dirección</label>
-            <input type="text" id="address"
-              class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none"
-              placeholder="Nombre y número de la calle">
-          </div>
-
-          <div class="mt-4">
-            <label for="city" class="block text-gray-700 dark:text-white mb-1">Provincia</label>
-            <input type="text" id="city"
-              class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none">
-          </div>
-
-          <div class="grid grid-cols-2 gap-4 mt-4">
-            <div>
-              <label for="state" class="block text-gray-700 dark:text-white mb-1">Ciudad</label>
-              <input type="text" id="state"
-                class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none">
+            <div class="">
+              <label for="phone" class="block text-gray-700 dark:text-white mb-1">Número de teléfono*</label>
+              <input type="text" id="phone" name="phone" formControlName="phone" maxlength="15"
+                class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none"
+                [class.border-red-500]="shippingAddress.get('phone')?.invalid && shippingAddress.get('phone')?.touched">
+              <small *ngIf="shippingAddress.get('phone')?.errors?.['required'] && shippingAddress.get('phone')?.touched"
+                class="text-red-500">Introduce un número de teléfono para que podamos llamar si hay algún problema con
+                la entrega.</small>
+              <small *ngIf="shippingAddress.get('phone')?.errors?.['pattern'] && shippingAddress.get('phone')?.touched"
+                class="text-red-500">Ingrese un número de teléfono válido.</small>
             </div>
+            <small>Se usa para ayudar con la entrega</small>
+
+            <div class="mt-4 h-24">
+              <label for="address" class="block text-gray-700 dark:text-white mb-1">Línea de dirección*</label>
+              <input type="text" id="address" name="address" formControlName="address" maxlength="255"
+                class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none"
+                placeholder="Nombre y número de la calle"
+                [class.border-red-500]="shippingAddress.get('address')?.invalid && shippingAddress.get('address')?.touched">
+              <small
+                *ngIf="shippingAddress.get('address')?.errors?.['required'] && shippingAddress.get('address')?.touched"
+                class="text-red-500">Introduce una dirección.</small>
+              <small
+                *ngIf="shippingAddress.get('address')?.errors?.['pattern'] && shippingAddress.get('address')?.touched"
+                class="text-red-500">Ingrese una dirección válida.</small>
+            </div>
+
             <div>
-              <label for="zip" class="block text-gray-700 dark:text-white mb-1">Código postal</label>
-              <input type="text" id="zip"
-                class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none">
+              <label for="province" class="block text-gray-700 dark:text-white mb-1">Provincia</label>
+              <input type="text" id="province" name="province" formControlName="province"
+                class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none"
+                [class.border-red-500]="shippingAddress.get('province')?.invalid && shippingAddress.get('province')?.touched">
+              <small
+                *ngIf="shippingAddress.get('province')?.errors?.['pattern'] && shippingAddress.get('province')?.touched"
+                class="text-red-500">Ingrese una provincia válida.</small>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+              <div>
+                <label for="city" class="block text-gray-700 dark:text-white mb-1">Ciudad*</label>
+                <input type="text" id="city" name="city" formControlName="city" maxlength="100"
+                  class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none"
+                  [class.border-red-500]="shippingAddress.get('city')?.invalid && shippingAddress.get('city')?.touched">
+                <small *ngIf="shippingAddress.get('city')?.errors?.['required'] && shippingAddress.get('city')?.touched"
+                  class="text-red-500">Introduce un nombre de ciudad.</small>
+                <small *ngIf="shippingAddress.get('city')?.errors?.['pattern'] && shippingAddress.get('city')?.touched"
+                  class="text-red-500">Ingrese una ciudad válida.</small>
+              </div>
+              <div>
+                <label for="zip" class="block text-gray-700 dark:text-white mb-1">Código postal*</label>
+                <input type="text" id="zip" name="zip" formControlName="zip" maxlength="5"
+                  class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none"
+                  [class.border-red-500]="shippingAddress.get('zip')?.invalid && shippingAddress.get('zip')?.touched">
+                <small *ngIf="shippingAddress.get('zip')?.errors?.['required'] && shippingAddress.get('zip')?.touched"
+                  class="text-red-500">Especifica un código postal.</small>
+                <small *ngIf="shippingAddress.get('zip')?.errors?.['pattern'] && shippingAddress.get('zip')?.touched"
+                  class="text-red-500">Ingrese un código postal válido.</small>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- Modal footer -->
-      <div
-        class="flex items-center justify-between p-4 md:p-4 border-t border-gray-200 rounded-b-xl dark:border-gray-600">
-        <!-- Dejar un espacio en blanco para que el botón se alinee a la derecha -->
-        <div *ngIf="product">
-          <p>Total ({{ getQuantity() }} producto/s): {{ product.price * getQuantity() }}€</p>
-          <small>(incluye impuestos)</small>
+        <!-- Modal footer -->
+        <div
+          class="flex items-center justify-between p-4 md:p-4 border-t border-gray-200 rounded-b-xl dark:border-gray-600">
+          <!-- Dejar un espacio en blanco para que el botón se alinee a la derecha -->
+          <div *ngIf="product">
+            <p>Total ({{ getQuantity() }} producto/s): {{ product.price * getQuantity() }}€</p>
+            <small>(incluye impuestos)</small>
+          </div>
+          <button type="button" type="submit"
+            class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+            Continuar y pagar
+          </button>
         </div>
-        <button type="button" (click)="submit()"
-          class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-          Continuar y pagar
-        </button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 

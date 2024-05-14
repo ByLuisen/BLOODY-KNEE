@@ -3,6 +3,7 @@ import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
 import { Router } from '@angular/router';
 import { finalize, of, switchMap, tap } from 'rxjs';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-thaivideos',
@@ -19,13 +20,24 @@ export class ThaivideosComponent implements OnInit {
   filteredItems: Video[] = [];
   selectedType: string = 'Todos';
   modalOpen: boolean = false;
-  role: string = 'admin';
+  role!: string;
   searchTerm: string = '';
   // Admin mode variable
   adminModeActivated: boolean = false;
   loading: boolean = false;
 
-  constructor(private http: HttpService, private router: Router) {}
+  constructor(private http: HttpService, private router: Router, private auth: AuthService) {
+    this.auth.isAuthenticated$.subscribe((isauth) => {
+      if (isauth) {
+        this.http.getRole().subscribe((role) => {
+          console.log(role.data);
+          this.role = role.data;
+        });
+      } else {
+        this.role = 'Basic';
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.loading = true;
@@ -81,7 +93,7 @@ export class ThaivideosComponent implements OnInit {
   }
 
   selectVideo(video: Video) {
-    if (video.exclusive && this.role != 'standard' && this.role != 'premium') {
+    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
       this.openModal();
       // Abre el modal si el video es premium y el usuario no tiene un rol premium
     } else {

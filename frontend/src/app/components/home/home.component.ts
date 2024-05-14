@@ -2,18 +2,30 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Video } from 'src/app/models/Video';
 import { Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  constructor(private http: HttpService, private router: Router) { }
+  constructor(private http: HttpService, private router: Router, private auth: AuthService) {
+    this.auth.isAuthenticated$.subscribe((isauth) => {
+      if (isauth) {
+        this.http.getRole().subscribe((role) => {
+          console.log(role.data);
+          this.role = role.data;
+        });
+      } else {
+        this.role = 'Basic';
+      }
+    });
+  }
 
   destacados: Video[] = [];
   videosAleatorios: Video[] = [];
   modalOpen: boolean = false;
-  role: string = "basic";
+  role!: string;
   ngOnInit() {
     this.getDestacados();
   }
@@ -47,7 +59,7 @@ export class HomeComponent implements OnInit {
   }
 
   selectVideo(video: Video) {
-    if (video.exclusive && this.role != "standard" && this.role != "premium") {
+    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
       this.openModal();
       // Abre el modal si el video es premium y el usuario no tiene un rol premium
     } else {
