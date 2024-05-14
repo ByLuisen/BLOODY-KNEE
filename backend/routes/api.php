@@ -57,7 +57,6 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('products/{id}/brand', [ProductController::class, 'productBrand']);
     Route::post('/payment', [StripeController::class, 'payment']);
     Route::post('/subscription', [StripeController::class, 'subscription']);
-    Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
     Route::put('comments/{commentId}', [CommentController::class, 'editComment']);
     Route::delete('comments/{commentId}', [CommentController::class, 'deleteComment']);
 });
