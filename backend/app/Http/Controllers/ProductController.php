@@ -10,7 +10,9 @@ use App\Http\Responses\ApiResponse;
 class ProductController extends Controller
 {
     /**
+     * Retrieve all products.
      *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
@@ -19,52 +21,35 @@ class ProductController extends Controller
 
             return ApiResponse::success(ProductResource::collection($products));
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
+            // Log the error or perform other actions as per your needs
             return ApiResponse::error($e->getMessage());
         }
-    }
-
-
-    public function productById(Request $request)
-    {
-        try {
-            // Obtiene los IDs de los parámetros de consulta 'id'
-            $ids = $request->query('id');
-
-            // $ids será una cadena que contiene los IDs separados por comas
-            // Puedes convertirlos a un array usando la función explode
-            $idsArray = explode(',', $ids);
-
-            // Ahora puedes usar $idsArray para lo que necesites, por ejemplo, buscar los productos en la base de datos
-            $products = Product::whereIn('id', $idsArray)->get();
-
-            // Devolver los productos como una respuesta exitosa
-            return ApiResponse::success(ProductResource::collection($products), 'Productos obtenidos correctamente por ID');
-        } catch (\Exception $e) {
-            // Manejar errores, loguear, etc.
-            return ApiResponse::error($e->getMessage());
-        }
-    }
-
-    public function getProductBrand($id)
-    {
-        $product = Product::where('id', $id)->get();
-
     }
 
     /**
-     * Obtiene la marca de un producto específico.
+     * Retrieve products by their IDs.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function productBrand($id)
+    public function productById(Request $request)
     {
-        $product = Product::findOrFail($id);
+        try {
+            // Get the IDs from the 'id' query parameters
+            $ids = $request->query('id');
 
-        // Obtener la marca del producto
-        $brand = $product->brand;
+            // $ids will be a string containing IDs separated by commas
+            // You can convert them to an array using the explode function
+            $idsArray = explode(',', $ids);
 
-        return response()->json(['brand' => $brand]);
+            // Now you can use $idsArray for whatever you need, e.g., fetching products from the database
+            $products = Product::with('brand', 'category')->whereIn('id', $idsArray)->get();
+
+            // Now you can use $idsArray for whatever you need, e.g., fetching products from the database
+            return ApiResponse::success(ProductResource::collection($products), 'Productos obtenidos correctamente por ID');
+        } catch (\Exception $e) {
+            // Handle errors, log, etc.
+            return ApiResponse::error($e->getMessage());
+        }
     }
 }

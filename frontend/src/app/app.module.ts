@@ -30,7 +30,6 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
-import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { environment } from 'src/environments/environment.development';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
@@ -57,7 +56,6 @@ import { OrderSummaryComponent } from './components/order-summary/order-summary.
     PricingComponent,
     PerfileMenuComponent,
     LikedVideosComponent,
-    ChatbotComponent,
     FavouriteVideosComponent,
     ProfileDietsComponent,
     ProfileOrdersComponent,

@@ -1,10 +1,10 @@
 <div class="sm:text-center aclonica-font fondo_bk overflow-auto">
   <h1 class="text-center mb-4">BO<span class="text-red-600">XEO</span></h1>
 
-  <!-- Buscador de videos -->
+  <!-- Video Searchbar -->
   <app-searchbar [todos]="todos" (filteredItemsChanged)="onFilteredItemsChanged($event)"></app-searchbar>
 
-  <!-- Botón para activar el modo admin -->
+  <!-- Button to activate admin mode -->
   <div class="flex flex-col justify-center items-center mb-4" *ngIf="role == 'admin'">
     <div
       class="border-solid border-2 w-44 bg-red-800 rounded-full hover:bg-red-900 transition duration-300 hover:scale-105 items-center "
@@ -42,7 +42,7 @@
 
   <!-- Filtered video list -->
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify">
-    <!-- Pantalla de carga mientras se obtienen los videos de boxing -->
+    <!-- Loading screen while boxing videos are being fetched -->
     <div class="fixed inset-0 flex items-center justify-center shadow-xl" *ngIf="loading; else boxingContainer">
       <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
       <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-red-500 animate-spin"></div>
@@ -51,7 +51,7 @@
     <ng-template #boxingContainer>
       <!-- Individual video item -->
       <div class="group relative" *ngFor="let video of filteredItems">
-        <!-- Mostrar solo si está en modo admin -->
+        <!-- Show only if in admin mode -->
         <div class="mb-2" *ngIf="adminModeActivated">
           <div class="flex flex-row">
             <img src="../../../assets/img/svg/bx-edit.svg" (click)="editVideo(video)" alt="bx-edit" class="w-9 mx-2"

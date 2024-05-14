@@ -52,16 +52,29 @@ export class BoxingvideosComponent implements OnInit {
       }
     });
   }
-
+  /**
+   *
+   */
   ngOnInit(): void {
+    // this.http.getRole().subscribe((data) => {
+    //   this.role = data[0].name;
+    //   console.log(this.role)
+    // })
+
+    // Set loading flag to true
     this.loading = true;
+
+    // Fetch videos for each modality
     this.http
       .getVideosModality(1, 1)
       .pipe(
         switchMap((videos) => {
+
           this.videosSaco = videos;
           this.todos = this.todos.concat(videos);
           this.filteredItems = [...this.todos];
+
+          // Return the fetched videos
           return of(videos);
         }),
         switchMap(() => {
@@ -91,28 +104,42 @@ export class BoxingvideosComponent implements OnInit {
           this.filteredItems = [...this.todos];
           return videos;
         }),
+
+        // Set loading flag to false after all requests are completed
         finalize(() => (this.loading = false))
       )
+
+      // Subscribe to the observable
       .subscribe();
   }
-  // Método para activar o desactivar el modo admin
+
+  /**
+   * Toggle admin mode
+   */
   toggleAdminMode() {
     this.adminModeActivated = !this.adminModeActivated;
   }
 
-  // Open modal method
+  /**
+   * Open modal dialog
+   */
   openModal() {
     this.modalOpen = true;
     document.body.classList.add('modal-open');
   }
 
-  // Close modal method
+  /**
+   * Close modal dialog
+   */
   closeModal() {
     this.modalOpen = false;
     document.body.classList.remove('modal-open');
   }
 
-  // Method to select a video
+  /**
+   * Select a video to play
+   * @param video The selected video
+   */
   selectVideo(video: Video) {
     // Check if video is exclusive and user role permits access
     if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
@@ -124,17 +151,24 @@ export class BoxingvideosComponent implements OnInit {
     }
   }
 
-  // Método que se ejecutará cuando cambien los elementos filtrados
+  /**
+   * Handle change in filtered items
+   * @param filteredItems The filtered video items
+   */
   onFilteredItemsChanged(filteredItems: Video[]) {
     this.filteredItems = filteredItems;
   }
 
+  /**
+  * Edit a video
+  * @param video The video to edit
+  */
   editVideo(video: Video) {
-    // Asignar el video que se va a editar a la propiedad editingVideo
+    // Assign the video to editingVideo property
     this.editingVideo = video;
     console.log('Editando video:', video);
 
-    // Establecer los valores del formulario de edición con los datos del video
+    // Set the edit form values with the video data
     this.editForm!.setValue({
       title: video.title,
       coach: video.coach,
@@ -142,22 +176,28 @@ export class BoxingvideosComponent implements OnInit {
     });
   }
 
+  /**
+   * Close edit modal
+   */
   closeEditModal() {
     this.editingVideo = null;
   }
 
+  /**
+   * Submit edit form
+   */
   submitEditForm() {
     if (this.editingVideo && this.editForm) {
-      // Actualizar los datos del video con los valores del formulario
+      // Update video data with form values
       this.editingVideo.title = this.editForm.value.title;
       this.editingVideo.coach = this.editForm.value.coach;
       this.editingVideo.description = this.editForm.value.description;
 
-      // Enviar la solicitud HTTP para editar el video
+      // Send HTTP request to edit the video
       this.http.editVideo(this.editingVideo).subscribe(
         (updatedVideo) => {
           console.log('Video edited successfully:', updatedVideo);
-          // Después de guardar los cambios, cierra el modal
+          // Close the modal after saving changes
           this.closeEditModal();
         },
         (error) => {
@@ -167,14 +207,18 @@ export class BoxingvideosComponent implements OnInit {
     }
   }
 
+  /**
+   * Delete a video
+   * @param video The video to delete
+   */
   deleteVideo(video: Video) {
-    // Aquí implementa la lógica para eliminar el video
+    // Implement logic to delete the video
     console.log('Eliminando video:', video);
 
     this.http.deleteVideo(video.id).subscribe(
       () => {
         console.log('Video eliminado exitosamente');
-        // Eliminar el video de la lista local si es necesario
+        // Remove the video from the local list if necessary
         this.filteredItems = this.filteredItems.filter(
           (item) => item.id !== video.id
         );
@@ -185,6 +229,10 @@ export class BoxingvideosComponent implements OnInit {
     );
   }
 
+  /**
+   * Filter videos by type
+   * @param type The type of videos to filter
+   */
   filterVideos(type: string) {
     this.selectedType = type;
 

@@ -25,18 +25,19 @@ use App\Http\Controllers\UserController;
 */
 
 
-
+// Route to retrieve user information if authenticated with Sanctum
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Route to check token validity and authorization
 Route::get('/private', function () {
     return response()->json([
         'message' => 'Your token is valid; you are authorized.',
     ]);
 })->middleware('auth:api');
 
-// Grupo de rutas para controladores con middleware de autenticacion y namespace de controladores
+// Route group for controllers with authentication middleware and controller namespace
 Route::group(['middleware' => 'api'], function () {
     Route::post('/new-user', [UserController::class, 'newUser']);
     Route::put('/update-role', [UserController::class, 'updateRole']);
@@ -66,6 +67,8 @@ Route::group(['middleware' => 'api'], function () {
 
     Route::post('/payment', [StripeController::class, 'payment']);
     Route::post('/subscription', [StripeController::class, 'subscription']);
+    Route::put('comments/{commentId}', [CommentController::class, 'editComment']);
+    Route::delete('comments/{commentId}', [CommentController::class, 'deleteComment']);
     Route::post('/retrieve-checkout', [StripeController::class, 'retrieveCheckoutSession']);
     Route::post('/retrieve-line-items', [StripeController::class, 'retrieveLineItems']);
 
@@ -74,3 +77,12 @@ Route::group(['middleware' => 'api'], function () {
 
     Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);
 });
+
+// Route to handle payment
+Route::post('/payment', [StripeController::class, 'payment']);
+
+// Route to handle subscription
+Route::post('/subscription', [StripeController::class, 'subscription']);
+
+// Route to send messages to OpenAI
+Route::post('/sendMessage', [OpenAIController::class, 'sendMessage']);

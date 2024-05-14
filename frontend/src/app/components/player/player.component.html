@@ -64,20 +64,51 @@
           <div class="flex">
             <p>{{video.comments}} comentarios</p>
           </div>
+
           <div class="relative mb-4">
-            <input #commentInput type="text"
+            <input #commentInput type="text" [(ngModel)]="commentInputValue" (input)="updateCommentInputState()"
               class="w-full border-2 rounded-lg border-red-600 py-2 px-3 bg-transparent focus:outline-none focus:border-red-600"
               placeholder="Añade un comentario...">
-            <button (click)="addComment(commentInput.value)"
+            <button (click)="addComment(commentInput.value)" [disabled]="isCommentInputEmpty"
               class="absolute top-0 right-0 bg-transparent hover:bg-red-600 text-red-700 hover:text-white font-bold py-2 px-4 rounded-r-lg">Comentar</button>
           </div>
-          <div *ngFor="let comentario of comentariosToShow" class="border-b-4 color mb-4 px-2">
+
+          <div *ngFor="let comentario of comentariosToShow" class="border-b-4 color mb-4 px-2 relative">
             <div class="flex items-center">
               <img [src]="comentario.user.picture" class="w-12 h-12 rounded-full">
               <p class="text-red-600 px-2">{{comentario.user.nickname}}</p>
+              <!-- Botón para guardar el comentario editado -->
+              <button *ngIf="editingCommentId === comentario.id"
+                (click)="saveEditedComment(comentario.id, editedCommentText)"
+                class="bg-transparent hover:bg-red-600 text-red-700 hover:text-white font-bold py-2 px-4 rounded-r-lg">
+                Guardar
+              </button>
+              <!-- SVG para editar comentario -->
+              <svg *ngIf="editingCommentId !== comentario.id"  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              viewBox="0 0 24 24" fill='#DC2626' (click)="startEditingComment(comentario.id, comentario.comment)">
+              <path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path>
+              <path
+                d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z">
+              </path>
+            </svg>
+            <!-- SVG para eliminar comentario -->
+            <svg *ngIf="editingCommentId !== comentario.id" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              viewBox="0 0 24 24" fill='#DC2626' (click)="deleteComment(comentario.id)">
+              <path
+                d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z">
+              </path>
+              <path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+            </svg>
             </div>
-            <p>{{comentario.comment}}</p>
+            <!-- Input para editar el comentario -->
+            <input *ngIf="editingCommentId === comentario.id" [(ngModel)]="editedCommentText"
+              class="w-full border-red-600 py-2 px-3 mx-4 mt-2 mb-4 border-2 rounded-lg bg-transparent focus:outline-none focus:border-red-600"
+              placeholder="Edita tu comentario...">
+            <p *ngIf="editingCommentId !== comentario.id">{{comentario.comment}}</p>
           </div>
+
+
+
           <div *ngIf="loading && comments.length > comentariosToShow.length"
             class="flex self-center justify-center content-center">
             <img src="../../../assets/img/loading.gif" alt="Cargando..."
@@ -85,6 +116,7 @@
           </div>
         </div>
       </div>
+
 
 
     </div>
