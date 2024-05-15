@@ -246,8 +246,11 @@
       <ng-template #merchContainer>
         <div *ngFor="let producto of productosFiltrados()"
           class="justify-center hover:transform hover:scale-105 cursor-pointer" (click)="verDetallesProducto(producto)">
-          <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.webp'"
-            class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto mx-auto">
+          <div class="relative">
+            <p *ngIf="producto.stock <= 0" class="absolute inset-0 flex items-center justify-center text-red-600 bg-black bg-opacity-25  text-3xl font-bold">Fuera de stock</p>
+            <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.webp'"
+              class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto mx-auto">
+          </div>
           <p>{{producto.name}}</p>
           <p class="text-red-600 text-2xl">€{{producto.price}}</p>
         </div>

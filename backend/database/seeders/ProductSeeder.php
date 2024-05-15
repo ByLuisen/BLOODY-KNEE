@@ -25,7 +25,7 @@ class ProductSeeder extends Seeder
             'name' => 'Jogger Venum',
             'description' => 'Cómodos y estilosos joggers, perfectos tanto para entrenamiento como para uso casual.',
             'price' => 75.50,
-            'stock' => 50,
+            'stock' => 0,
             'url_img1' => 'VenumJogger_1',
             'url_img2' => 'VenumJogger_2',
             'url_img3' => 'VenumJogger_3'

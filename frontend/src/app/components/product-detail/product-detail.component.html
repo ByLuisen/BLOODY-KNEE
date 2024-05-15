@@ -78,9 +78,9 @@
           <div class="flex flex-col sm:w-1/2 pt-8 sm:pt-0">
             <div class="flex flex-col items-center text-center justify-center">
               <div *ngIf="product.stock > 10" class="text-green-800"> Disponible en Stock ●</div>
-              <div *ngIf="product.stock < 10" class="text-orange-800">Quedan {{product.stock}} en Stock ●</div>
-              <div *ngIf="product.stock < 1" class="text-orange-800">Fuera de Stock ●</div>
-              <div class="flex justify-center items-center bg-red-700 w-52 rounded-full mt-4  ">
+              <div *ngIf="product.stock < 10 && product.stock > 0" class="text-orange-800">Queda/n {{product.stock}} en Stock ●</div>
+              <div *ngIf="product.stock <= 0" class="text-orange-800 text-2xl">Fuera de Stock ●</div>
+              <div class="flex justify-center items-center bg-red-700 w-52 rounded-full mt-4" *ngIf="product.stock > 0">
                 <label for="quantity" class="text-md text-white">Cantidad:</label>
                 <select id="quantity" name="quantity"
                   class="text-white mt-1 block w-24 py-2 px-3 bg-red-700 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500-500">
@@ -90,13 +90,12 @@
                     <option value="{{ idx + 1 }}">{{ idx + 1 }}</option>
                   </ng-container>
                 </select>
-
               </div>
-              <button (click)="add()"
+              <button (click)="add()" *ngIf="product.stock > 0"
                 class="flex-col bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4  mt-4 transition duration-300 transform hover:scale-105 rounded-full">
                 Agregar a la cesta
               </button>
-              <button (click)="loginOrModal()"
+              <button (click)="loginOrModal()" *ngIf="product.stock > 0"
                 class="flex-col bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4  mt-4 transition duration-300 transform hover:scale-105 rounded-full">
                 Comprar ya
               </button>
