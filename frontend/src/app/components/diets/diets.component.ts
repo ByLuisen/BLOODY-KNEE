@@ -39,17 +39,26 @@ export class DietsComponent implements OnInit {
     });
   }
 
-  openPopup() {
+   openPopup() {
     const url = "https://mediafiles.botpress.cloud/3f57b270-55b9-4672-b183-05107ff22d9d/webchat/bot.html";
-    const width = 400;
-    const height = 700;
-    const leftPosition = 1500;
-    const topPosition = 150;
-  
+    let width = 400;
+    let height = 700;
+    let leftPosition = 1500;
+    let topPosition = 150;
+
+    // Verificar si es un dispositivo móvil
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        // Ajustar dimensiones y posición para móviles
+        width = window.innerWidth * 0.8; // 80% del ancho de la ventana
+        height = window.innerHeight * 0.8; // 80% de la altura de la ventana
+        leftPosition = (window.innerWidth - width) / 2; // Centrar horizontalmente
+        topPosition = (window.innerHeight - height) / 2; // Centrar verticalmente
+    }
 
     // Abrir el popup usando window.open
     window.open(url, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=" + topPosition + ",left=" + leftPosition + ",width=" + width + ",height=" + height);
-  }
+}
+
 
   openModal(image: string) {
     this.modalStates[image] = true; // Abrir el modal correspondiente a la imagen

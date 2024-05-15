@@ -1,9 +1,16 @@
-<div class="sm:hidden block">
+<div class="sm:hidden md:hidden block">
   <div class="absolute bottom-6 left-5 cursor-pointer z-50">
-    <button class="fixed-button" (click)="expandDiv()"></button>
+    <button class="fixed-button hover:border-4 hover:border-solid hover:border-red-600 w-50" (click)="expandDiv()"></button>
   </div>
   <div id="expandibleDiv" class="expandible-div mx-auto aclonica-font text-white z-50">
     <ul class="flex flex-col mt-3">
+      <li (click)="expandDiv()">
+        <a role="button" class="flex" routerLink="/home">
+          <img class="icon" src="../../../../assets/img/my_logo.webp" alt="" />
+          <span class="nav-text">Home</span>
+        </a>
+      </li>
+      <hr>
       <li (click)="expandDiv()">
         <a role="button" class="flex" routerLink="/thaivideos">
           <img class="icon" src="../../../../assets/img/icons8_boxer_512.webp" alt="" />

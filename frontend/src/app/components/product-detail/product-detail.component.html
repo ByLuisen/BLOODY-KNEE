@@ -1,4 +1,4 @@
-<div class="sm:text-center aclonica-font overflow-auto fondo_bk">
+<div class="text-justify sm:text-center aclonica-font overflow-auto fondo_bk">
 
   <!-- Banner -->
   <div
@@ -27,15 +27,15 @@
     </div>
   </div>
 
-  <div class="px-24 text-center text-gray-800 overflow-auto p-4">
+  <div class="sm:px-24 text-center text-gray-800 overflow-auto p-4">
     <!-- Go merch -->
-    <div class="ml-10 flex bg-red-700 rounded-full w-64 h-12 items-center content-center" role="button"
+    <div class="sm:ml-10 flex bg-red-700 rounded-full w-56 sm:w-64 h-12 items-center content-center" role="button"
       routerLink="/merchandising">
       <p class="ml-2 text-white">←</p>
       <img src="../../../assets/img/eccommerce1.webp" alt="eccommerce1.webp" class="w-8 h-8 ml-1">
       <p class="text-white ml-2">Todos los productos</p>
     </div>
-    <div class="flex flex-wrap mt-9 ml-5">
+    <div class="flex flex-wrap mt-9 sm:ml-5">
       <!-- Pantalla de carga mientras se obtienen el producto -->
       <div class="fixed inset-0 flex items-center justify-center shadow-xl"
         *ngIf="loadingProduct; else productContainer">
@@ -45,8 +45,8 @@
       </div>
       <ng-template #productContainer>
         <!-- Galería de imágenes -->
-        <div class="w-1/3" *ngIf="product">
-          <div class="image-gallery flex justify-center">
+        <div class="sm:w-1/3" *ngIf="product">
+          <div class="flex justify-center">
             <div class="thumbnails flex flex-col space-y-2 mx-4">
               <img [src]="'../../../assets/img/imgs_productos/' + product.url_img1 + '.webp'"
                 class="cursor-pointer hover:border-2 hover:border-solid hover:border-red-700  w-36 h-auto transition duration-300 transform hover:scale-110 mb"
@@ -58,7 +58,7 @@
                 class="cursor-pointer hover:border-2 hover:border-solid hover:border-red-700  w-36 h-auto transition duration-300 transform hover:scale-110 mb"
                 (click)="setMainImage(product.url_img3)">
             </div>
-            <div class="main-image flex justify-center">
+            <div class="flex justify-center">
               <img [src]="'../../../assets/img/imgs_productos/' + mainImageUrl + '.webp'" alt="Imagen Principal"
                 class="w-96 h-auto border-2 border-solid border-red-700">
             </div>
@@ -66,16 +66,16 @@
         </div>
 
         <!-- Detalles del producto -->
-        <div class="w-2/3 ps-14">
-          <div class="flex-col py-9 " *ngIf="product">
-            <h1 class="text-6xl font-bold text-red-600 mb-1 text-start">{{ product.name }}</h1>
+        <div class="sm:w-2/3 sm:ps-14 py-2 sm:py-0">
+          <div class="sm:flex-col sm:py-9" *ngIf="product">
+            <h1 class="text-center text-2xl sm:text-6xl font-bold text-red-600 mb-1 sm:text-start">{{ product.name }}<br><span class="sm:hidden text-black">{{product.price}}€</span></h1>
             <div class="bg-red-700 w-auto h-0.5"></div>
-            <div class="float-start py-7 w-1/2">
-              <p class="text-5xl text-start mr-2 mt-3">{{ product.price }}€</p>
-              <p class="text-base  text-start mt-3 ">{{ product.description }}</p>
+            <div class="text-center sm:float-start sm:py-7 sm:w-1/2">
+              <p class="hidden sm:block text-5xl text-start mr-2 mt-3">{{ product.price }}€</p>
+              <p class="sm:text-base text-center sm:text-start sm:mt-3 ">{{ product.description }}</p>
             </div>
           </div>
-          <div class="flex flex-col w-1/2">
+          <div class="flex flex-col sm:w-1/2 pt-8 sm:pt-0">
             <div class="flex flex-col items-center text-center justify-center">
               <div *ngIf="product.stock > 10" class="text-green-800"> Disponible en Stock ●</div>
               <div *ngIf="product.stock < 10" class="text-orange-800">Quedan {{product.stock}} en Stock ●</div>
@@ -110,12 +110,12 @@
         <!-- Recommended products -->
         <div class="w-full mt-5 mb-5">
           <div class="bg-red-700 w-auto h-0.5"></div>
-          <div class="flex justify-center mt-8">
+          <div class="sm:flex justify-center mt-8">
             <div class="mx-4" *ngFor="let product of topProducts">
               <div class="flex flex-col justify-center items-center">
                 <p class="text-sm mb-3 cursor-pointer" (click)="verDetallesProducto(product.id)">{{product.name}}</p>
                 <img [src]="'../../../assets/img/imgs_productos/' + product.url_img1 + '.webp'"
-                  class="cursor-pointer hover:border-2 hover:border-solid hover:border-red-600  w-36 h-auto transition duration-300 transform hover:scale-110 mb"
+                  class="cursor-pointer hover:border-2 hover:border-solid hover:border-red-600 w-50  sm:w-36 h-auto transition duration-300 transform hover:scale-110 mb"
                   (click)="verDetallesProducto(product.id)">
                 <p class="text-red-500 mb-3 mt-3">{{product.price}} €</p>
               </div>
