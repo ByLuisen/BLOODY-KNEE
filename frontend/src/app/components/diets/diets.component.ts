@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Diet } from 'src/app/models/Diet';
+import { AuthService } from '@auth0/auth0-angular';
+
 @Component({
   selector: 'app-diets',
   templateUrl: './diets.component.html',
@@ -17,11 +19,24 @@ export class DietsComponent implements OnInit {
   modalOpen: boolean = false;
   modalStates: { [key: string]: boolean } = {};
   errorMessage: string | null = null;
+  role: string | null = null;
+  // Mensaje para informar al admin
+  infoAdmin: string = "";
 
-  constructor(private http: HttpService) { }
+  constructor(private http: HttpService, private auth: AuthService) { }
 
   ngOnInit(): void {
     this.getDietData();
+    this.auth.isAuthenticated$.subscribe((isauth) => {
+      if (isauth) {
+        this.http.getRole().subscribe((role) => {
+          console.log(role.data);
+          this.role = role.data;
+        });
+      } else {
+        this.role = 'admin'; // TODO cambiar a "Basic"
+      }
+    });
   }
 
   openPopup() {
@@ -82,7 +97,7 @@ export class DietsComponent implements OnInit {
       setTimeout(() => {
         this.flashingIndex = null;
       }, 2500);
-    }else {
+    } else {
       this.errorMessage = "Por favor, introduce valores para la altura y el peso.";
     }
   }
