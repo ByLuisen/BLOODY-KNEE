@@ -48,3 +48,18 @@ button.active {
   background-color: #cbd5e0;
   color: #1a202c;
 }
+
+@media (max-width: 600px) {
+  .premium-icon {
+    position: absolute;
+    top: 30px;
+    right: 55px;
+    z-index: 1;
+    transition: transform 0.3s;
+  }
+
+    .star-icon {
+      width: 35px;
+      height: auto;
+    }
+}
