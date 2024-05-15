@@ -18,7 +18,7 @@ export class MenuMovileComponent {
 
     if (!this.expanded) {
       // Expandir el div
-      div.style.height = "auto"; // Cambia este valor al deseado
+      div.style.height = "390px"; // Cambia este valor al deseado
     } else {
       // Revertir los cambios en el botón y el div
       button.style.bottom = "40px";

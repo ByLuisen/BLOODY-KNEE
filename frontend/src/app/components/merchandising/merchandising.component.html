@@ -1,4 +1,4 @@
-<div class="sm:text-center aclonica-font fondo_bk overflow-auto">
+<div class="text-justify sm:text-center aclonica-font fondo_bk overflow-auto">
   <!-- Banner -->
   <div
     class="sticky top-0 z-10 isolate flex items-center gap-x-6 overflow-hidden bg-red-200 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
@@ -26,29 +26,29 @@
     </div>
   </div>
   <!-- Products -->
-  <h1 class="text-center mt-5">MERCHAN<span class="text-red-600">DISING</span></h1>
-  <div class="grid grid-cols-2 px-96 text-center">
-    <div class="pl-52 pt-4 text-start">
+  <h1 class="text-center mt-5 mx-auto sm:mx-0 tamaño">MERCHAN<span class="text-red-600">DISING</span></h1>
+  <div class="grid grid-cols-1 sm:grid-cols-2 sm:px-96 text-center">
+    <div class="sm:pl-52 pt-4 text-center sm:text-center">
       <h2>Disponibilidad</h2>
-      <div class="flex items-center">
+      <div class="flex items-center pl-20">
         <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
           (change)="mostrarEnStock = !mostrarEnStock">
         <p>En Stock ({{ contarProductosEnStock() }})</p>
       </div>
-      <div class="flex">
+      <div class="flex items-center pl-20">
         <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
           (change)="mostrarFueraDeStock = !mostrarFueraDeStock">
         <p>Fuera de Stock ({{ contarProductosFueraDeStock() }})</p>
       </div>
     </div>
-    <div class="text-start pl-36 pt-4">
+    <div class="text-center sm:text-start sm:pl-36 pt-4">
       <h2>Precio</h2>
       <input type="range" min="0" max="150" value="0" class="range-input" #priceRangeInput (input)="onPriceChange()">
       <p>Rango de precio: $0 - ${{priceRangeInput.value }}</p>
     </div>
   </div>
   <!-- Iterar sobre los productos utilizando *ngFor -->
-  <div class="grid grid-cols-4 px-56 pt-10 gap-32">
+  <div class="grid grid-cols-1 sm:grid-cols-4 sm:px-56 px-4 pt-10 gap-2 mx-auto sm:mx-0 sm:gap-32">
     <!-- Pantalla de carga mientras se obtienen los productos del merch -->
     <div class="fixed inset-0 flex items-center justify-center shadow-xl" *ngIf="loading; else merchContainer">
       <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>

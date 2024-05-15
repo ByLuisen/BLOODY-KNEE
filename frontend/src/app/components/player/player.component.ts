@@ -156,12 +156,12 @@ export class PlayerComponent implements OnInit {
       } else {
         this.likeOpenModal();
       }
-    });this.auth.user$.subscribe((user) => {
+    }); this.auth.user$.subscribe((user) => {
       if (user) {
         this.currentUser = user; // Almacena la información del usuario autenticado
       }
     });
-    
+
   }
 
   likeVideo(videoId: number): void {
