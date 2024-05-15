@@ -19,11 +19,13 @@ return new class extends Migration
             $table->date('date_delivery')->default(now());
             $table->string('country');
             $table->string('full_name');
+            $table->string('email');
             $table->string('phone');
             $table->string('address');
             $table->string('province')->nullable();
             $table->string('city');
             $table->string('zip');
+            $table->decimal('shipping_cost', 10, 2);
             $table->decimal('amount_total', 10, 2);
             $table->enum('status', ['Pendiente', 'En Proceso', 'Enviado', 'Entregado', 'Cancelado', 'Devuelto']);
             $table->timestamps();

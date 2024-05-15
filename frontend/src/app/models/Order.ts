@@ -13,6 +13,7 @@ export class Order {
   #province: string;
   #city: string;
   #zip: string;
+  #shipping_cost: number;
   #amount_total: number;
   #payment_method: string;
   #status: string;
@@ -30,10 +31,11 @@ export class Order {
     province: string = '',
     city: string = '',
     zip: string = '',
+    shipping_cost: number = 0,
     amount_total: number = 0,
     payment_method: string = '',
     status: string = '',
-    order_details: OrderDetail[] = []
+    order_details: OrderDetail[] = [],
   ) {
     this.#id = id;
     this.#user_id = user_id;
@@ -47,10 +49,12 @@ export class Order {
     this.#province = province;
     this.#city = city;
     this.#zip = zip;
+    this.#shipping_cost = shipping_cost;
     this.#amount_total = amount_total;
     this.#payment_method = payment_method;
     this.#status = status;
     this.#order_details = order_details;
+    this.#shipping_cost = shipping_cost;
   }
 
   //Getters--------------------------
@@ -90,6 +94,9 @@ export class Order {
   }
   get zip(): string {
     return this.#zip;
+  }
+  get shipping_cost(): number {
+    return this.#shipping_cost;
   }
   get amount_total(): number {
     return this.#amount_total;
@@ -142,6 +149,9 @@ export class Order {
   set zip(zip: string) {
     this.#zip = zip;
   }
+  set shipping_cost(shipping_cost: number) {
+    this.#shipping_cost = shipping_cost;
+  }
   set amount_total(amount_total: number) {
     this.#amount_total = amount_total;
   }
@@ -170,6 +180,7 @@ export class Order {
       province: this.#province,
       city: this.#city,
       zip: this.#zip,
+      shipping_cost: this.#shipping_cost,
       amount_total: this.#amount_total,
       payment_method: this.#payment_method,
       status: this.#status,

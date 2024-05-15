@@ -527,7 +527,7 @@ export class HttpService {
       })
     );
   }
-  
+
   makeOrder(checkout_session: any, line_items: any): Observable<Order> {
     const url = `${this.url}/make-order`;
     return this.auth.user$.pipe(
@@ -566,6 +566,23 @@ export class HttpService {
         };
         return this._http
           .post<{ data: Order[] }>(url, body)
+          .pipe(map((response) => response.data));
+      })
+    );
+  }
+
+  cancelOrder(checkout_session: any, line_items: any): Observable<Order> {
+    const url = `${this.url}/make-order`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          checkout_session: checkout_session,
+          line_items: line_items,
+          email: user ? user.email : '',
+          connection: user ? user.sub?.split('|')[0] : '',
+        };
+        return this._http
+          .post<{ data: Order }>(url, body)
           .pipe(map((response) => response.data));
       })
     );
