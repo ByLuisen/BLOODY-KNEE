@@ -52,4 +52,67 @@ class ProductController extends Controller
             return ApiResponse::error($e->getMessage());
         }
     }
+
+    /**
+     * Añadir un nuevo producto.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request)
+    {
+        try {
+            $product = new Product;
+            $product->brand_id = $request->input('brand_id');
+            $product->category_id = $request->input('category_id');
+            $product->name = $request->input('name');
+            $product->description = $request->input('description');
+            $product->price = $request->input('price');
+            $product->stock = $request->input('stock');
+            $product->url_img1 = $request->input('url_img1');
+            $product->url_img2 = $request->input('url_img2');
+            $product->url_img3 = $request->input('url_img3');
+            $product->save();
+
+            return ApiResponse::success(new ProductResource($product), 'Producto añadido correctamente');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage());
+        }
+    }
+    /**
+     * Editar un producto existente.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->update($request->all());
+
+            return ApiResponse::success(new ProductResource($product), 'Producto actualizado correctamente');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage());
+        }
+    }
+
+    /**
+     * Eliminar un producto existente.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->delete();
+
+            return ApiResponse::success([], 'Producto eliminado correctamente');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage());
+        }
+    }
 }

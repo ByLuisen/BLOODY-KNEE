@@ -30,7 +30,7 @@ export class HttpService {
     private _http: HttpClient,
     private auth: AuthService,
     private cookie: CookieService
-  ) {}
+  ) { }
 
   initUser(): void {
     this.auth.user$.subscribe((user) => {
@@ -516,6 +516,39 @@ export class HttpService {
         );
       })
     );
+  }
+
+  /**
+   * Add a new product
+   *
+   * @param product
+   * @returns
+   */
+  addProduct(product: Product): Observable<Product> {
+    return this._http.post<Product>(this.url, product);
+  }
+
+  /**
+   * Update an existing product
+   *
+   * @param id
+   * @param product
+   * @returns
+   */
+  updateProduct(id: number, product: Product): Observable<Product> {
+    const url = `${this.url}/products/${id}`;
+    return this._http.put<Product>(url, product);
+  }
+
+  /**
+   * Delete a product
+   *
+   * @param id
+   * @returns
+   */
+  deleteProduct(id: number): Observable<any> {
+    const url = `${this.url}/products/${id}`;
+    return this._http.delete(url);
   }
 
   editComment(commentId: number, comment: string): Observable<any> {

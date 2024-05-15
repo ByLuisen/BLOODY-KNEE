@@ -39,7 +39,7 @@ export class ProductDetailComponent implements OnInit {
     public auth: AuthService,
     private cookie: CookieService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -103,17 +103,19 @@ export class ProductDetailComponent implements OnInit {
   }
 
   /**
-   *
-   */
+     *
+     */
   getRandomProducts(): void {
     this.http
       .getProducts()
       .pipe(
         switchMap((products) => {
-          // Obtener 6 productos aleatorios
+          // Get 6 random products
           const randomProducts = this.getRandomItems(products, 6);
           console.log('Productos aleatorios:', randomProducts);
-          this.topProducts = randomProducts;
+
+          this.topProducts = randomProducts.filter(product => product.id !== this.productId);
+
           return of(products);
         }),
         finalize(() => (this.loadingProduct = false)),
@@ -171,7 +173,7 @@ export class ProductDetailComponent implements OnInit {
         })
       )
       .subscribe(
-        () => {},
+        () => { },
         (error) => {
           console.error(error);
           // Manejar el error en tu aplicación
@@ -260,7 +262,7 @@ export class ProductDetailComponent implements OnInit {
           finalize(() => (this.loading = false))
         )
         .subscribe(
-          () => {},
+          () => { },
           (error) => {
             console.error('Error al iniciar la sesión de pago:', error);
             // Manejar el error en tu aplicación

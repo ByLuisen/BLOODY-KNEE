@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { catchError, finalize, of, switchMap } from 'rxjs';
 import { Product } from 'src/app/models/Product';
 import { HttpService } from 'src/app/services/http.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-merchandising',
@@ -12,21 +13,51 @@ import { HttpService } from 'src/app/services/http.service';
 export class MerchandisingComponent implements OnInit {
   // Array para almacenar todos los productos
   productos: Product[] = [];
-
   // Boolean para controlar los filtros de stock
   mostrarEnStock: boolean = false;
   mostrarFueraDeStock: boolean = false;
-
   // Variable para almacenar el precio máximo seleccionado
   precioMaximo: number = 150;
-
   loading: boolean = false;
 
-  constructor(private http: HttpService, private router: Router) {}
+  // Variable para simular el role del usuario
+  role!: string;
+
+  // Modos para los admins
+  editAdminMode: boolean = false;
+  deleteAdminMode: boolean = false;
+  // createAdminMode: boolean = false;
+
+  // Modos para los modales
+  editModal: boolean = false;
+  deleteModal: boolean = false;
+  createModal: boolean = false;
+
+  // Variable para almacenar el producto que se está editando
+  editedProduct: Product = new Product; // Asegúrate de inicializarlo con las propiedades correctas del tipo Product
+
+  // Mensaje para informar al admin
+  infoAdmin: string = "";
+
+  // variable para almacenar la ID del producto seleccionado para eliminar
+  selectedProduct: Product | null = null;
+
+  constructor(private http: HttpService, private router: Router, private auth: AuthService) { }
+  @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
   ngOnInit(): void {
     this.getProductos();
     console.log(this.productos);
+    this.auth.isAuthenticated$.subscribe((isauth) => {
+      if (isauth) {
+        this.http.getRole().subscribe((role) => {
+          console.log(role.data);
+          this.role = role.data;
+        });
+      } else {
+        this.role = 'Basic'; // TODO cambiar a "Basic"
+      }
+    });
   }
 
   getProductos(): void {
@@ -58,8 +89,9 @@ export class MerchandisingComponent implements OnInit {
       .subscribe();
   }
 
-  @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
-
+  /**
+   *
+   */
   onPriceChange() {
     this.precioMaximo = parseInt(this.priceRangeInput.nativeElement.value);
   }
@@ -69,10 +101,18 @@ export class MerchandisingComponent implements OnInit {
     return this.productos.filter((producto) => producto.stock > 0).length;
   }
 
+  /**
+   *
+   * @returns
+   */
   contarProductosFueraDeStock(): number {
     return this.productos.filter((producto) => producto.stock === 0).length;
   }
 
+  /**
+   *
+   * @returns
+   */
   productosFiltrados(): Product[] {
     let productosFiltrados: Product[] = [];
 
@@ -100,9 +140,133 @@ export class MerchandisingComponent implements OnInit {
 
     return productosFiltrados;
   }
-
-  verDetallesProducto(productId: number) {
-    // Navegar a la vista de detalles del producto con el ID del producto como parámetro
-    this.router.navigate(['/product', productId]);
+  /**
+   *
+   * @param product
+   */
+  verDetallesProducto(product: Product) {
+    if (this.editAdminMode) {
+      this.openEditModal(product.id);
+    } else if (this.deleteAdminMode) {
+      this.openDeleteModal(product);
+    } else {
+      this.router.navigate(['/product', product.id]);
+    }
   }
+
+
+  // Método para manejar el clic en el botón de editar producto
+  editProduct(): void {
+    if (!this.editAdminMode) {
+      this.editAdminMode = true;
+      this.infoAdmin = "SELECCIONA EL PRODUCTO A EDITAR";
+    } else {
+      this.editAdminMode = false;
+      this.infoAdmin = "";
+    }
+    console.log("editAdminMode=" + this.editAdminMode);
+  }
+
+  // Método para manejar el clic en el botón de agregar producto
+  addProduct(): void {
+    if (!this.createModal) {
+      this.createModal = true;
+    } else {
+      this.createModal = false;
+    }
+    console.log("createAdminMode=" + this.createModal);
+  }
+
+  // Método para manejar el clic en el botón de eliminar producto
+  deleteProduct(): void {
+    if (!this.deleteAdminMode) {
+      this.deleteAdminMode = true;
+      this.infoAdmin = "SELECCIONA EL PRODUCTO A ELIMINAR";
+    } else {
+      this.deleteAdminMode = false;
+      this.infoAdmin = "";
+    }
+    console.log("deleteAdminMode=" + this.deleteAdminMode);
+  }
+
+  /**
+   * Abre un formulario en modal para editar los datos del producto
+   *
+   * @param productId
+   */
+  openEditModal(productId: number) {
+    const selectedProduct = this.productos.find(producto => producto.id === productId);
+    if (selectedProduct) {
+      this.editedProduct = { ...selectedProduct } as Product; // Clonar el producto seleccionado para evitar modificar el original directamente
+      this.editModal = true;
+    }
+  }
+
+  /**
+   * Cierra el modal con el formulario para editar producto
+   *
+   */
+  closeEditModal() {
+    // Limpia el producto editado y cierra el modal
+    this.editedProduct = new Product();
+    this.editModal = false;
+  }
+
+  /**
+   *
+   */
+  submitEditProductForm() {
+    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(() => {
+      this.closeEditModal();
+      this.getProductos();
+    });
+  }
+
+  /**
+   *
+   */
+  submitCreateProductForm() {
+    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(() => {
+      this.closeEditModal();
+      this.getProductos();
+    });
+  }
+
+
+  /**
+   * Busca el producto que se seleccione por ID para mostrar el modal
+   *
+   * @param productId
+   */
+  openDeleteModal(product: Product) {
+    this.selectedProduct = product;
+    this.deleteModal = true;
+  }
+
+  /**
+   * Cancela
+   */
+  cancelDelete() {
+    this.selectedProduct = null;
+    this.deleteModal = false;
+  }
+
+  confirmDelete() {
+    if (this.selectedProduct !== null) {
+      this.http.deleteProduct(this.selectedProduct.id).subscribe(() => {
+        // Eliminar el producto de la lista después de la eliminación exitosa
+        this.productos = this.productos.filter(producto => producto.id !== this.selectedProduct!.id);
+        // Restablecer la variable selectedProduct
+        this.selectedProduct = null;
+        // Cerrar el modal después de la eliminación
+        this.deleteModal = false;
+      });
+    }
+  }
+
+  // CREATE PRODUCT MODAL
+  closeCreateModal() {
+    this.createModal = false;
+  }
+
 }

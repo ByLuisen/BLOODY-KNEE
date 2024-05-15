@@ -29,6 +29,7 @@ export class CartComponent {
     // Check if user is authenticated
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
+        // Perform actions if user is authenticated
         this.getProductsFromBBDD();
       } else {
         // Retrieve products from cookie if user is not authenticated
@@ -98,6 +99,10 @@ export class CartComponent {
       .subscribe();
   }
 
+  /**
+   * Function to delete a product from the cart
+   * @param index
+   */
   deleteProduct(index: number): void {
     if (this.auth.isAuthenticated$) {
       this.http.deleteProductCart(this.products[index].id).subscribe();
