@@ -1,72 +1,258 @@
 <div class="text-justify sm:text-center aclonica-font fondo_bk overflow-auto">
   <!-- Banner -->
   <div
-    class="sticky top-0 z-10 isolate flex items-center gap-x-6 overflow-hidden bg-red-200 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
-    <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      aria-hidden="true">
-      <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff4d4d] to-[#fc8989] opacity-30"
+    class="sticky top-0 z-10 isolate flex flex-col sm:flex-row items-center gap-x-6 overflow-hidden bg-red-200 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
+    <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl">
+      <div
+        class="aspect-[577/310] w-[36.0625rem] sm:w-[22.5rem] bg-gradient-to-r from-[#ff4d4d] to-[#fc8989] opacity-30"
         style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)">
       </div>
     </div>
-    <div class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      aria-hidden="true">
-      <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff4d4d] to-[#ff1111] opacity-30"
+    <div class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl">
+      <div
+        class="aspect-[577/310] w-[36.0625rem] sm:w-[22.5rem] bg-gradient-to-r from-[#ff4d4d] to-[#ff1111] opacity-30"
         style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)">
       </div>
     </div>
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
       <p class="text-sm leading-6 text-gray-900">
-        <strong class="font-semibold">Bloody Knee 2024</strong><svg viewBox="0 0 2 2"
-          class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true">
+        <strong class="font-semibold">Bloody Knee 2024</strong>
+        <svg viewBox="0 0 2 2" class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true">
           <circle cx="1" cy="1" r="1" />
-        </svg>Actualmente sólo ofrecemos entregas a direcciones dentro de España.
+        </svg>
+        Actualmente sólo ofrecemos entregas a direcciones dentro de España.
       </p>
     </div>
     <div class="flex flex-1 justify-end">
     </div>
   </div>
-  <!-- Products -->
-  <h1 class="text-center mt-5 mx-auto sm:mx-0 tamaño">MERCHAN<span class="text-red-600">DISING</span></h1>
-  <div class="grid grid-cols-1 sm:grid-cols-2 sm:px-96 text-center">
-    <div class="sm:pl-52 pt-4 text-center sm:text-center">
-      <h2>Disponibilidad</h2>
-      <div class="flex items-center pl-20">
-        <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
-          (change)="mostrarEnStock = !mostrarEnStock">
-        <p>En Stock ({{ contarProductosEnStock() }})</p>
-      </div>
-      <div class="flex items-center pl-20">
-        <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
-          (change)="mostrarFueraDeStock = !mostrarFueraDeStock">
-        <p>Fuera de Stock ({{ contarProductosFueraDeStock() }})</p>
-      </div>
-    </div>
-    <div class="text-center sm:text-start sm:pl-36 pt-4">
-      <h2>Precio</h2>
-      <input type="range" min="0" max="150" value="0" class="range-input" #priceRangeInput (input)="onPriceChange()">
-      <p>Rango de precio: $0 - ${{priceRangeInput.value }}</p>
-    </div>
-  </div>
-  <!-- Iterar sobre los productos utilizando *ngFor -->
-  <div class="grid grid-cols-1 sm:grid-cols-4 sm:px-56 px-4 pt-10 gap-2 mx-auto sm:mx-0 sm:gap-32">
-    <!-- Pantalla de carga mientras se obtienen los productos del merch -->
-    <div class="fixed inset-0 flex items-center justify-center shadow-xl" *ngIf="loading; else merchContainer">
-      <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
-      <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-red-500 animate-spin"></div>
-      <img src="../../../assets/img/my_logo.webp" class="rounded-full h-8 w-8">
-    </div>
-    <ng-template #merchContainer>
-      <div *ngFor="let producto of productosFiltrados()"
-        class="w-auto h-auto justify-center hover:transform hover:scale-105 cursor-pointer"
-        (click)="verDetallesProducto(producto.id)">
+  <!-- end banner -->
+  <div class="px-5 sm:px-10 md:px-20 pt-10">
 
-        <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.webp'"
-          class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto">
-        <p>{{producto.name}}</p>
-        <p class="text-red-600">€{{producto.price}}</p>
+    <!-- Filter section -->
+    <h1 class="text-center mt-5">MERCHAN<span class="text-red-600">DISING</span></h1>
+    <div
+      class="grid grid-cols-1 self-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 px-5 sm:px-10 md:px-20 text-center">
+      <div class="pl-2 sm:pl-10 pt-4 text-center justify-center">
+        <h2>Disponibilidad</h2>
+        <div class="flex justify-center items-center">
+          <p>En Stock ({{ contarProductosEnStock() }})</p>
+          <input type="checkbox" name="filter_stock"
+            class="w-4 h-4 rounded-lg mr-2 ml-1 bg-red-100 border-red-500 focus:bg-red-200 focus:border-red-600"
+            (change)="mostrarEnStock = !mostrarEnStock">
+          <p class="ml-3">Fuera de Stock ({{ contarProductosFueraDeStock() }})</p>
+          <input type="checkbox" name="filter_stock"
+            class="w-4 h-4 rounded-lg mr-2 ml-1 bg-red-100 border-red-500 focus:bg-red-200 focus:border-red-600"
+            (change)="mostrarFueraDeStock = !mostrarFueraDeStock">
+        </div>
       </div>
-    </ng-template>
-  </div>
+      <div class="pl-2 sm:pl-10 pt-4 text-center justify-center">
+        <h2>Precio</h2>
+        <input type="range" min="0" max="150" value="0" class="range-input" #priceRangeInput (input)="onPriceChange()">
+        <p>Rango de precio: $0 - ${{priceRangeInput.value }}</p>
+      </div>
+    </div>
+    <!-- end filter section -->
 
-  <app-cart></app-cart>
+    <!-- Button to activate admin mode -->
+    <div class="flex flex-col justify-center items-center mb-4 mt-4" *ngIf="role == 'admin'">
+      <div class="w-2/4 h-auto bg-red-600 rounded-full">
+        <p class="my-2 mx-2 text-3xl text-white">HERRAMIENTAS DE ADMINISTRACIÓN</p>
+        <div *ngIf="infoAdmin!=''" class="text-2xl text-red-600 bg-white w-full rounded-md">
+          <p class="py-1">{{infoAdmin}}</p>
+        </div>
+        <div class="flex flex-row my-3 justify-center">
+          <button
+            class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300"
+            (click)="addProduct()">Agregar producto
+            <span
+              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Añade
+              un nuevo producto a la tienda</span>
+          </button>
+          <button
+            class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-yellow-500 border border-solid border-yellow-500 hover:scale-125 transition-transform duration-300"
+            (click)="editProduct()">Editar producto
+            <span
+              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
+              un producto para editar sus datos</span></button>
+          <button
+            class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-red-500 border border-solid border-red-500 hover:scale-125 transition-transform duration-300"
+            (click)="deleteProduct()">Eliminar producto
+            <span
+              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
+              un producto para eliminarlo</span></button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modals for admins -->
+    <!-- Modal para editar producto -->
+    <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+      <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
+        <h2 class="text-xl font-semibold mb-4">Editar <span class="text-red-600"> {{editedProduct.name}}</span></h2>
+        <!-- Aquí va tu formulario para editar el producto -->
+        <form (submit)="submitEditProductForm()">
+          <!-- Campos de formulario para editar el producto -->
+          <!-- Name -->
+          <div class="mb-4">
+            <label for="productName" class="block text-black">Nombre del Producto:</label>
+            <input type="text" id="productName" name="productName" [(ngModel)]="editedProduct.name"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Brand_id -->
+          <div class="mb-4">
+            <label for="brand_id" class="block text-black">Id de la Marca:</label>
+            <input type="text" id="brand_id" name="brand_id" [(ngModel)]="editedProduct.brandId"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Description -->
+          <div class="mb-4">
+            <label for="productDescription" class="block text-black">Descripción del Producto:</label>
+            <textarea id="productDescription" name="productDescription" [(ngModel)]="editedProduct.description"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"></textarea>
+          </div>
+          <!-- Price -->
+          <div class="mb-4">
+            <label for="productPrice" class="block text-black">Precio:</label>
+            <input type="number" id="productPrice" name="productPrice" [(ngModel)]="editedProduct.price"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Image 1 -->
+          <div class="mb-4">
+            <label for="productUrl1" class="block text-black">Nombre de la primera foto:</label>
+            <input type="text" id="productUrl1" name="productUrl1" [(ngModel)]="editedProduct.url_img1"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Image 2 -->
+          <div class="mb-4">
+            <label for="productUrl2" class="block text-black">Nombre de la segunda foto:</label>
+            <input type="text" id="productUrl2" name="productUrl2" [(ngModel)]="editedProduct.url_img2"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center  text-red-700">
+          </div>
+          <!-- Image 3 -->
+          <div class="mb-4">
+            <label for="productUrl3" class="block text-black">Nombre de la tercera foto:</label>
+            <input type="text" id="productUrl3" name="productUrl3" [(ngModel)]="editedProduct.url_img3"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Info of stock ammount -->
+          <div class="mb-4">
+            <label for="stock" class="block text-black">Información del stock</label>
+            <input type="number" id="stock" name="stock" [(ngModel)]="editedProduct.stock"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700" readonly>
+          </div>
+          <!-- Botones de acción -->
+          <div class="flex justify-center">
+            <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
+              (click)="closeEditModal()">Cancelar</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar Cambios</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Modal para añadir un producto -->
+    <div *ngIf="createModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+      <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
+        <h2 class="text-xl font-semibold mb-4">Crear producto</h2>
+        <!-- Aquí va tu formulario para crear el producto -->
+        <form (submit)="submitCreateProductForm()">
+          <!-- Name -->
+          <div class="mb-4">
+            <label for="productName" class="block text-black">Nombre del Producto:</label>
+            <input type="text" id="productName" name="productName" [(ngModel)]="editedProduct.name"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Brand_id -->
+          <div class="mb-4">
+            <label for="brand_id" class="block text-black">Id de la Marca:</label>
+            <input type="text" id="brand_id" name="brand_id" [(ngModel)]="editedProduct.brandId"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Description -->
+          <div class="mb-4">
+            <label for="productDescription" class="block text-black">Descripción del Producto:</label>
+            <textarea id="productDescription" name="productDescription" [(ngModel)]="editedProduct.description"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"></textarea>
+          </div>
+          <!-- Price -->
+          <div class="mb-4">
+            <label for="productPrice" class="block text-black">Precio:</label>
+            <input type="number" id="productPrice" name="productPrice" [(ngModel)]="editedProduct.price"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Image 1 -->
+          <div class="mb-4">
+            <label for="productUrl1" class="block text-black">Nombre de la primera foto:</label>
+            <input type="text" id="productUrl1" name="productUrl1" [(ngModel)]="editedProduct.url_img1"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Image 2 -->
+          <div class="mb-4">
+            <label for="productUrl2" class="block text-black">Nombre de la segunda foto:</label>
+            <input type="text" id="productUrl2" name="productUrl2" [(ngModel)]="editedProduct.url_img2"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center  text-red-700">
+          </div>
+          <!-- Image 3 -->
+          <div class="mb-4">
+            <label for="productUrl3" class="block text-black">Nombre de la tercera foto:</label>
+            <input type="text" id="productUrl3" name="productUrl3" [(ngModel)]="editedProduct.url_img3"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Info of stock ammount -->
+          <div class="mb-4">
+            <label for="stock" class="block text-black">Información del stock</label>
+            <input type="number" id="stock" name="stock" [(ngModel)]="editedProduct.stock"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700" readonly>
+          </div>
+          <!-- Botones de acción -->
+          <div class="flex justify-center">
+            <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
+              (click)="closeCreateModal()">Cancelar</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación de producto -->
+    <div *ngIf="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+      <div class="bg-white rounded-lg p-6 max-w-md mx-auto">
+        <h2 *ngIf="selectedProduct !== null" class="text-xl font-semibold mb-4">Eliminar <b class="text-red-600">
+            {{selectedProduct.name}}</b></h2>
+        <p *ngIf="selectedProduct !== null">¿Estás seguro de que quieres eliminar el producto con ID <span
+            class="text-red-600">
+            {{selectedProduct.id}}</span>?</p>
+        <p *ngIf="selectedProduct === null">Por favor, selecciona un producto para eliminar.</p>
+        <div class="flex justify-end mt-4">
+          <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
+            (click)="cancelDelete()">Cancelar</button>
+          <button type="button" class="bg-red-500 text-white px-4 py-2 rounded-lg"
+            (click)="confirmDelete()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+    <!-- Iterar sobre los productos utilizando *ngFor -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 text-center md:grid-cols-4 lg:grid-cols-4 px-5 sm:px-10 md:px-20 pt-10 gap-4">
+      <!-- Pantalla de carga mientras se obtienen los productos del merch -->
+      <div class="fixed inset-0 flex items-center justify-center shadow-xl" *ngIf="loading; else merchContainer">
+        <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
+        <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-red-500 animate-spin"></div>
+        <img src="../../../assets/img/my_logo.webp" class="rounded-full h-8 w-8">
+      </div>
+      <ng-template #merchContainer>
+        <div *ngFor="let producto of productosFiltrados()"
+          class="justify-center hover:transform hover:scale-105 cursor-pointer" (click)="verDetallesProducto(producto)">
+          <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.webp'"
+            class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto mx-auto">
+          <p>{{producto.name}}</p>
+          <p class="text-red-600 text-2xl">€{{producto.price}}</p>
+        </div>
+      </ng-template>
+    </div>
+    <app-cart></app-cart>
+  </div>
 </div>

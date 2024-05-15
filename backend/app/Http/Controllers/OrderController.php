@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -39,13 +40,17 @@ class OrderController extends Controller
             $order = new Order();
             $order->user_id = $user->id;
             $order->payment_id = $checkout_session['payment_intent'];
+            $order->order_date = Carbon::now()->toDateString();
+            $order->date_delivery = Carbon::now()->addDays(7)->toDateString();
             $order->country = $user->country;
             $order->full_name = $user->full_name;
+            $order->email = $checkout_session['customer_email'];
             $order->phone = $user->phone;
             $order->address = $user->address;
             $order->province = $user->province;
             $order->city = $user->city;
             $order->zip = $user->zip;
+            $order->shipping_cost = $checkout_session['shipping_cost']['amount_total'] / 100;
             $order->amount_total = $checkout_session['amount_total'] / 100;
             $order->status = 'En Proceso';
             $order->save();

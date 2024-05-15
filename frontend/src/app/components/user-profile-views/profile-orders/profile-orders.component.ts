@@ -13,9 +13,11 @@ export class ProfileOrdersComponent implements OnInit {
   constructor(private http: HttpService) {}
 
   ngOnInit(): void {
-      this.http.getOrders().subscribe((orders) => {
-        this.orders = orders;
-        console.log(orders)
-      })
+    this.http.getOrders().subscribe((orders) => {
+      this.orders = orders;
+      console.log(orders);
+    });
   }
+
+  cancelOrder(): void {}
 }

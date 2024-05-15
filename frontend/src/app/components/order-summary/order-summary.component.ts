@@ -34,10 +34,10 @@ export class OrderSummaryComponent implements OnInit {
             // Llamamos a makeOrder con los resultados de las dos llamadas
             return this.http.makeOrder(this.checkout_session, this.line_items);
           }),
-          tap((response: Order) => {
+          tap((order: Order) => {
             // Procesamos la respuesta de makeOrder
-            this.order = response;
-            console.log(response);
+            this.order = order;
+            console.log(order);
           })
         ).subscribe();
       }

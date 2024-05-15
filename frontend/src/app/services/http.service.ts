@@ -30,7 +30,7 @@ export class HttpService {
     private _http: HttpClient,
     private auth: AuthService,
     private cookie: CookieService
-  ) {}
+  ) { }
 
   initUser(): void {
     this.auth.user$.subscribe((user) => {
@@ -518,6 +518,39 @@ export class HttpService {
     );
   }
 
+  /**
+   * Add a new product
+   *
+   * @param product
+   * @returns
+   */
+  addProduct(product: Product): Observable<Product> {
+    return this._http.post<Product>(this.url, product);
+  }
+
+  /**
+   * Update an existing product
+   *
+   * @param id
+   * @param product
+   * @returns
+   */
+  updateProduct(id: number, product: Product): Observable<Product> {
+    const url = `${this.url}/products/${id}`;
+    return this._http.put<Product>(url, product);
+  }
+
+  /**
+   * Delete a product
+   *
+   * @param id
+   * @returns
+   */
+  deleteProduct(id: number): Observable<any> {
+    const url = `${this.url}/products/${id}`;
+    return this._http.delete(url);
+  }
+
   editComment(commentId: number, comment: string): Observable<any> {
     const url = `${this.url}/comments/${commentId}`;
     return this._http.put(url, { comment }).pipe(
@@ -527,7 +560,7 @@ export class HttpService {
       })
     );
   }
-  
+
   makeOrder(checkout_session: any, line_items: any): Observable<Order> {
     const url = `${this.url}/make-order`;
     return this.auth.user$.pipe(
@@ -566,6 +599,23 @@ export class HttpService {
         };
         return this._http
           .post<{ data: Order[] }>(url, body)
+          .pipe(map((response) => response.data));
+      })
+    );
+  }
+
+  cancelOrder(checkout_session: any, line_items: any): Observable<Order> {
+    const url = `${this.url}/make-order`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          checkout_session: checkout_session,
+          line_items: line_items,
+          email: user ? user.email : '',
+          connection: user ? user.sub?.split('|')[0] : '',
+        };
+        return this._http
+          .post<{ data: Order }>(url, body)
           .pipe(map((response) => response.data));
       })
     );
