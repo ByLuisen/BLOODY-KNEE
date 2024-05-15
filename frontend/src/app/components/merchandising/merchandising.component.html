@@ -26,29 +26,212 @@
     <div class="flex flex-1 justify-end">
     </div>
   </div>
+  <!-- end banner -->
   <div class="px-5 sm:px-10 md:px-20 pt-10">
 
-    <!-- Products -->
+    <!-- Filter section -->
     <h1 class="text-center mt-5">MERCHAN<span class="text-red-600">DISING</span></h1>
     <div
-      class="grid grid-cols-1 self-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 px-5 sm:px-10 md:px-20 text-center">
-      <div class="pl-2 sm:pl-10 pt-4 text-center">
+      class="grid grid-cols-1 self-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 px-5 sm:px-10 md:px-20 text-center">
+      <div class="pl-2 sm:pl-10 pt-4 text-center justify-center">
         <h2>Disponibilidad</h2>
-        <div class="flex items-center">
-          <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
-            (change)="mostrarEnStock = !mostrarEnStock">
+        <div class="flex justify-center items-center">
           <p>En Stock ({{ contarProductosEnStock() }})</p>
-        </div>
-        <div class="flex">
-          <input type="checkbox" name="filter_stock" class="w-4 h-4 rounded-lg mr-2"
+          <input type="checkbox" name="filter_stock"
+            class="w-4 h-4 rounded-lg mr-2 ml-1 bg-red-100 border-red-500 focus:bg-red-200 focus:border-red-600"
+            (change)="mostrarEnStock = !mostrarEnStock">
+          <p class="ml-3">Fuera de Stock ({{ contarProductosFueraDeStock() }})</p>
+          <input type="checkbox" name="filter_stock"
+            class="w-4 h-4 rounded-lg mr-2 ml-1 bg-red-100 border-red-500 focus:bg-red-200 focus:border-red-600"
             (change)="mostrarFueraDeStock = !mostrarFueraDeStock">
-          <p>Fuera de Stock ({{ contarProductosFueraDeStock() }})</p>
         </div>
       </div>
-      <div class="text-start pt-4">
+      <div class="pl-2 sm:pl-10 pt-4 text-center justify-center">
         <h2>Precio</h2>
         <input type="range" min="0" max="150" value="0" class="range-input" #priceRangeInput (input)="onPriceChange()">
         <p>Rango de precio: $0 - ${{priceRangeInput.value }}</p>
+      </div>
+    </div>
+    <!-- end filter section -->
+
+    <!-- Button to activate admin mode -->
+    <div class="flex flex-col justify-center items-center mb-4 mt-4" *ngIf="role == 'admin'">
+      <div class="w-2/4 h-auto bg-red-600 rounded-full">
+        <p class="my-2 mx-2 text-3xl text-white">HERRAMIENTAS DE ADMINISTRACIÓN</p>
+        <div *ngIf="infoAdmin!=''" class="text-2xl text-red-600 bg-white w-full rounded-md">
+          <p class="py-1">{{infoAdmin}}</p>
+        </div>
+        <div class="flex flex-row my-3 justify-center">
+          <button
+            class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300"
+            (click)="addProduct()">Agregar producto
+            <span
+              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Añade
+              un nuevo producto a la tienda</span>
+          </button>
+          <button
+            class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-yellow-500 border border-solid border-yellow-500 hover:scale-125 transition-transform duration-300"
+            (click)="editProduct()">Editar producto
+            <span
+              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
+              un producto para editar sus datos</span></button>
+          <button
+            class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-red-500 border border-solid border-red-500 hover:scale-125 transition-transform duration-300"
+            (click)="deleteProduct()">Eliminar producto
+            <span
+              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
+              un producto para eliminarlo</span></button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modals for admins -->
+    <!-- Modal para editar producto -->
+    <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+      <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
+        <h2 class="text-xl font-semibold mb-4">Editar <span class="text-red-600"> {{editedProduct.name}}</span></h2>
+        <!-- Aquí va tu formulario para editar el producto -->
+        <form (submit)="submitEditProductForm()">
+          <!-- Campos de formulario para editar el producto -->
+          <!-- Name -->
+          <div class="mb-4">
+            <label for="productName" class="block text-black">Nombre del Producto:</label>
+            <input type="text" id="productName" name="productName" [(ngModel)]="editedProduct.name"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Brand_id -->
+          <div class="mb-4">
+            <label for="brand_id" class="block text-black">Id de la Marca:</label>
+            <input type="text" id="brand_id" name="brand_id" [(ngModel)]="editedProduct.brandId"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Description -->
+          <div class="mb-4">
+            <label for="productDescription" class="block text-black">Descripción del Producto:</label>
+            <textarea id="productDescription" name="productDescription" [(ngModel)]="editedProduct.description"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"></textarea>
+          </div>
+          <!-- Price -->
+          <div class="mb-4">
+            <label for="productPrice" class="block text-black">Precio:</label>
+            <input type="number" id="productPrice" name="productPrice" [(ngModel)]="editedProduct.price"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Image 1 -->
+          <div class="mb-4">
+            <label for="productUrl1" class="block text-black">Nombre de la primera foto:</label>
+            <input type="text" id="productUrl1" name="productUrl1" [(ngModel)]="editedProduct.url_img1"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Image 2 -->
+          <div class="mb-4">
+            <label for="productUrl2" class="block text-black">Nombre de la segunda foto:</label>
+            <input type="text" id="productUrl2" name="productUrl2" [(ngModel)]="editedProduct.url_img2"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center  text-red-700">
+          </div>
+          <!-- Image 3 -->
+          <div class="mb-4">
+            <label for="productUrl3" class="block text-black">Nombre de la tercera foto:</label>
+            <input type="text" id="productUrl3" name="productUrl3" [(ngModel)]="editedProduct.url_img3"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Info of stock ammount -->
+          <div class="mb-4">
+            <label for="stock" class="block text-black">Información del stock</label>
+            <input type="number" id="stock" name="stock" [(ngModel)]="editedProduct.stock"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700" readonly>
+          </div>
+          <!-- Botones de acción -->
+          <div class="flex justify-center">
+            <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
+              (click)="closeEditModal()">Cancelar</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar Cambios</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Modal para añadir un producto -->
+    <div *ngIf="createModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+      <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
+        <h2 class="text-xl font-semibold mb-4">Crear producto</h2>
+        <!-- Aquí va tu formulario para crear el producto -->
+        <form (submit)="submitCreateProductForm()">
+          <!-- Name -->
+          <div class="mb-4">
+            <label for="productName" class="block text-black">Nombre del Producto:</label>
+            <input type="text" id="productName" name="productName" [(ngModel)]="editedProduct.name"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Brand_id -->
+          <div class="mb-4">
+            <label for="brand_id" class="block text-black">Id de la Marca:</label>
+            <input type="text" id="brand_id" name="brand_id" [(ngModel)]="editedProduct.brandId"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Description -->
+          <div class="mb-4">
+            <label for="productDescription" class="block text-black">Descripción del Producto:</label>
+            <textarea id="productDescription" name="productDescription" [(ngModel)]="editedProduct.description"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"></textarea>
+          </div>
+          <!-- Price -->
+          <div class="mb-4">
+            <label for="productPrice" class="block text-black">Precio:</label>
+            <input type="number" id="productPrice" name="productPrice" [(ngModel)]="editedProduct.price"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Image 1 -->
+          <div class="mb-4">
+            <label for="productUrl1" class="block text-black">Nombre de la primera foto:</label>
+            <input type="text" id="productUrl1" name="productUrl1" [(ngModel)]="editedProduct.url_img1"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Image 2 -->
+          <div class="mb-4">
+            <label for="productUrl2" class="block text-black">Nombre de la segunda foto:</label>
+            <input type="text" id="productUrl2" name="productUrl2" [(ngModel)]="editedProduct.url_img2"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center  text-red-700">
+          </div>
+          <!-- Image 3 -->
+          <div class="mb-4">
+            <label for="productUrl3" class="block text-black">Nombre de la tercera foto:</label>
+            <input type="text" id="productUrl3" name="productUrl3" [(ngModel)]="editedProduct.url_img3"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          </div>
+          <!-- Info of stock ammount -->
+          <div class="mb-4">
+            <label for="stock" class="block text-black">Información del stock</label>
+            <input type="number" id="stock" name="stock" [(ngModel)]="editedProduct.stock"
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700" readonly>
+          </div>
+          <!-- Botones de acción -->
+          <div class="flex justify-center">
+            <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
+              (click)="closeCreateModal()">Cancelar</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación de producto -->
+    <div *ngIf="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+      <div class="bg-white rounded-lg p-6 max-w-md mx-auto">
+        <h2 *ngIf="selectedProduct !== null" class="text-xl font-semibold mb-4">Eliminar <b class="text-red-600">
+            {{selectedProduct.name}}</b></h2>
+        <p *ngIf="selectedProduct !== null">¿Estás seguro de que quieres eliminar el producto con ID <span
+            class="text-red-600">
+            {{selectedProduct.id}}</span>?</p>
+        <p *ngIf="selectedProduct === null">Por favor, selecciona un producto para eliminar.</p>
+        <div class="flex justify-end mt-4">
+          <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
+            (click)="cancelDelete()">Cancelar</button>
+          <button type="button" class="bg-red-500 text-white px-4 py-2 rounded-lg"
+            (click)="confirmDelete()">Eliminar</button>
+        </div>
       </div>
     </div>
     <!-- Iterar sobre los productos utilizando *ngFor -->
@@ -62,12 +245,11 @@
       </div>
       <ng-template #merchContainer>
         <div *ngFor="let producto of productosFiltrados()"
-          class="justify-center hover:transform hover:scale-105 cursor-pointer"
-          (click)="verDetallesProducto(producto.id)">
+          class="justify-center hover:transform hover:scale-105 cursor-pointer" (click)="verDetallesProducto(producto)">
           <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.webp'"
             class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto mx-auto">
           <p>{{producto.name}}</p>
-          <p class="text-red-600">€{{producto.price}}</p>
+          <p class="text-red-600 text-2xl">€{{producto.price}}</p>
         </div>
       </ng-template>
     </div>
