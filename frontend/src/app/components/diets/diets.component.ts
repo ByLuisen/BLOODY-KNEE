@@ -39,8 +39,16 @@ export class DietsComponent implements OnInit {
     });
   }
 
-  toggleChatbot() {
-    this.showChatbot = !this.showChatbot;
+  openPopup() {
+    const url = "https://mediafiles.botpress.cloud/3f57b270-55b9-4672-b183-05107ff22d9d/webchat/bot.html";
+    const width = 400;
+    const height = 700;
+    const leftPosition = 1500;
+    const topPosition = 150;
+  
+
+    // Abrir el popup usando window.open
+    window.open(url, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=" + topPosition + ",left=" + leftPosition + ",width=" + width + ",height=" + height);
   }
 
   openModal(image: string) {

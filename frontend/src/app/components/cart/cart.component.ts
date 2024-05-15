@@ -104,16 +104,10 @@ export class CartComponent {
    * @param index
    */
   deleteProduct(index: number): void {
-    // Remove the product from the products array
-    this.products.splice(index, 1);
-
-    // Remove the product from the cart array
-    this.cart.splice(index, 1);
-
-    // Verificar si todavía hay productos en el carrito
-    if (this.cart.length === 0) {
-      // Si no hay productos en el carrito, eliminar la cookie
-      this.cookie.delete('cart');
+    if (this.auth.isAuthenticated$) {
+      this.http.deleteProductCart(this.products[index].id).subscribe();
+      // Eliminar el producto del array products
+      this.products.splice(index, 1);
     } else {
       // Eliminar el producto del array products
       this.products.splice(index, 1);

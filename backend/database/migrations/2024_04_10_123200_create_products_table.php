@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('brand_id');
             $table->unsignedBigInteger('category_id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->text('description');
             $table->integer('price');
             $table->integer('stock');

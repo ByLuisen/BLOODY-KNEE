@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Product extends Model
 {
@@ -12,7 +13,7 @@ class Product extends Model
     /**
      * Get the brand associated with the product.
      */
-    public function brand()
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
@@ -24,6 +25,7 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
     public function carts()
     {
         return $this->belongsToMany(Cart::class, 'cart_store_products')->withTimestamps();

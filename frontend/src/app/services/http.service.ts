@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
@@ -16,6 +16,7 @@ import { Comment } from '../models/Comment';
 
 import { CookieService } from 'ngx-cookie-service';
 import { FormGroup } from '@angular/forms';
+import { Order } from '../models/Order';
 
 @Injectable({
   providedIn: 'root',
@@ -260,14 +261,6 @@ export class HttpService {
           (response) => {
             observer.next(response.data);
             observer.complete();
-            this.countAndUpdateComments(id).subscribe(
-              () => {
-                console.log('Comentarios actualizados');
-              },
-              (error) => {
-                console.error('Error al actualizar los comentarios', error);
-              }
-            );
           },
           (error) => {
             observer.error(error);
@@ -514,7 +507,6 @@ export class HttpService {
           comment: comment,
         };
         console.log(body);
-
         return this._http.post(url, body).pipe(
           catchError((error) => {
             // Manejar errores aquí
@@ -557,5 +549,75 @@ export class HttpService {
   deleteProduct(id: number): Observable<any> {
     const url = `${this.url}/products/${id}`;
     return this._http.delete(url);
+  }
+
+  editComment(commentId: number, comment: string): Observable<any> {
+    const url = `${this.url}/comments/${commentId}`;
+    return this._http.put(url, { comment }).pipe(
+      catchError((error) => {
+        console.error('Error en la solicitud HTTP:', error);
+        return of(null);
+      })
+    );
+  }
+
+  makeOrder(checkout_session: any, line_items: any): Observable<Order> {
+    const url = `${this.url}/make-order`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          checkout_session: checkout_session,
+          line_items: line_items,
+          email: user ? user.email : '',
+          connection: user ? user.sub?.split('|')[0] : '',
+        };
+        return this._http
+          .post<{ data: Order }>(url, body)
+          .pipe(map((response) => response.data));
+      })
+    );
+  }
+
+  deleteComment(commentId: number): Observable<any> {
+    const url = `${this.url}/comments/${commentId}`;
+    return this._http.delete(url).pipe(
+      catchError((error) => {
+        console.error('Error en la solicitud HTTP:', error);
+        return of(null);
+      })
+    );
+  }
+
+
+  getOrders(): Observable<Order[]> {
+    const url = `${this.url}/get-orders`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          email: user ? user.email : '',
+          connection: user ? user.sub?.split('|')[0] : '',
+        };
+        return this._http
+          .post<{ data: Order[] }>(url, body)
+          .pipe(map((response) => response.data));
+      })
+    );
+  }
+
+  cancelOrder(checkout_session: any, line_items: any): Observable<Order> {
+    const url = `${this.url}/make-order`;
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        const body = {
+          checkout_session: checkout_session,
+          line_items: line_items,
+          email: user ? user.email : '',
+          connection: user ? user.sub?.split('|')[0] : '',
+        };
+        return this._http
+          .post<{ data: Order }>(url, body)
+          .pipe(map((response) => response.data));
+      })
+    );
   }
 }
