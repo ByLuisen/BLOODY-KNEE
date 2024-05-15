@@ -106,10 +106,4 @@ class StripeController extends Controller
 
         return ApiResponse::success(['line_items' => $line_items], 'Line Items obtenido correctamente');
     }
-
-    public function cancelOrder(Request $request)
-    {
-        $stripe = new \Stripe\StripeClient(env('stripeSecretKey'));
-        $stripe->paymentIntents->cancel('pi_3MtwBwLkdIwHu7ix28a3tqPa', []);
-    }
 }

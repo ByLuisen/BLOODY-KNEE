@@ -100,4 +100,10 @@ class OrderController extends Controller
 
         return ApiResponse::success($userOrders, 'Pedidos del usuario obtenidos correctamente');
     }
+
+    public function cancelOrder(Request $request)
+    {
+        $stripe = new \Stripe\StripeClient(env('stripeSecretKey'));
+        $stripe->paymentIntents->cancel('pi_3MtwBwLkdIwHu7ix28a3tqPa', []);
+    }
 }
