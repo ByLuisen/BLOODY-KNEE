@@ -18,7 +18,7 @@
   height: 0;
   background-color: #c90000; 
   overflow: hidden;
-  transition: height 2s ease;
+  transition: height 0.3s ease; /* Ajusta el valor de 0.3s según tu preferencia de velocidad */
   border-top-left-radius: 40px;
   /* La mitad del ancho del botón */
   border-top-right-radius: 40px;
