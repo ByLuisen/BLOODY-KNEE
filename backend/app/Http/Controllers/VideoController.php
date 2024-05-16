@@ -191,7 +191,6 @@ class VideoController extends Controller
         }
     }
 
-
     /**
      * Increment the visit count for a video.
      *
@@ -280,38 +279,4 @@ class VideoController extends Controller
             return ApiResponse::error($e->getMessage(), 500);
         }
     }
-
-
-    // public function saveVideoForCurrentUser(Request $request,$videoId)
-    // {
-    //     try {
-    //         // Obtener el correo electrónico y la conexión del cuerpo de la solicitud
-    //         $email = $request->input('email');
-    //         $connection = $request->input('connection');
-
-    //         $user = User::where('email', $email)
-    //             ->where('connection', $connection)
-    //             ->first();
-
-    //         // Verificar si el usuario está autenticado
-    //         if (!$user) {
-    //             return ApiResponse::error('Usuario no autenticado', 401);
-    //         }
-
-    //         // Encontrar el video por su ID
-    //         $video = Video::findOrFail($videoId);
-
-    //         // Verificar si el video existe
-    //         if (!$video) {
-    //             return ApiResponse::error('Video no encontrado', 404);
-    //         }
-
-    //         // Asociar el video al usuario
-    //         $user->savedVideos()->attach($video->id);
-
-    //         return ApiResponse::success(null, 'Video guardado correctamente para el usuario');
-    //     } catch (\Exception $e) {
-    //         return ApiResponse::error($e->getMessage(), 500);
-    //     }
-    // }
 }
