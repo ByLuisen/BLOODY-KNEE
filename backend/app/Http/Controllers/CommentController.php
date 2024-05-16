@@ -28,18 +28,17 @@ class CommentController extends Controller
         try {
             // Buscar los comentarios asociados al video especificado por su ID, ordenados por fecha de creación
             $comments = UserCommentVideo::with('user')
-                                        ->where('video_id', $id)
-                                        ->orderBy('created_at', 'desc') // Ordenar por fecha de creación, puedes cambiar 'desc' a 'asc' si deseas orden ascendente
-                                        ->get();
+                ->where('video_id', $id)
+                ->orderBy('created_at', 'desc') // Ordenar por fecha de creación, puedes cambiar 'desc' a 'asc' si deseas orden ascendente
+                ->get();
             // Retorna la colección de comentarios en forma de recurso
             return ApiResponse::success($comments, 'Lista de comentarios obtenida correctamente');
-            
         } catch (\Exception $e) {
             // Loguear el error o realizar otras acciones según tus necesidades
             return ApiResponse::error($e->getMessage());
         }
     }
-    
+
 
     public function countAndUpdateComments($videoId)
     {
@@ -105,42 +104,40 @@ class CommentController extends Controller
 
 
     public function editComment(Request $request, $commentId)
-{
-    try {
-        // Validar los datos del comentario
-        $request->validate([
-            'comment' => 'required|string|max:255',
-        ]);
+    {
+        try {
+            // Validar los datos del comentario
+            $request->validate([
+                'comment' => 'required|string|max:255',
+            ]);
 
-        // Buscar el comentario por su ID
-        $comment = UserCommentVideo::findOrFail($commentId);
+            // Buscar el comentario por su ID
+            $comment = UserCommentVideo::findOrFail($commentId);
 
-        // Actualizar el comentario con los nuevos datos
-        $comment->comment = $request->comment;
-        $comment->save();
+            // Actualizar el comentario con los nuevos datos
+            $comment->comment = $request->comment;
+            $comment->save();
 
-        return ApiResponse::success($comment, 'Comentario editado correctamente');
-    } catch (\Exception $e) {
-        // Loguear el error o realizar otras acciones según tus necesidades
-        return ApiResponse::error($e->getMessage());
+            return ApiResponse::success($comment, 'Comentario editado correctamente');
+        } catch (\Exception $e) {
+            // Loguear el error o realizar otras acciones según tus necesidades
+            return ApiResponse::error($e->getMessage());
+        }
     }
-}
 
-public function deleteComment($commentId)
-{
-    try {
-        // Buscar el comentario por su ID
-        $comment = UserCommentVideo::findOrFail($commentId);
+    public function deleteComment($commentId)
+    {
+        try {
+            // Buscar el comentario por su ID
+            $comment = UserCommentVideo::findOrFail($commentId);
 
-        // Eliminar el comentario
-        $comment->delete();
+            // Eliminar el comentario
+            $comment->delete();
 
-        return ApiResponse::success(null, 'Comentario eliminado correctamente');
-    } catch (\Exception $e) {
-        // Loguear el error o realizar otras acciones según tus necesidades
-        return ApiResponse::error($e->getMessage());
+            return ApiResponse::success(null, 'Comentario eliminado correctamente');
+        } catch (\Exception $e) {
+            // Loguear el error o realizar otras acciones según tus necesidades
+            return ApiResponse::error($e->getMessage());
+        }
     }
-}
-
-
 }

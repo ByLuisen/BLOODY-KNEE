@@ -59,7 +59,6 @@ export class PlayerComponent implements AfterViewInit {
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
     );
-    this.loadButtons();
     this.route.params.subscribe((params) => {
       this.videoId = +params['videoId'];
       this.getVideo();
@@ -102,7 +101,6 @@ export class PlayerComponent implements AfterViewInit {
     this.http.getCommentById(videoId).subscribe(
       (comments: Comment[]) => {
         console.log('Comentarios obtenidos:', comments);
-        // Aquí puedes manejar los comentarios obtenidos, por ejemplo, asignarlos a una propiedad del componente
         this.comments = comments;
         this.loadInitialComments();
       },
@@ -141,14 +139,7 @@ export class PlayerComponent implements AfterViewInit {
     this.descriptionVisible = !this.descriptionVisible;
   }
 
-  loadButtons() {
-    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
-      if (isAuthenticated) {
-        this.setupButtons(this.videoId);
-        this.restoreButtonState(this.videoId);
-      }
-    });
-  }
+
 
   islogged() {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
@@ -242,91 +233,6 @@ export class PlayerComponent implements AfterViewInit {
     const shuffled = array.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   }
-
-  setupButtons(videoId: number) {
-    const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
-    const dislikeButton = this.elementRef.nativeElement.querySelector('.dislike-button');
-
-    const userId = this.currentUser ? this.currentUser.sub : 'guest'; // Obtener el ID de usuario actual o establecerlo como 'guest' si no hay usuario autenticado
-
-    const likeKey = `likeButtonState_${userId}_${videoId}`;
-    const dislikeKey = `dislikeButtonState_${userId}_${videoId}`;
-
-    if (likeButton) {
-      likeButton.addEventListener('click', (e: MouseEvent) => {
-        e.preventDefault();
-        likeButton.classList.toggle('active');
-        likeButton.classList.add('animated');
-        dislikeButton?.classList.remove('active', 'animated');
-        localStorage.setItem(likeKey, likeButton.classList.contains('active') ? 'active' : '');
-        localStorage.removeItem(dislikeKey); // Elimina el estado de dislike para este usuario y video
-      });
-    }
-
-    if (dislikeButton) {
-      dislikeButton.addEventListener('click', (e: MouseEvent) => {
-        e.preventDefault();
-        dislikeButton.classList.toggle('active');
-        dislikeButton.classList.add('animated');
-        likeButton?.classList.remove('active', 'animated');
-        localStorage.setItem(dislikeKey, dislikeButton.classList.contains('active') ? 'active' : '');
-        localStorage.removeItem(likeKey); // Elimina el estado de like para este usuario y video
-      });
-    }
-  }
-
-  restoreButtonState(videoId: number) {
-    const userId = this.currentUser ? this.currentUser.sub : 'guest'; // Obtener el ID de usuario actual o establecerlo como 'guest' si no hay usuario autenticado
-
-    const likeKey = `likeButtonState_${userId}_${videoId}`;
-    const dislikeKey = `dislikeButtonState_${userId}_${videoId}`;
-    const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
-    const dislikeButton = this.elementRef.nativeElement.querySelector('.dislike-button');
-
-    const storedLikeState = localStorage.getItem(likeKey);
-    const storedDislikeState = localStorage.getItem(dislikeKey);
-
-    if (storedLikeState === 'active' && likeButton) {
-      likeButton.classList.add('active');
-      dislikeButton?.classList.remove('active');
-    }
-
-    if (storedDislikeState === 'active' && dislikeButton) {
-      dislikeButton.classList.add('active');
-      likeButton?.classList.remove('active');
-    }
-  }
-
-
-
-
-  toggleLikeState(comment: HTMLElement) {
-    comment.classList.toggle('active');
-    comment.classList.add('animated');
-    const container = comment.parentElement;
-    if (container) {
-      const dislikeComment = container.querySelector('.dislike-comment');
-      if (dislikeComment) {
-        dislikeComment.classList.remove('active', 'animated');
-      }
-    }
-    localStorage.setItem('commentLikeState', comment.classList.contains('active') ? 'active' : '');
-  }
-
-  toggleDislikeState(comment: HTMLElement) {
-    comment.classList.toggle('active');
-    comment.classList.add('animated');
-    const container = comment.parentElement;
-    if (container) {
-      const likeComment = container.querySelector('.like-comment');
-      if (likeComment) {
-        likeComment.classList.remove('active', 'animated');
-      }
-    }
-    localStorage.setItem('commentDislikeState', comment.classList.contains('active') ? 'active' : '');
-  }
-
-
 
   plusOrMinus() {
     return Math.random() < 0.5 ? -1 : 1;
