@@ -157,7 +157,7 @@ class ProductSeeder extends Seeder
             'name' => 'Camiseta Venum Negra',
             'description' => 'Camiseta Venum negra que combina comodidad con un diseño elegante.',
             'price' => 24.99,
-            'stock' => 50,
+            'stock' => 10,
             'url_img1' => 'CamisetaVenum_1',
             'url_img2' => 'CamisetaVenum_2',
             'url_img3' => 'CamisetaVenum_3'

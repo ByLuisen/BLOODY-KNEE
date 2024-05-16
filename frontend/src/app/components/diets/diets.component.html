@@ -48,60 +48,72 @@
 
   <div class="mt-10">
     <h1 class="text-center">TI<span class="text-red-600">POS</span></h1>
-    <!-- Button to activate admin mode -->
-    <div class="flex flex-col justify-center items-center mb-4 mt-4" *ngIf="role == 'admin'">
-      <div class="w-2/4 h-auto bg-red-600 rounded-full">
-        <p class="my-2 mx-2 text-3xl text-white">HERRAMIENTAS DE ADMINISTRACIÓN</p>
-        <div *ngIf="infoAdmin!=''" class="text-2xl text-red-600 bg-white w-full rounded-md">
-          <p class="py-1">{{infoAdmin}}</p>
-        </div>
-        <div class="flex flex-row my-3 justify-center">
-          <button
-            class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300">Agregar
-            dieta
-            <span
-              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Añade
-              un nuevo tipo de dieta</span>
-          </button>
-          <button
-            class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-yellow-500 border border-solid border-yellow-500 hover:scale-125 transition-transform duration-300">Editar
-            dieta
-            <span
-              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
-              una dieta para editar sus datos</span></button>
-          <button
-            class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-red-500 border border-solid border-red-500 hover:scale-125 transition-transform duration-300">Eliminar
-            dieta
-            <span
-              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
-              una dieta para eliminarla</span></button>
-        </div>
+    <!-- Pantalla de carga mientras se obtienen los productos del merch -->
+    <div class="flex items-center justify-center my-8" *ngIf="loading; else dietsContainer">
+      <div class="relative h-12 w-12">
+        <div class="absolute inset-0 h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
+        <div class="absolute inset-0 h-12 w-12 rounded-full border-t-4 border-b-4 border-red-500 animate-spin"></div>
+        <img src="../../../assets/img/my_logo.webp" class="absolute inset-2 rounded-full h-8 w-8">
       </div>
     </div>
-    <div class="TIPES text-justify mb-5" *ngFor="let diet of diets">
-      <div class="border-b-4">
-        <h2 class="text-xl"><b>{{diet.title}}</b></h2>
-        <p>{{diet.description}}</p>
-        <div class="text-end mb-8">
-          <button class="bg-white text-red-600 rounded-lg  px-4 py-2 hover:bg-red-500"
-            (click)="openModal(diet.content)">Leer
-            más</button>
-          <div
-            [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalStates[diet.content], 'hidden': !modalStates[diet.content]}">
-            <div class="absolute inset-0 backdrop-blur-xl"></div>
-            <div class="bg-white p-2 rounded-lg z-50">
-              <img [src]="'../../../assets/img/img_dietas/' + diet.content" style="width: 600px; height: 700px;">
-              <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded mx-1"
-                (click)="closeModal(diet.content)">Cerrar</button>
+    <ng-template #dietsContainer>
+      <!-- Button to activate admin mode -->
+      <div class="flex flex-col justify-center items-center mb-4 mt-4" *ngIf="role == 'admin'">
+        <div class="w-2/4 h-auto bg-red-600 rounded-full">
+          <p class="my-2 mx-2 text-3xl text-white">HERRAMIENTAS DE ADMINISTRACIÓN</p>
+          <div *ngIf="infoAdmin!=''" class="text-2xl text-red-600 bg-white w-full rounded-md">
+            <p class="py-1">{{infoAdmin}}</p>
+          </div>
+          <div class="flex flex-row my-3 justify-center">
+            <button
+              class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300">Agregar
+              dieta
+              <span
+                class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Añade
+                un nuevo tipo de dieta</span>
+            </button>
+            <button
+              class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-yellow-500 border border-solid border-yellow-500 hover:scale-125 transition-transform duration-300">Editar
+              dieta
+              <span
+                class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
+                una dieta para editar sus datos</span></button>
+            <button
+              class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-red-500 border border-solid border-red-500 hover:scale-125 transition-transform duration-300">Eliminar
+              dieta
+              <span
+                class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
+                una dieta para eliminarla</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="TIPES text-justify mb-5" *ngFor="let diet of diets">
+        <div class="border-b-4">
+          <h2 class="text-xl"><b>{{diet.title}}</b></h2>
+          <p>{{diet.description}}</p>
+          <div class="text-end mb-8">
+            <button class="bg-white text-red-600 rounded-lg  px-4 py-2 hover:bg-red-500"
+              (click)="openModal(diet.content)">Leer
+              más</button>
+            <div
+              [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalStates[diet.content], 'hidden': !modalStates[diet.content]}">
+              <div class="absolute inset-0 backdrop-blur-xl"></div>
+              <div class="bg-white p-2 rounded-lg z-50">
+                <img [src]="'../../../assets/img/img_dietas/' + diet.content" style="width: 600px; height: 700px;">
+                <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded mx-1"
+                  (click)="closeModal(diet.content)">Cerrar</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-template>
+
   </div>
 
   <div>
-    <button (click)="openPopup()" class="w-16 h-16 flex justify-center items-center chatbot-toggle-button transition-transform duration-300 transform hover:scale-110">
+    <button (click)="openPopup()"
+      class="w-16 h-16 flex justify-center items-center chatbot-toggle-button transition-transform duration-300 transform hover:scale-110">
       <img src="../../../assets/img/bot4.webp" alt="Chatbot Toggle">
     </button>
   </div>

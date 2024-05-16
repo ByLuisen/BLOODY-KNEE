@@ -236,7 +236,7 @@
     </div>
     <!-- Iterar sobre los productos utilizando *ngFor -->
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 text-center md:grid-cols-4 lg:grid-cols-4 px-5 sm:px-10 md:px-20 pt-10 gap-4">
+      class="grid grid-cols-1 sm:grid-cols-2 text-center md:grid-cols-4 lg:grid-cols-4 px-5 sm:px-10 md:px-20 py-14 gap-4">
       <!-- Pantalla de carga mientras se obtienen los productos del merch -->
       <div class="fixed inset-0 flex items-center justify-center shadow-xl" *ngIf="loading; else merchContainer">
         <div class="absolute h-12 w-12 rounded-full border-t-4 border-b-4 border-gray-200"></div>
@@ -246,10 +246,10 @@
       <ng-template #merchContainer>
         <div *ngFor="let producto of productosFiltrados()"
           class="justify-center hover:transform hover:scale-105 cursor-pointer" (click)="verDetallesProducto(producto)">
-          <div class="relative">
+          <div class="relative hover:border-4 hover:border-solid hover:border-red-600 ">
             <p *ngIf="producto.stock <= 0" class="absolute inset-0 flex items-center justify-center text-red-600 bg-black bg-opacity-25  text-3xl font-bold">Fuera de stock</p>
             <img [src]="'../../../assets/img/imgs_productos/' + producto.url_img1 + '.webp'"
-              class="hover:border-4 hover:border-solid hover:border-red-600 w-50 h-auto mx-auto">
+              class="w-50 h-auto mx-auto">
           </div>
           <p>{{producto.name}}</p>
           <p class="text-red-600 text-2xl">€{{producto.price}}</p>

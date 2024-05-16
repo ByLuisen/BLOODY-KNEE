@@ -39,7 +39,7 @@ export class ProductDetailComponent implements OnInit {
     public auth: AuthService,
     private cookie: CookieService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -88,6 +88,7 @@ export class ProductDetailComponent implements OnInit {
           this.product = product[0];
           // Inicializar la imagen principal con la primera imagen del producto
           this.mainImageUrl = this.product ? this.product.url_img1 : '';
+          console.log(product);
           return of(product);
         }),
         catchError((error) => {
@@ -103,8 +104,8 @@ export class ProductDetailComponent implements OnInit {
   }
 
   /**
-     *
-     */
+   *
+   */
   getRandomProducts(): void {
     this.http
       .getProducts()
@@ -114,7 +115,9 @@ export class ProductDetailComponent implements OnInit {
           const randomProducts = this.getRandomItems(products, 6);
           console.log('Productos aleatorios:', randomProducts);
 
-          this.topProducts = randomProducts.filter(product => product.id !== this.productId);
+          this.topProducts = randomProducts.filter(
+            (product) => product.id !== this.productId
+          );
 
           return of(products);
         }),
@@ -147,11 +150,12 @@ export class ProductDetailComponent implements OnInit {
         const product = new Product();
         product.id = this.productId;
         product.quantity = this.getQuantity();
-        this.http.addProductToCart(product).subscribe();
-        this.added = true;
-        setTimeout(() => {
-          this.added = false;
-        }, 7000);
+        this.http.addProductToCart(product).subscribe((response) => {
+          this.added = true;
+          setTimeout(() => {
+            this.added = false;
+          }, 7000);
+        });
       } else {
         this.saveProductInACookie();
       }
@@ -173,7 +177,7 @@ export class ProductDetailComponent implements OnInit {
         })
       )
       .subscribe(
-        () => { },
+        () => {},
         (error) => {
           console.error(error);
           // Manejar el error en tu aplicación
@@ -262,7 +266,7 @@ export class ProductDetailComponent implements OnInit {
           finalize(() => (this.loading = false))
         )
         .subscribe(
-          () => { },
+          () => {},
           (error) => {
             console.error('Error al iniciar la sesión de pago:', error);
             // Manejar el error en tu aplicación

@@ -35,7 +35,10 @@
       <img src="../../../assets/img/eccommerce1.webp" alt="eccommerce1.webp" class="w-8 h-8 ml-1">
       <p class="text-white ml-2">Todos los productos</p>
     </div>
-    <div class="flex flex-wrap mt-9 sm:ml-5">
+    <div class="sm:ml-10 mt-10 flex items-center content-center" *ngIf="!loadingProduct">
+      <p>Merchandising > {{ product.category }} > {{ product.name }}</p>
+    </div>
+    <div class="flex flex-wrap sm:ml-5">
       <!-- Pantalla de carga mientras se obtienen el producto -->
       <div class="fixed inset-0 flex items-center justify-center shadow-xl"
         *ngIf="loadingProduct; else productContainer">
@@ -44,6 +47,7 @@
         <img src="../../../assets/img/my_logo.webp" class="rounded-full h-8 w-8">
       </div>
       <ng-template #productContainer>
+
         <!-- Galería de imágenes -->
         <div class="sm:w-1/3" *ngIf="product">
           <div class="flex justify-center">
@@ -67,19 +71,22 @@
 
         <!-- Detalles del producto -->
         <div class="sm:w-2/3 sm:ps-14 py-2 sm:py-0">
-          <div class="sm:flex-col sm:py-9" *ngIf="product">
-            <h1 class="text-center text-2xl sm:text-6xl font-bold text-red-600 mb-1 sm:text-start">{{ product.name }}<br><span class="sm:hidden text-black">{{product.price}}€</span></h1>
+          <div class="sm:flex-col sm:pb-9" *ngIf="product">
+            <h1 class="text-center text-2xl sm:text-6xl font-bold text-red-600 mb-1 sm:text-start">{{ product.name
+              }}<br><span class="sm:hidden text-black">{{product.price}}€</span></h1>
             <div class="bg-red-700 w-auto h-0.5"></div>
             <div class="text-center sm:float-start sm:py-7 sm:w-1/2">
               <p class="hidden sm:block text-5xl text-start mr-2 mt-3">{{ product.price }}€</p>
               <p class="sm:text-base text-center sm:text-start sm:mt-3 ">{{ product.description }}</p>
+              <p class="sm:text-base text-center sm:text-start sm:mt-3 text-red-600">Marca: {{ product.brand }}</p>
             </div>
           </div>
           <div class="flex flex-col sm:w-1/2 pt-8 sm:pt-0">
             <div class="flex flex-col items-center text-center justify-center">
-              <div *ngIf="product.stock > 10" class="text-green-800"> Disponible en Stock ●</div>
-              <div *ngIf="product.stock < 10 && product.stock > 0" class="text-orange-800">Queda/n {{product.stock}} en Stock ●</div>
-              <div *ngIf="product.stock <= 0" class="text-orange-800 text-2xl">Fuera de Stock ●</div>
+              <div *ngIf="product.stock > 10" class="text-green-700 text-lg"> Disponible en Stock ●</div>
+              <div *ngIf="product.stock <= 10 && product.stock > 0" class="text-orange-700 text-lg">Queda/n
+                {{product.stock}} en Stock ●</div>
+              <div *ngIf="product.stock <= 0" class="text-orange-700 text-2xl">Fuera de Stock ●</div>
               <div class="flex justify-center items-center bg-red-700 w-52 rounded-full mt-4" *ngIf="product.stock > 0">
                 <label for="quantity" class="text-md text-white">Cantidad:</label>
                 <select id="quantity" name="quantity"
@@ -112,11 +119,18 @@
           <div class="sm:flex justify-center mt-8">
             <div class="mx-4" *ngFor="let product of topProducts">
               <div class="flex flex-col justify-center items-center">
-                <p class="text-sm mb-3 cursor-pointer" (click)="verDetallesProducto(product.id)">{{product.name}}</p>
-                <img [src]="'../../../assets/img/imgs_productos/' + product.url_img1 + '.webp'"
-                  class="cursor-pointer hover:border-2 hover:border-solid hover:border-red-600 w-50  sm:w-36 h-auto transition duration-300 transform hover:scale-110 mb"
+                <p class="text-sm mb-3 cursor-pointer" (click)="verDetallesProducto(product.id)">{{ product.name }}</p>
+                <div
+                  class="relative cursor-pointer transform transition duration-300 hover:scale-110 hover:border-2 hover:border-solid hover:border-red-600"
                   (click)="verDetallesProducto(product.id)">
-                <p class="text-red-500 mb-3 mt-3">{{product.price}} €</p>
+                  <p *ngIf="product.stock <= 0"
+                    class="absolute inset-0 flex items-center justify-center text-red-600 bg-black bg-opacity-50 text-2xl font-bold">
+                    Fuera de stock
+                  </p>
+                  <img [src]="'../../../assets/img/imgs_productos/' + product.url_img1 + '.webp'"
+                    class="w-50 sm:w-36 h-auto">
+                </div>
+                <p class="text-red-500 mb-3 mt-3">{{ product.price }} €</p>
               </div>
             </div>
           </div>
