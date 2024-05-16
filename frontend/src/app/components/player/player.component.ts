@@ -14,7 +14,7 @@ import { ViewChild } from '@angular/core';
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css'],
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent implements AfterViewInit {
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
   videoId!: number;
@@ -55,7 +55,7 @@ export class PlayerComponent implements OnInit {
       }
     });
   }
-  ngOnInit() {
+  ngAfterViewInit() {
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
     );
@@ -131,7 +131,7 @@ export class PlayerComponent implements OnInit {
         );
       } else {
         console.log('El usuario debe estar autenticado para agregar un comentario.');
-        this.auth.loginWithRedirect();
+        this.auth.loginWithPopup();
         // Aquí podrías mostrar un mensaje al usuario indicando que necesita iniciar sesión para agregar un comentario
       }
     });
@@ -144,8 +144,8 @@ export class PlayerComponent implements OnInit {
   loadButtons() {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
-        this.setupButtons();
-        this.setupCommentButtons();
+        this.setupButtons(this.videoId);
+        this.restoreButtonState(this.videoId);
       }
     });
   }
@@ -163,7 +163,10 @@ export class PlayerComponent implements OnInit {
     });
 
   }
-
+  /**
+   * 
+   * @param videoId 
+   */
   likeVideo(videoId: number): void {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
@@ -182,7 +185,10 @@ export class PlayerComponent implements OnInit {
       }
     });
   }
-
+  /**
+   * 
+   * @param videoId 
+   */
   dislikeVideo(videoId: number): void {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if (isAuthenticated) {
@@ -237,11 +243,14 @@ export class PlayerComponent implements OnInit {
     return shuffled.slice(0, count);
   }
 
-  setupButtons() {
-    const likeButton =
-      this.elementRef.nativeElement.querySelector('.like-button');
-    const dislikeButton =
-      this.elementRef.nativeElement.querySelector('.dislike-button');
+  setupButtons(videoId: number) {
+    const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
+    const dislikeButton = this.elementRef.nativeElement.querySelector('.dislike-button');
+
+    const userId = this.currentUser ? this.currentUser.sub : 'guest'; // Obtener el ID de usuario actual o establecerlo como 'guest' si no hay usuario autenticado
+
+    const likeKey = `likeButtonState_${userId}_${videoId}`;
+    const dislikeKey = `dislikeButtonState_${userId}_${videoId}`;
 
     if (likeButton) {
       likeButton.addEventListener('click', (e: MouseEvent) => {
@@ -249,6 +258,8 @@ export class PlayerComponent implements OnInit {
         likeButton.classList.toggle('active');
         likeButton.classList.add('animated');
         dislikeButton?.classList.remove('active', 'animated');
+        localStorage.setItem(likeKey, likeButton.classList.contains('active') ? 'active' : '');
+        localStorage.removeItem(dislikeKey); // Elimina el estado de dislike para este usuario y video
       });
     }
 
@@ -258,44 +269,36 @@ export class PlayerComponent implements OnInit {
         dislikeButton.classList.toggle('active');
         dislikeButton.classList.add('animated');
         likeButton?.classList.remove('active', 'animated');
+        localStorage.setItem(dislikeKey, dislikeButton.classList.contains('active') ? 'active' : '');
+        localStorage.removeItem(likeKey); // Elimina el estado de like para este usuario y video
       });
     }
   }
 
-  setupCommentButtons() {
-    const likeComments: NodeListOf<HTMLElement> =
-      this.elementRef.nativeElement.querySelectorAll('.like-comment');
-    const dislikeComments: NodeListOf<HTMLElement> =
-      this.elementRef.nativeElement.querySelectorAll('.dislike-comment');
+  restoreButtonState(videoId: number) {
+    const userId = this.currentUser ? this.currentUser.sub : 'guest'; // Obtener el ID de usuario actual o establecerlo como 'guest' si no hay usuario autenticado
 
-    likeComments.forEach((likeComment) => {
-      likeComment.addEventListener('click', (e: MouseEvent) => {
-        e.preventDefault();
-        this.toggleLikeState(likeComment);
-      });
-    });
+    const likeKey = `likeButtonState_${userId}_${videoId}`;
+    const dislikeKey = `dislikeButtonState_${userId}_${videoId}`;
+    const likeButton = this.elementRef.nativeElement.querySelector('.like-button');
+    const dislikeButton = this.elementRef.nativeElement.querySelector('.dislike-button');
 
-    dislikeComments.forEach((dislikeComment) => {
-      dislikeComment.addEventListener('click', (e: MouseEvent) => {
-        e.preventDefault();
-        this.toggleDislikeState(dislikeComment);
-      });
-    });
-  }
+    const storedLikeState = localStorage.getItem(likeKey);
+    const storedDislikeState = localStorage.getItem(dislikeKey);
 
-  toggleComments() {
-    this.commentsVisible = !this.commentsVisible;
-    if (this.commentsVisible) {
-      this.setupCommentButtons();
+    if (storedLikeState === 'active' && likeButton) {
+      likeButton.classList.add('active');
+      dislikeButton?.classList.remove('active');
+    }
+
+    if (storedDislikeState === 'active' && dislikeButton) {
+      dislikeButton.classList.add('active');
+      likeButton?.classList.remove('active');
     }
   }
 
-  resetAnimation(button: HTMLElement) {
-    button.querySelectorAll('svg').forEach((svg) => {
-      button.removeChild(svg);
-    });
-    button.classList.remove('animated', 'active');
-  }
+
+
 
   toggleLikeState(comment: HTMLElement) {
     comment.classList.toggle('active');
@@ -307,6 +310,7 @@ export class PlayerComponent implements OnInit {
         dislikeComment.classList.remove('active', 'animated');
       }
     }
+    localStorage.setItem('commentLikeState', comment.classList.contains('active') ? 'active' : '');
   }
 
   toggleDislikeState(comment: HTMLElement) {
@@ -319,7 +323,10 @@ export class PlayerComponent implements OnInit {
         likeComment.classList.remove('active', 'animated');
       }
     }
+    localStorage.setItem('commentDislikeState', comment.classList.contains('active') ? 'active' : '');
   }
+
+
 
   plusOrMinus() {
     return Math.random() < 0.5 ? -1 : 1;

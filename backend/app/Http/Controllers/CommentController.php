@@ -31,25 +31,15 @@ class CommentController extends Controller
                                         ->where('video_id', $id)
                                         ->orderBy('created_at', 'desc') // Ordenar por fecha de creación, puedes cambiar 'desc' a 'asc' si deseas orden ascendente
                                         ->get();
-
-            // Verificar si se encontraron comentarios
-            if ($comments->isNotEmpty()) {
-                // Retorna la colección de comentarios en forma de recurso
-                return ApiResponse::success($comments, 'Lista de comentarios obtenida correctamente');
-            } else {
-                // Retorna un mensaje de error si no se encontraron comentarios
-                return ApiResponse::error('No se encontraron comentarios para el video con el ID proporcionado');
-            }
+            // Retorna la colección de comentarios en forma de recurso
+            return ApiResponse::success($comments, 'Lista de comentarios obtenida correctamente');
+            
         } catch (\Exception $e) {
             // Loguear el error o realizar otras acciones según tus necesidades
             return ApiResponse::error($e->getMessage());
         }
     }
-
-
-
-
-
+    
 
     public function countAndUpdateComments($videoId)
     {

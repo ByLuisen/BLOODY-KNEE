@@ -84,7 +84,7 @@
                 Guardar
               </button>
               <!-- SVG para editar comentario -->
-              <svg *ngIf="editingCommentId !== comentario.id" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              <svg *ngIf="editingCommentId !== comentario.id" xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="cursor-pointer"
                 viewBox="0 0 24 24" fill='#DC2626' (click)="startEditingComment(comentario.id, comentario.comment)">
                 <path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path>
                 <path
@@ -92,7 +92,7 @@
                 </path>
               </svg>
               <!-- SVG para eliminar comentario -->
-              <svg *ngIf="editingCommentId !== comentario.id" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              <svg *ngIf="editingCommentId !== comentario.id" xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="cursor-pointer"
                 viewBox="0 0 24 24" fill='#DC2626' (click)="deleteComment(comentario.id)">
                 <path
                   d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z">
@@ -120,7 +120,7 @@
 
 
     </div>
-    <div class="sm:pl-96 mt-16 mx-auto">
+    <div class="sm:pl-96 mt-4 mx-auto">
       <div *ngFor="let destacado of videosAleatorios"
         class="transition-transform duration-300 transform hover:scale-110">
         <ng-container>
@@ -161,7 +161,7 @@
     <div class="ms-3 text-sm font-normal">
       <p class="mb-4 text-black">Te gusta este video?</p>
       <p class="">Inicia sesión para que tu opinion cuente.</p>
-      <button class="mt-4 bg-red-600 text-white px-2 py-2 rounded  mx-1" (click)="auth.loginWithRedirect()">Iniciar
+      <button class="mt-4 bg-red-600 text-white px-2 py-2 rounded  mx-1" (click)="auth.loginWithPopup()">Iniciar
         sesión</button>
     </div>
     <button type="button" (click)="likeCloseModal()"
