@@ -301,6 +301,7 @@ export class HttpService {
       })
     );
   }
+
   /**
    * Updates the number of dislikes for a video.
    * @param videoId The ID of the video.
@@ -373,22 +374,61 @@ export class HttpService {
   }
 
   /**
-   * Updates the information of a video on the server.
-   * @param video The Video object containing the updated information of the video.
+   * Creates a new diet on the server.
+   * @param diet The Diet object containing the information of the new diet.
+   * @returns An observable that emits the created diet after the request is completed.
+   */
+  createDiet(diet: Diet): Observable<Diet> {
+    return this._http.post<Diet>(`${this.url}/diets`, diet);
+  }
+  /**
+   *
+   * @param dietId
+   * @param updatedDiet
+   * @returns
+   */
+  updateDiet(dietId: number, updatedDiet: Diet): Observable<Diet> {
+    const url = `${this.url}/diets/${dietId}`;
+    return this._http.put<Diet>(url, updatedDiet);
+  }
+
+  /**
+   * Deletes a diet from the server.
+   * @param dietId The ID of the diet to be deleted.
+   * @returns An observable that emits void after the deletion request is completed.
+   */
+  deleteDiet(dietId: number): Observable<void> {
+    const url = `${this.url}/diets/${dietId}`;
+    return this._http.delete<void>(url);
+  }
+
+  /**
+   * Creates a new video on the server.
+   * @param video The Video object containing the information of the new video.
+   * @returns An observable that emits the created video after the request is completed.
+   */
+  createVideo(video: Video): Observable<Video> {
+    return this._http.post<Video>(`${this.url}/videos`, video);
+  }
+
+  /**
+   * Updates an existing video on the server.
+   * @param id The ID of the video to update.
+   * @param updatedVideo The updated Video object with the new information.
    * @returns An observable that emits the updated video after the request is completed.
    */
-  editVideo(video: Video): Observable<Video> {
-    const url = `${this.url}/videos/${video.id}`;
-    return this._http.put<Video>(url, video);
+  updateVideo(id: number, updatedVideo: Video): Observable<Video> {
+    const url = `${this.url}/videos/${id}`;
+    return this._http.put<Video>(url, updatedVideo);
   }
 
   /**
    * Deletes a video from the server.
-   * @param videoId The ID of the video to be deleted.
+   * @param id The ID of the video to delete.
    * @returns An observable that emits void after the deletion request is completed.
    */
-  deleteVideo(videoId: number): Observable<void> {
-    const url = `${this.url}/videos/${videoId}`;
+  destroyVideo(id: number): Observable<void> {
+    const url = `${this.url}/videos/${id}`;
     return this._http.delete<void>(url);
   }
 

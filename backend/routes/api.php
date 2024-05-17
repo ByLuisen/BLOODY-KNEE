@@ -52,6 +52,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('getcommentbyid/{id}', [CommentController::class, 'commentById']);
     Route::resource('videos', VideoController::class);
     Route::resource('diets', DietController::class);
+    Route::put('diets/{id}', [DietController::class, 'update']);
     Route::put('updateLikes/{id}', [VideoController::class, 'updateLikes']);
     Route::put('updateDislikes/{id}', [VideoController::class, 'updateDislikes']);
     Route::put('/videos/{id}/visit', [VideoController::class, 'incrementVideoVisits']);
@@ -59,6 +60,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/comments', [CommentController::class, 'addComment']);
     Route::resource('products', ProductController::class);
     Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
+    Route::post('/videos', [VideoController::class, 'create']);
     Route::put('videos/{id}', [VideoController::class, 'update']);
     Route::delete('videos/{id}', [VideoController::class, 'delete']);
     Route::get('products/{id}/brand', [ProductController::class, 'productBrand']);
@@ -66,14 +68,12 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/subscription', [StripeController::class, 'subscription']);
     Route::post('/retrieve-checkout', [StripeController::class, 'retrieveCheckoutSession']);
     Route::post('/retrieve-line-items', [StripeController::class, 'retrieveLineItems']);
-    Route::post('/products', [ProductController::class, 'store']); // Añadir un producto
-    Route::put('/products/{id}', [ProductController::class, 'update']); // Editar un producto
-    Route::delete('/products/{id}', [ProductController::class, 'destroy']); // Eliminar un producto
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::put('/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::post('/cancel-order', [StripeController::class, 'cancelOrder']);
     Route::put('comments/{commentId}', [CommentController::class, 'editComment']);
     Route::delete('comments/{commentId}', [CommentController::class, 'deleteComment']);
-
     Route::post('/make-order', [OrderController::class, 'makeOrder']);
     Route::post('/get-orders', [OrderController::class, 'getOrders']);
-
 });

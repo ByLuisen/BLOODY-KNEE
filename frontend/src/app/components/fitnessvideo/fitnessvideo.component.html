@@ -12,11 +12,13 @@
       <img src="../../../assets/img/svg/bxl-dev-to.svg" alt="configAdmin.svg" class="w-14 mx-auto">
       <p class="text-white">MODE</p>
     </div>
+    <button *ngIf="adminModeActivated"
+      class="bg-transparent rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300 mt-2"
+      (click)="addVideo()">Agregar video
+    </button>
   </div>
-
   <!-- Filter buttons -->
   <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-4 sm:px-96 pb-20 px-10">
-
     <!-- Button to filter all videos -->
     <button class="bg-gray-400 text-black rounded-lg hover:bg-gray-300" [class.active]="selectedType === 'Todos'"
       (click)="filterVideos('Todos')">Todos</button>
@@ -32,6 +34,99 @@
       Equipamiento</button>
   </div>
 
+  <!-- Modal para crear video -->
+  <div *ngIf="createModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+    <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
+      <h2 class="text-xl font-semibold mb-4">Crear video</h2>
+      <!-- Formulario para crear el video -->
+      <form (submit)="submitCreateVideoForm()">
+        <!-- Título -->
+        <div class="mb-4">
+          <label for="videoTitle" class="block text-black">Título del Video:</label>
+          <input type="text" id="videoTitle" name="videoTitle" [(ngModel)]="editedVideo.title"
+            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+        </div>
+        <!-- Entrenador -->
+        <div class="mb-4">
+          <label for="videoCoach" class="block text-black">Entrenador:</label>
+          <input type="text" id="videoCoach" name="videoCoach" [(ngModel)]="editedVideo.coach"
+            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+        </div>
+        <!-- Descripción -->
+        <div class="mb-4">
+          <label for="videoDescription" class="block text-black">Descripción del Video:</label>
+          <textarea id="videoDescription" name="videoDescription" [(ngModel)]="editedVideo.description"
+            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"></textarea>
+        </div>
+        <!-- URL -->
+        <div class="mb-4">
+          <label for="videoUrl" class="block text-black">URL del Video:</label>
+          <input type="text" id="videoUrl" name="videoUrl" [(ngModel)]="editedVideo.url"
+            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+        </div>
+        <!-- Duración -->
+        <div class="mb-4">
+          <label for="videoDuration" class="block text-black">Duración:</label>
+          <input type="text" id="videoDuration" name="videoDuration" [(ngModel)]="editedVideo.duration"
+            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+        </div>
+        <!-- Exclusivo -->
+        <div class="mb-4">
+          <label for="videoExclusive" class="block text-black">Exclusivo:</label>
+          <input type="checkbox" id="videoExclusive" name="videoExclusive" [(ngModel)]="editedVideo.exclusive"
+            class="border-gray-300 border rounded-lg px-4 py-2 text-center text-red-700">
+        </div>
+        <!-- Botones de acción -->
+        <div class="flex justify-center">
+          <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
+            (click)="closeCreateModal()">Cancelar</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- end modal para crear video -->
+  <!-- edit video modal -->
+  <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+    <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
+      <h2 class="text-xl font-semibold mb-4">Edit <span class="text-red-600">{{ editedVideo.title }}</span></h2>
+      <form (submit)="submitEditVideoForm()">
+        <!-- Title -->
+        <div class="mb-4">
+          <label for="videoTitle" class="block text-black">Title:</label>
+          <input type="text" id="videoTitle" name="videoTitle" [(ngModel)]="editedVideo.title"
+            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+        </div>
+        <!-- Coach -->
+        <div class="mb-4">
+          <label for="videoCoach" class="block text-black">Coach:</label>
+          <input type="text" id="videoCoach" name="videoCoach" [(ngModel)]="editedVideo.coach"
+            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+        </div>
+        <!-- Description -->
+        <div class="mb-4">
+          <label for="videoDescription" class="block text-black">Description:</label>
+          <textarea id="videoDescription" name="videoDescription" [(ngModel)]="editedVideo.description"
+            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700 h-52"></textarea>
+        </div>
+        <!-- URL -->
+        <div class="mb-4">
+          <label for="videoUrl" class="block text-black">URL:</label>
+          <input type="text" id="videoUrl" name="videoUrl" [(ngModel)]="editedVideo.url"
+            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+        </div>
+        <!-- Other fields... -->
+        <!-- Buttons -->
+        <div class="flex justify-center">
+          <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
+            (click)="closeEditModal()">Cancel</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- end edit video modal -->
   <!-- Lista de videos filtrados -->
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 pb-20 text-center sm:text-justify">
     <!-- Pantalla de carga mientras se obtiene los videos de fitness -->
@@ -45,13 +140,12 @@
         <!-- Mostrar solo si está en modo admin -->
         <div *ngIf="adminModeActivated">
           <div class="flex flex-row">
-            <img src="../../../assets/img/svg/bx-edit.svg" (click)="editVideo(video)" alt="bx-edit" class="w-9 mx-2"
+            <img src="../../../assets/img/svg/bx-edit.svg" (click)="editVideo(video.id)" alt="bx-edit" class="w-9 mx-2"
               role="button">
             <img src="../../../assets/img/svg/bx-trash.svg" (click)="deleteVideo(video)" alt="bx-edit" class="w-9 mx-2"
               role="button">
           </div>
         </div>
-
         <ng-container>
           <a (click)="selectVideo(video)">
             <div class="premium-icon" *ngIf="video.exclusive">
@@ -65,20 +159,14 @@
           </a>
         </ng-container>
         <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
-
           <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
-
           <div class="bg-white p-8 rounded-lg z-50">
-
             <h2 class="text-2xl font-bold mb-4">¡Ups!
               Contenido Premium</h2>
-
             <p>Este video es contenido
               premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
-
             <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
               (click)="closeModal()">Cerrar</button>
-
             <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
               routerLink="/pricing">Subscribirse</button>
           </div>

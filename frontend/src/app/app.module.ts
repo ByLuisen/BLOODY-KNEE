@@ -38,6 +38,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ShippingAddressPageComponent } from './components/shipping-address-page/shipping-address-page.component';
 import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,9 @@ import { OrderSummaryComponent } from './components/order-summary/order-summary.
     FormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FileUploadModule
+
   ],
 
   providers: [

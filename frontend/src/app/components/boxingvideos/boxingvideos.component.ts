@@ -56,10 +56,7 @@ export class BoxingvideosComponent implements OnInit {
    *
    */
   ngOnInit(): void {
-    // this.http.getRole().subscribe((data) => {
-    //   this.role = data[0].name;
-    //   console.log(this.role)
-    // })
+
 
     // Set loading flag to true
     this.loading = true;
@@ -194,16 +191,16 @@ export class BoxingvideosComponent implements OnInit {
       this.editingVideo.description = this.editForm.value.description;
 
       // Send HTTP request to edit the video
-      this.http.editVideo(this.editingVideo).subscribe(
-        (updatedVideo) => {
-          console.log('Video edited successfully:', updatedVideo);
-          // Close the modal after saving changes
-          this.closeEditModal();
-        },
-        (error) => {
-          console.error('Error editing video:', error);
-        }
-      );
+      // this.http.updateVideo(this.editingVideo).subscribe(
+      //   (updatedVideo) => {
+      //     console.log('Video edited successfully:', updatedVideo);
+      //     // Close the modal after saving changes
+      //     this.closeEditModal();
+      //   },
+      //   (error) => {
+      //     console.error('Error editing video:', error);
+      //   }
+      // );
     }
   }
 
@@ -215,7 +212,7 @@ export class BoxingvideosComponent implements OnInit {
     // Implement logic to delete the video
     console.log('Eliminando video:', video);
 
-    this.http.deleteVideo(video.id).subscribe(
+    this.http.destroyVideo(video.id).subscribe(
       () => {
         console.log('Video eliminado exitosamente');
         // Remove the video from the local list if necessary

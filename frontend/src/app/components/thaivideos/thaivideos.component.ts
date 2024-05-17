@@ -34,7 +34,7 @@ export class ThaivideosComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Basic';
+        this.role = 'admin';
       }
     });
   }

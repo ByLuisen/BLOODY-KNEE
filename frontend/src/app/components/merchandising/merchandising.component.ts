@@ -26,7 +26,6 @@ export class MerchandisingComponent implements OnInit {
   // Modos para los admins
   editAdminMode: boolean = false;
   deleteAdminMode: boolean = false;
-  // createAdminMode: boolean = false;
 
   // Modos para los modales
   editModal: boolean = false;
@@ -55,7 +54,7 @@ export class MerchandisingComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Basic'; // TODO cambiar a "Basic"
+        this.role = 'admin'; // TODO cambiar a "Basic"
       }
     });
   }

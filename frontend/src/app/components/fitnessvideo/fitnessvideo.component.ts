@@ -23,6 +23,15 @@ export class FitnessvideoComponent implements OnInit {
   // Admin mode variable
   adminModeActivated: boolean = false;
 
+  // Modal for create a video form
+  createModal: boolean = false;
+  editModal: boolean = false;
+  deleteModal: boolean = false;
+
+  // Variable para almacenar el video que se está editando
+  editedVideo: Video = new Video;
+
+
   constructor(
     private http: HttpService,
     private router: Router,
@@ -35,7 +44,7 @@ export class FitnessvideoComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Basic';
+        this.role = 'admin';
       }
     });
   }
@@ -65,6 +74,8 @@ export class FitnessvideoComponent implements OnInit {
         finalize(() => (this.loading = false))
       )
       .subscribe();
+
+
   }
   openModal() {
     this.modalOpen = true;
@@ -114,14 +125,80 @@ export class FitnessvideoComponent implements OnInit {
   // Método para activar o desactivar el modo admin
   toggleAdminMode() {
     this.adminModeActivated = !this.adminModeActivated;
-  }
-  editVideo(video: Video) {
-    // Aquí implementa la lógica para editar el video
-    console.log('Editando video:', video);
+    console.log("adminModeActivated: " + this.adminModeActivated);
   }
 
+  /**
+   *
+   * @param video
+   */
+  editVideo(videoId: number) {
+    const selectedVideo = this.todos.find(video => video.id === videoId)
+    if (selectedVideo) {
+      this.editedVideo = selectedVideo; // Asignar directamente el video seleccionado
+      this.editModal = true;
+    }
+
+  }
+
+  /**
+   *
+   */
+  closeEditModal() {
+    // Limpia el video editado y cierra el modal
+    this.editedVideo = new Video();
+    this.editModal = false;
+  }
+  /**
+   *
+   */
+  submitEditVideoForm() {
+    this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
+      (updatedVideo) => {
+        console.log("Video actualizado exitosamente", updatedVideo);
+        //Actualizo el video en lista local
+        const index = this.todos.findIndex(video => video.id === updatedVideo.id);
+        if (index !== -1) {
+          this.todos[index] = updatedVideo;
+        }
+        this.closeEditModal();
+      },
+      (error) => {
+        console.error("Error al actualizar el Video:", error)
+      }
+    )
+  }
+
+  /**
+   *
+   * @param video
+   */
   deleteVideo(video: Video) {
     // Aquí implementa la lógica para eliminar el video
     console.log('Eliminando video:', video);
   }
+
+  /**
+   *
+   */
+  submitCreateVideoForm() {
+
+  }
+  /**
+   *
+   */
+  addVideo() {
+    if (!this.createModal) {
+      this.createModal = true;
+    }
+  }
+  /**
+   *
+   */
+  closeCreateModal() {
+    if (this.createModal) {
+      this.createModal = false;
+    }
+  }
+
 }
