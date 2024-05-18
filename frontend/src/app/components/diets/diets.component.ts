@@ -57,7 +57,7 @@ export class DietsComponent implements OnInit {
       ]),
       dietContent: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z\s.ñÑ]*$/) // String
+        Validators.pattern(/^[a-zA-Z\s.ñÑ]*$/) // String,ñ
       ]),
       dietImage: new FormControl('', []),
       dietAuthor: new FormControl('', [

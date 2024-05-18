@@ -4,6 +4,7 @@ import { Video } from 'src/app/models/Video';
 import { Router } from '@angular/router';
 import { finalize, of, switchMap, tap } from 'rxjs';
 import { AuthService } from '@auth0/auth0-angular';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-fitnessvideo',
   templateUrl: './fitnessvideo.component.html',
@@ -30,7 +31,11 @@ export class FitnessvideoComponent implements OnInit {
 
   // Variable para almacenar el video que se está editando
   editedVideo: Video = new Video;
+  // Selected video to delete
+  selectedVideo: Video | null = null;
 
+  // Formulario de creación del video
+  createVideoForm!: FormGroup;
 
   constructor(
     private http: HttpService,
@@ -47,6 +52,33 @@ export class FitnessvideoComponent implements OnInit {
         this.role = 'admin';
       }
     });
+
+    // Formulario de creación de video
+    this.createVideoForm = new FormGroup({
+      videoTitle: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]*$/) // Texto y numeros
+      ]),
+      videoCoach: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z\s]*$/) // Texto
+      ]),
+      videoDescription: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s.ñÑ]*$/) // String,ñ
+      ]),
+      videoUrl: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^(https?:\/\/)?(www\.)?[a-zA-Z0-9]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,5}([/?#].*)?$/)
+      ]),
+      videoDuration: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9\s:.]*$/), // String
+      ]),
+      videoExclusive: new FormControl('', [
+        Validators.required
+      ]),
+    })
   }
 
   ngOnInit(): void {
@@ -179,11 +211,65 @@ export class FitnessvideoComponent implements OnInit {
   }
 
   /**
+ * Busca el video que se seleccione por ID para mostrar el modal
+ *
+ * @param video
+ */
+  openDeleteModal(video: Video) {
+    this.selectedVideo = video;
+    this.deleteModal = true;
+  }
+
+  /**
+   *
+   */
+  confirmDelete() {
+    if (this.selectedVideo !== null) {
+      this.http.destroyVideo(this.selectedVideo.id).subscribe(() => {
+        this.todos = this.todos.filter(video => video.id !== this.selectedVideo?.id);
+        this.selectedVideo = null;
+        this.deleteModal = false;
+      });
+    }
+    
+  }
+  /**
+   *
+   */
+  cancelDelete() {
+    this.selectedVideo = null;
+    this.deleteModal = false;
+  }
+
+
+  /**
    *
    */
   submitCreateVideoForm() {
+    if (this.createVideoForm.valid) {
+      const newVideo = {
+        title: this.createVideoForm.value.videoTitle,
+        coach: this.createVideoForm.value.videoCoach,
+        description: this.createVideoForm.value.videoDescription,
+        url: this.createVideoForm.value.videoUrl,
+        duration: this.createVideoForm.value.videoDuration,
+        exclusive: this.createVideoForm.value.videoExclusive
+      };
 
+      // this.http.createVideo(newVideo).subscribe(
+      //   (createdVideo) => {
+      //     console.log("Video creado exitosamente", createdVideo);
+      //     // Agregar el nuevo video a la lista local si es necesario
+      //     this.todos.push(createdVideo);
+      //     this.closeCreateModal();
+      //   },
+      //   (error) => {
+      //     console.error("Error al crear el Video:", error)
+      //   }
+      // );
+    }
   }
+
   /**
    *
    */
@@ -192,6 +278,7 @@ export class FitnessvideoComponent implements OnInit {
       this.createModal = true;
     }
   }
+
   /**
    *
    */

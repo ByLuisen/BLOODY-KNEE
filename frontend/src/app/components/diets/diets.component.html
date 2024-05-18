@@ -159,9 +159,7 @@
     <div *ngIf="createModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
       <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
         <h2 class="text-xl font-semibold mb-4">Crear Dieta</h2>
-        <!-- Aquí va tu formulario para crear la dieta -->
         <form [formGroup]="createDietForm" (submit)="submitCreateDietForm()">
-          <!-- Campos de formulario para crear la dieta -->
           <!-- Title -->
           <div class="mb-4">
             <label for="dietTitle" class="block text-black">Título de la Dieta:</label>
