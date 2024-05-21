@@ -11,6 +11,23 @@ class Product extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'brand_id',
+        'category_id',
+        'description',
+        'price',
+        'url_img1',
+        'url_img2',
+        'url_img3',
+        'stock',
+    ];
+
+    /**
      * Get the brand associated with the product.
      */
     public function brand(): BelongsTo

@@ -82,7 +82,7 @@ export class MerchandisingComponent implements OnInit {
       ]),
       price: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^(5\d?|[6-9]\d?|1\d{2}|200)$/)
+        Validators.pattern(/^(?:[5-9]|[1-9][0-9]|1[0-9]{2}|200)$/)
       ]),
       url1: new FormControl('', [
         Validators.required,
@@ -286,15 +286,21 @@ export class MerchandisingComponent implements OnInit {
     this.editModal = false;
   }
 
-  /**
-   *
-   */
+  // Método en el componente Angular para actualizar el producto
   submitEditProductForm() {
-    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(() => {
-      this.closeEditModal();
-      this.getProductos();
-    });
+    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(
+      response => {
+        // Manejo de la respuesta
+        console.log('Producto actualizado correctamente', response);
+        this.closeEditModal();
+      },
+      error => {
+        // Manejo del error
+        console.error('Error al actualizar el producto', error);
+      }
+    );
   }
+
 
   /**
    *
