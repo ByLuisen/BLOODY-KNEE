@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\QuoteResource;
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
 use App\Http\Responses\ApiResponse;
-use App\Models\Quote;
 use Illuminate\Http\Request;
 
-class QuoteController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class QuoteController extends Controller
     public function index()
     {
         try {
-            $quotes = Quote::get();
-            return ApiResponse::success(QuoteResource::collection($quotes), 'Lista de quotas obtenida correctamente');
+            $categories = Category::get();
+            return ApiResponse::success(CategoryResource::collection($categories), 'Lista de categorias obtenidas correctamente');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage());
         }

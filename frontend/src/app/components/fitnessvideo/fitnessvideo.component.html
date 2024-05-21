@@ -3,7 +3,7 @@
 
   <!-- Buscador de videos -->
   <app-searchbar [todos]="todos" (filteredItemsChanged)="onFilteredItemsChanged($event)"></app-searchbar>
-
+  <!-- Admin tools -->
   <div class="flex flex-col justify-center items-center mb-4" *ngIf="role == 'admin'">
     <!-- Botón para activar el modo admin -->
     <div

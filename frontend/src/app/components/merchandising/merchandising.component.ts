@@ -4,6 +4,9 @@ import { catchError, finalize, of, switchMap } from 'rxjs';
 import { Product } from 'src/app/models/Product';
 import { HttpService } from 'src/app/services/http.service';
 import { AuthService } from '@auth0/auth0-angular';
+import { Brand } from 'src/app/models/Brand';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Category } from 'src/app/models/Category';
 
 @Component({
   selector: 'app-merchandising',
@@ -19,34 +22,34 @@ export class MerchandisingComponent implements OnInit {
   // Variable para almacenar el precio máximo seleccionado
   precioMaximo: number = 150;
   loading: boolean = false;
-
   // Variable para simular el role del usuario
   role!: string;
-
   // Modos para los admins
   editAdminMode: boolean = false;
   deleteAdminMode: boolean = false;
-
   // Modos para los modales
   editModal: boolean = false;
   deleteModal: boolean = false;
-  createModal: boolean = false;
-
+  createModal: boolean = true;
   // Variable para almacenar el producto que se está editando
   editedProduct: Product = new Product; // Asegúrate de inicializarlo con las propiedades correctas del tipo Product
-
+  // Variable para almacenar el producto a añadir
+  newProduct: Product = new Product;
   // Mensaje para informar al admin
   infoAdmin: string = "";
-
   // variable para almacenar la ID del producto seleccionado para eliminar
   selectedProduct: Product | null = null;
+  // Almacena las marcas
+  brands: Brand[] = [];
+  // Almacena las categorias
+  categories: Category[] = [];
+  // Formulario de creación del producto
+  creationForm!: FormGroup;
 
   constructor(private http: HttpService, private router: Router, private auth: AuthService) { }
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
   ngOnInit(): void {
-    this.getProductos();
-    console.log(this.productos);
     this.auth.isAuthenticated$.subscribe((isauth) => {
       if (isauth) {
         this.http.getRole().subscribe((role) => {
@@ -57,6 +60,72 @@ export class MerchandisingComponent implements OnInit {
         this.role = 'admin'; // TODO cambiar a "Basic"
       }
     });
+
+    this.getProductos();
+    this.getBrands();
+    this.getCategories();
+    console.log("Nuevo producto" + this.newProduct.toJSON);
+    this.creationForm = new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]*$/)
+      ]),
+      brandId: new FormControl('', [
+        Validators.required,
+      ]),
+      categoryId: new FormControl('', [
+        Validators.required,
+      ]),
+      description: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]*$/)
+      ]),
+      price: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^(5\d?|[6-9]\d?|1\d{2}|200)$/)
+      ]),
+      url1: new FormControl('', [
+        Validators.required,
+      ]),
+      url2: new FormControl('', [
+        Validators.required,
+      ]),
+      url3: new FormControl('', [
+        Validators.required,
+      ]),
+      stock: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9\s]*$/)
+      ])
+    })
+  }
+  /**
+   *
+   */
+  getBrands(): void {
+    this.http.getBrands().subscribe(
+      (brands) => {
+        this.brands = brands;
+        console.log(brands)
+      },
+      (error) => {
+        console.error('Error al obtener las marcas:', error);
+      }
+    );
+  }
+  /**
+   *
+   */
+  getCategories(): void {
+    this.http.getCategories().subscribe(
+      (categories) => {
+        this.categories = categories;
+        console.log(categories)
+      },
+      (error) => {
+        console.error('Error al obtener las categorias:', error);
+      }
+    );
   }
 
   getProductos(): void {
@@ -131,7 +200,6 @@ export class MerchandisingComponent implements OnInit {
         );
       }
     }
-
     // Filtrar por rango de precio
     productosFiltrados = productosFiltrados.filter(
       (producto) => producto.price <= this.precioMaximo
@@ -196,9 +264,16 @@ export class MerchandisingComponent implements OnInit {
   openEditModal(productId: number) {
     const selectedProduct = this.productos.find(producto => producto.id === productId);
     if (selectedProduct) {
-      this.editedProduct = { ...selectedProduct } as Product; // Clonar el producto seleccionado para evitar modificar el original directamente
+      this.editedProduct = { ...selectedProduct } as Product;
+      this.getBrands();
+      this.getCategories();
       this.editModal = true;
     }
+  }
+  // Método para obtener el nombre de la marca del producto
+  getBrandNameById(brandId: number): string {
+    const brand = this.brands.find(brand => brand.id === brandId);
+    return brand ? brand.name : ''; // Devolver el nombre de la marca si se encuentra, de lo contrario, cadena vacía
   }
 
   /**
@@ -225,8 +300,19 @@ export class MerchandisingComponent implements OnInit {
    *
    */
   submitCreateProductForm() {
-    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(() => {
-      this.closeEditModal();
+    if (this.creationForm.valid) {
+      this.newProduct.name = this.creationForm.value.name;
+      this.newProduct.brandId = this.creationForm.value.brandId;
+      this.newProduct.description = this.creationForm.value.description;
+      this.newProduct.price = this.creationForm.value.price;
+      this.newProduct.url_img1 = this.creationForm.value.url1;
+      this.newProduct.url_img2 = this.creationForm.value.url2;
+      this.newProduct.url_img3 = this.creationForm.value.url3;
+      this.newProduct.stock = this.creationForm.value.stock;
+    }
+    this.http.addProduct(this.newProduct).subscribe(() => {
+      this.creationForm.reset();
+      this.closeCreateModal();
       this.getProductos();
     });
   }
@@ -253,11 +339,8 @@ export class MerchandisingComponent implements OnInit {
   confirmDelete() {
     if (this.selectedProduct !== null) {
       this.http.deleteProduct(this.selectedProduct.id).subscribe(() => {
-        // Eliminar el producto de la lista después de la eliminación exitosa
         this.productos = this.productos.filter(producto => producto.id !== this.selectedProduct!.id);
-        // Restablecer la variable selectedProduct
         this.selectedProduct = null;
-        // Cerrar el modal después de la eliminación
         this.deleteModal = false;
       });
     }

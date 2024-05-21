@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\VideoController;
@@ -38,6 +40,12 @@ Route::get('/private', function () {
 
 // Route group for controllers with authentication middleware and controller namespace
 Route::group(['middleware' => 'api'], function () {
+    Route::resource('videos', VideoController::class);
+    Route::resource('diets', DietController::class);
+    Route::resource('quotes', QuoteController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('brands', BrandController::class);
+    Route::resource('categories', CategoryController::class);
     Route::post('/new-user', [UserController::class, 'newUser']);
     Route::put('/update-role', [UserController::class, 'updateRole']);
     Route::post('/get-role', [UserController::class, 'getRole']);
@@ -46,19 +54,15 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/get-cart', [CartController::class, 'getCartProducts']);
     Route::post('/add-product-to-cart', [CartController::class, 'addProductToCart']);
     Route::delete('/delete-product-cart', [CartController::class, 'removeProductFromCart']);
-    Route::resource('quotes', QuoteController::class);
     Route::get('modalityvideo/{modality_id}/{type_id}', [VideoController::class, 'modalities']);
     Route::get('getvideobyid/{id}', [VideoController::class, 'videoById']);
     Route::get('getcommentbyid/{id}', [CommentController::class, 'commentById']);
-    Route::resource('videos', VideoController::class);
-    Route::resource('diets', DietController::class);
     Route::put('diets/{id}', [DietController::class, 'update']);
     Route::put('updateLikes/{id}', [VideoController::class, 'updateLikes']);
     Route::put('updateDislikes/{id}', [VideoController::class, 'updateDislikes']);
     Route::put('/videos/{id}/visit', [VideoController::class, 'incrementVideoVisits']);
     Route::post('videos/{videoId}/update-comments', [CommentController::class, 'countAndUpdateComments']);
     Route::post('/comments', [CommentController::class, 'addComment']);
-    Route::resource('products', ProductController::class);
     Route::get('getproductbyid/{id}', [ProductController::class, 'productById']);
     Route::post('/videos', [VideoController::class, 'create']);
     Route::put('videos/{id}', [VideoController::class, 'update']);
