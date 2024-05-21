@@ -279,4 +279,42 @@ class VideoController extends Controller
             return ApiResponse::error($e->getMessage(), 500);
         }
     }
+
+    public function saveAsFavorite(Request $request, $videoId)
+    {
+        try {
+            // Get the user by their email if provided
+            $user = null;
+            $email = $request->input('email');
+            if ($email) {
+                $user = User::where('email', $email)->first();
+            }
+    
+            // Check if the user exists
+            if (!$user) {
+                return ApiResponse::error('Usuario no encontrado', 404);
+            }
+    
+            // Check if the video is already marked as favorite for this user
+            if ($user->favorites()->where('video_id', $videoId)->exists()) {
+                return ApiResponse::error('El video ya está marcado como favorito para este usuario');
+            }
+    
+            // Get the video by its ID
+            $video = Video::find($videoId);
+    
+            // Check if the video exists
+            if (!$video) {
+                return ApiResponse::error('Video no encontrado', 404);
+            }
+    
+            // Attach the video as favorite for the user
+            $user->favorites()->attach($videoId);
+    
+            return ApiResponse::success(null, 'Video guardado como favorito correctamente');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage());
+        }
+    }
+    
 }

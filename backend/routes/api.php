@@ -72,7 +72,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/cancel-order', [StripeController::class, 'cancelOrder']);
     Route::put('comments/{commentId}', [CommentController::class, 'editComment']);
     Route::delete('comments/{commentId}', [CommentController::class, 'deleteComment']);
-
+    Route::post('/save-as-favorite/{videoId}', [VideoController::class, 'saveAsFavorite']);
     Route::post('/make-order', [OrderController::class, 'makeOrder']);
     Route::post('/get-orders', [OrderController::class, 'getOrders']);
 

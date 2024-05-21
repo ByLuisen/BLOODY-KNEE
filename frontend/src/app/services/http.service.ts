@@ -620,4 +620,20 @@ export class HttpService {
       })
     );
   }
+
+  saveAsFavorite(videoId: number): Observable<Response> {
+    const url = `${this.url}/save-as-favorite/${videoId}`;
+    return this.auth.idTokenClaims$.pipe(
+      switchMap((user) => {
+        // Get the email from the user object
+        const email = user ? user.email : '';
+
+        // Create the request body
+        const body = { email };
+
+        // Make the POST request
+        return this._http.post<Response>(url, body);
+      })
+    );
+  }
 }

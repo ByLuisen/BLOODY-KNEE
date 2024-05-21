@@ -331,5 +331,25 @@ export class PlayerComponent implements AfterViewInit {
       }
     );
   }
-
+  saveVideoAsFavorite(videoId: number): void {
+    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.http.saveAsFavorite(videoId).subscribe(
+          (response) => {
+            console.log('Video guardado como favorito correctamente', response);
+            console.log('Guardando video como favorito:', videoId); // Verifica que este mensaje se imprima en la consola al hacer clic en el botón
+            // Aquí puedes realizar otras acciones después de que el video se guarde como favorito
+          },
+          (error) => {
+            console.error('Error al guardar el video como favorito', error);
+            // Manejar el error, mostrar un mensaje de error, o realizar otras acciones según sea necesario
+          }
+        );
+      } else {
+        console.log('El usuario debe estar autenticado para agregar un comentario.');
+        this.auth.loginWithPopup();
+        // Aquí podrías mostrar un mensaje al usuario indicando que necesita iniciar sesión para agregar un comentario
+      }
+    });
+  }
 }
