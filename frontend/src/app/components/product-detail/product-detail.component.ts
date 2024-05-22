@@ -139,7 +139,12 @@ export class ProductDetailComponent implements OnInit {
     window.location.href = window.location.origin + '/product/' + productId;
   }
 
-  add(): void {
+  async add(): Promise<void> {
+    await this.getProducto();
+
+    if (this.product.stock <= 0) {
+      this.outStockAlert = true;
+    }
     this.auth.isAuthenticated$.pipe(take(1)).subscribe((isAuthenticated) => {
       if (isAuthenticated) {
         const product = new Product();
@@ -162,34 +167,35 @@ export class ProductDetailComponent implements OnInit {
     await this.getProducto();
     if (this.product.stock > 0) {
       this.auth.isAuthenticated$
-      .pipe(
-        switchMap((logged) => {
-          if (!logged) {
-            return this.auth.loginWithPopup();
+        .pipe(
+          switchMap((logged) => {
+            if (!logged) {
+              return this.auth.loginWithPopup();
+            }
+            return of(null); // Emite un valor nulo si ya está autenticado
+          }),
+          switchMap(() => {
+            this.openModal = true;
+            return of(null);
+          })
+        )
+        .subscribe(
+          () => {},
+          (error) => {
+            console.error(error);
+            // Manejar el error en tu aplicación
           }
-          return of(null); // Emite un valor nulo si ya está autenticado
-        }),
-        switchMap(() => {
-          this.openModal = true;
-          return of(null);
-        })
-      )
-      .subscribe(
-        () => {},
-        (error) => {
-          console.error(error);
-          // Manejar el error en tu aplicación
-        }
-      );
+        );
     } else {
       this.outStockAlert = true;
     }
   }
 
-  async saveProductInACookie(): Promise<void> {
-    // Update the product for the stock
-    await this.getProducto();
-
+  /**
+   * Function for add the product in a cookie validating whether it exists or not to
+   * overwrite the quantity or eliminate it in case the product is out of stock
+   */
+  saveProductInACookie(): void {
     // Create the product object to add
     const productToAdd = {
       id: this.productId,
@@ -197,7 +203,7 @@ export class ProductDetailComponent implements OnInit {
       added_date: new Date().toISOString(),
     };
 
-    // Verify if the cookie cart exist
+    // Verify if the cookie cart exists
     if (this.cookie.check('cart')) {
       // Get the cart cookie value parsing it
       const cart = JSON.parse(this.cookie.get('cart'));
@@ -210,26 +216,57 @@ export class ProductDetailComponent implements OnInit {
       if (existingProductIndex !== -1) {
         // Si el producto ya está en el carrito, actualizar su cantidad
         cart[existingProductIndex].quantity += productToAdd.quantity;
-        if (cart[existingProductIndex].quantity <= this.product.stock) {
+        if (cart[existingProductIndex].quantity > this.product.stock) {
+          cart[existingProductIndex].quantity = this.product.stock;
+          // Show laert quantity notification
+          if (this.product.stock > 0) {
+            this.alertQuantity = true;
+            setTimeout(() => {
+              this.alertQuantity = false;
+            }, 7000);
+          }
+        } else {
+          if (this.product.stock > 0) {
+            // Show added succesfully notification
+            this.added = true;
+            setTimeout(() => {
+              this.added = false;
+            }, 7000);
+            // Update the added_date of the product
+            cart[existingProductIndex].added_date = productToAdd.added_date;
+          }
+        }
+      } else {
+        // Si el producto no está en el carrito, agregarlo
+        cart.push(productToAdd);
+        if (this.product.stock > 0) {
+          // Show added succesfully notification
           this.added = true;
           setTimeout(() => {
             this.added = false;
           }, 7000);
-        } else {
-          cart[existingProductIndex].quantity = this.product.stock;
-          this.alertQuantity = true;
-          setTimeout(() => {
-            this.alertQuantity = false;
-          }, 7000);
         }
-        cart[existingProductIndex].added_date = productToAdd.added_date;
-      } else {
-        // Si el producto no está en el carrito, agregarlo
-        cart.push(productToAdd);
       }
-      this.cookie.set('cart', JSON.stringify(cart), 365, '/');
+
+      // Remove products with zero stock from the cart
+      const updatedCart = cart.filter((product: any) => product.quantity > 0);
+      console.log(updatedCart);
+
+      // If the updated cart is empty, delete the cookie
+      if (updatedCart.length === 0) {
+        this.cookie.delete('cart', '/');
+      } else {
+        this.cookie.set('cart', JSON.stringify(updatedCart), 365, '/');
+      }
     } else {
-      this.cookie.set('cart', JSON.stringify([productToAdd]), 365, '/'); // Convert the array to JSON and save it in the cookie
+      if (this.product.stock > 0) {
+        this.cookie.set('cart', JSON.stringify([productToAdd]), 365, '/'); // Convert the array to JSON and save it in the cookie
+        // Show added succesfully notification
+        this.added = true;
+        setTimeout(() => {
+          this.added = false;
+        }, 7000);
+      }
     }
   }
 

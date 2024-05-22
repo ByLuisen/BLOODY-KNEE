@@ -85,6 +85,7 @@ import { MerchandisingBannerComponent } from './components/merchandising-banner/
       authorizationParams: {
         redirect_uri: window.location.origin,
       },
+      cacheLocation: 'localstorage',
     }),
     ProfileMenuService,
     provideHttpClient(withInterceptors([authHttpInterceptorFn])),
