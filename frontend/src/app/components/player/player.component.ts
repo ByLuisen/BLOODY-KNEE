@@ -23,6 +23,12 @@ export class PlayerComponent implements OnInit {
   videosAleatorios: Video[] = [];
   modalOpen: boolean = false;
   modalOpen2: boolean = false;
+  modalOpen3: boolean = false;
+  modalOpen4: boolean = false;
+  modalOpen5: boolean = false;
+  modalOpen6: boolean = false;
+  modalOpen7: boolean = false;
+  modalOpen8: boolean = false;
   role!: string;
   comentariosToShow: Comment[] = [];
   loading: boolean = false;
@@ -49,7 +55,7 @@ export class PlayerComponent implements OnInit {
     this.auth.isAuthenticated$.subscribe((isauth) => {
       if (isauth) {
         this.auth.idTokenClaims$.subscribe((claims) => {
-          if (claims  && claims.email) {
+          if (claims && claims.email) {
             this.userEmail = claims.email; // Almacenar el correo electrónico en la variable
             console.log('User Email:', this.userEmail); // Verificar el correo electrónico en la consola
           }
@@ -63,7 +69,7 @@ export class PlayerComponent implements OnInit {
       }
     });
   }
-  
+
   ngOnInit() {
     this.loadingPlayer = true;
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
@@ -113,10 +119,10 @@ export class PlayerComponent implements OnInit {
         console.log('Comentarios obtenidos:', comments);
         this.comments = comments;
         this.loadInitialComments();
-        
+
       },
       (error) => {
-       
+
         console.error('Error al obtener comentarios:', error);
       }
     );
@@ -175,7 +181,20 @@ export class PlayerComponent implements OnInit {
       if (isAuthenticated) {
         this.http.updateLikes(videoId).subscribe(
           (response) => {
-            console.log('Like actualizado correctamente', response);
+            console.log(response.message);
+            if (response.message === 'Likes actualizados correctamente') {
+              this.UpdateLikeOpenModal();
+
+              this.UpdateLikeCloseModal2();
+              this.UpdateDislikeCloseModal();
+              this.UpdateDislikeCloseModal2();
+            } else if (response.message === 'Like quitado exitosamente') {
+              this.UpdateLikeOpenModal2();
+
+              this.UpdateLikeCloseModal();
+              this.UpdateDislikeCloseModal();
+              this.UpdateDislikeCloseModal2();
+            }
           },
           (error) => {
             console.error('Error al actualizar like', error);
@@ -188,6 +207,8 @@ export class PlayerComponent implements OnInit {
       }
     });
   }
+
+
   /**
    * 
    * @param videoId 
@@ -197,7 +218,21 @@ export class PlayerComponent implements OnInit {
       if (isAuthenticated) {
         this.http.updateDislikes(videoId).subscribe(
           (response) => {
-            console.log('Dislike actualizado correctamente', response);
+            console.log(response.message);
+            if (response.message === 'Dislike registrado correctamente') {
+              this.UpdateDislikeOpenModal();
+
+              this.UpdateDislikeCloseModal2();
+              this.UpdateLikeCloseModal();
+              this.UpdateLikeCloseModal2();
+            } else if (response.message === 'Dislike quitado exitosamente') {
+              this.UpdateDislikeOpenModal2();
+
+              this.UpdateDislikeCloseModal();
+              this.UpdateDislikeOpenModal2();
+              this.UpdateLikeCloseModal();
+              this.UpdateLikeCloseModal2();
+            }
           },
           (error) => {
             console.error('Error al actualizar dislike', error);
@@ -210,6 +245,9 @@ export class PlayerComponent implements OnInit {
       }
     });
   }
+
+
+
 
   getVideo(): void {
     this.http.getVideoById(this.videoId).subscribe(
@@ -282,6 +320,76 @@ export class PlayerComponent implements OnInit {
     // Remueve la clase que evita el scroll del body
   }
 
+  // Método para cerrar el modal
+  SaveCloseModal() {
+    this.modalOpen3 = false;
+    document.body.classList.remove('modal-open');
+    // Remueve la clase que evita el scroll del body
+  }
+
+  SaveOpenModal() {
+    this.modalOpen3 = true;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+  SaveOpenModal2() {
+    this.modalOpen4 = true;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+
+  // Método para cerrar el modal
+  SaveCloseModal2() {
+    this.modalOpen4 = false;
+    document.body.classList.remove('modal-open');
+    // Remueve la clase que evita el scroll del body
+  }
+
+  UpdateLikeOpenModal() {
+    this.modalOpen5 = true;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+
+  UpdateLikeCloseModal() {
+    this.modalOpen5 = false;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+
+  UpdateLikeOpenModal2() {
+    this.modalOpen6 = true;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+  UpdateLikeCloseModal2() {
+    this.modalOpen6 = false;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+  UpdateDislikeOpenModal() {
+    this.modalOpen7 = true;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+  UpdateDislikeCloseModal() {
+    this.modalOpen7 = false;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+  UpdateDislikeOpenModal2() {
+    this.modalOpen8 = true;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+  UpdateDislikeCloseModal2() {
+    this.modalOpen8 = false;
+    document.body.classList.add('modal-open');
+    // Agrega una clase para evitar el scroll del body
+  }
+
+
+
   getExclusive(video: Video) {
     if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
       this.openModal();
@@ -353,10 +461,13 @@ export class PlayerComponent implements OnInit {
             console.log('Video guardado como favorito correctamente', response);
             console.log('Guardando video como favorito:', videoId); // Verifica que este mensaje se imprima en la consola al hacer clic en el botón
             // Aquí puedes realizar otras acciones después de que el video se guarde como favorito
+            this.SaveOpenModal();
           },
           (error) => {
-            console.error('Error al guardar el video como favorito', error);
+            console.error('El video ya está gurdado', error);
             // Manejar el error, mostrar un mensaje de error, o realizar otras acciones según sea necesario
+            this.SaveCloseModal();
+            this.SaveOpenModal2();
           }
         );
       } else {
