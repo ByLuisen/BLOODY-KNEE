@@ -14,7 +14,7 @@ import { ViewChild } from '@angular/core';
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css'],
 })
-export class PlayerComponent implements AfterViewInit {
+export class PlayerComponent implements OnInit {
   commentsVisible: boolean = true;
   descriptionVisible: boolean = false;
   videoId!: number;
@@ -34,6 +34,7 @@ export class PlayerComponent implements AfterViewInit {
   commentInputValue: string = ''; // Propiedad para almacenar el valor del campo de entrada
   isCommentInputEmpty: boolean = true; // Propiedad para controlar si el campo de entrada está vacío
   currentUser: User | null = null;
+  loadingPlayer: boolean = false;
   @ViewChild('commentInput') commentInput!: ElementRef;
   constructor(
     private elementRef: ElementRef,
@@ -55,7 +56,8 @@ export class PlayerComponent implements AfterViewInit {
       }
     });
   }
-  ngAfterViewInit() {
+  ngOnInit() {
+    this.loadingPlayer = true;
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
     );
@@ -103,8 +105,10 @@ export class PlayerComponent implements AfterViewInit {
         console.log('Comentarios obtenidos:', comments);
         this.comments = comments;
         this.loadInitialComments();
+        this.loadingPlayer = false;
       },
       (error) => {
+        this.loadingPlayer = false;
         console.error('Error al obtener comentarios:', error);
       }
     );

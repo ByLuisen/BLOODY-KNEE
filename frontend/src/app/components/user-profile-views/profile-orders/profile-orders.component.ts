@@ -8,12 +8,15 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./profile-orders.component.css'],
 })
 export class ProfileOrdersComponent implements OnInit {
+  loading: boolean = false;
   orders!: Order[];
 
   constructor(private http: HttpService) {}
 
   ngOnInit(): void {
+    this.loading = true;
     this.http.getOrders().subscribe((orders) => {
+      this.loading = false;
       this.orders = orders;
       console.log(orders);
     });

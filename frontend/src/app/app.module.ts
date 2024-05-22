@@ -15,7 +15,6 @@ import { PerfileMenuComponent } from './components/menus/profile-menu/profile-me
 import { ProfileMenuService } from './services/profile-menu-service.service';
 import { FavouriteVideosComponent } from './components/user-profile-views/favourite-videos/favourite-videos.component';
 import { LikedVideosComponent } from './components/user-profile-views/liked-videos/liked-videos.component';
-import { ProfileDietsComponent } from './components/user-profile-views/profile-diets/profile-diets.component';
 import { ProfileOrdersComponent } from './components/user-profile-views/profile-orders/profile-orders.component';
 import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
 import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
@@ -38,6 +37,8 @@ import { CartComponent } from './components/cart/cart.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ShippingAddressPageComponent } from './components/shipping-address-page/shipping-address-page.component';
 import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
+import { OutStockModalComponent } from './components/out-stock-modal/out-stock-modal.component';
+import { MerchandisingBannerComponent } from './components/merchandising-banner/merchandising-banner.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,6 @@ import { OrderSummaryComponent } from './components/order-summary/order-summary.
     PerfileMenuComponent,
     LikedVideosComponent,
     FavouriteVideosComponent,
-    ProfileDietsComponent,
     ProfileOrdersComponent,
     SearchbarComponent,
     ProductDetailComponent,
@@ -65,6 +65,8 @@ import { OrderSummaryComponent } from './components/order-summary/order-summary.
     CartComponent,
     ShippingAddressPageComponent,
     OrderSummaryComponent,
+    OutStockModalComponent,
+    MerchandisingBannerComponent,
 
   ],
   imports: [

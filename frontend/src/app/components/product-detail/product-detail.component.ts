@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { AuthService } from '@auth0/auth0-angular';
-import { catchError, finalize, of, switchMap, tap } from 'rxjs';
+import { catchError, finalize, of, switchMap, take, tap } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/models/User';
 
@@ -27,6 +27,8 @@ export class ProductDetailComponent implements OnInit {
   mainImageUrl!: string;
   brandName!: string;
   added: boolean = false;
+  alertQuantity: boolean = false;
+  outStockAlert: boolean = false;
   quantity!: number;
   loading: boolean = false;
   loadingProduct: boolean = false;
@@ -39,11 +41,12 @@ export class ProductDetailComponent implements OnInit {
     public auth: AuthService,
     private cookie: CookieService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.productId = +params['productId'];
+      this.loadingProduct = true;
       this.getProducto();
     });
     this.getRandomProducts();
@@ -79,23 +82,17 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
-  getProducto(): void {
-    this.loadingProduct = true;
-    this.http
-      .getProductsById([this.productId])
-      .pipe(
-        switchMap((product) => {
-          this.product = product[0];
-          // Inicializar la imagen principal con la primera imagen del producto
-          this.mainImageUrl = this.product ? this.product.url_img1 : '';
-          return of(product);
-        }),
-        catchError((error) => {
-          console.error('Error al obtener el producto:', error);
-          return of([]);
-        })
-      )
-      .subscribe();
+  async getProducto(): Promise<void> {
+    try {
+      const product = await this.http
+        .getProductsById([this.productId])
+        .toPromise();
+      this.product = product![0];
+      // Inicializar la imagen principal con la primera imagen del producto
+      this.mainImageUrl = this.product ? this.product.url_img1 : '';
+    } catch (error) {
+      console.error('Error al obtener el producto:', error);
+    }
   }
 
   setMainImage(url: string): void {
@@ -103,8 +100,8 @@ export class ProductDetailComponent implements OnInit {
   }
 
   /**
-     *
-     */
+   *
+   */
   getRandomProducts(): void {
     this.http
       .getProducts()
@@ -112,9 +109,10 @@ export class ProductDetailComponent implements OnInit {
         switchMap((products) => {
           // Get 6 random products
           const randomProducts = this.getRandomItems(products, 6);
-          console.log('Productos aleatorios:', randomProducts);
 
-          this.topProducts = randomProducts.filter(product => product.id !== this.productId);
+          this.topProducts = randomProducts.filter(
+            (product) => product.id !== this.productId
+          );
 
           return of(products);
         }),
@@ -142,24 +140,28 @@ export class ProductDetailComponent implements OnInit {
   }
 
   add(): void {
-    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
+    this.auth.isAuthenticated$.pipe(take(1)).subscribe((isAuthenticated) => {
       if (isAuthenticated) {
         const product = new Product();
         product.id = this.productId;
         product.quantity = this.getQuantity();
-        this.http.addProductToCart(product).subscribe();
-        this.added = true;
-        setTimeout(() => {
-          this.added = false;
-        }, 7000);
+        this.http.addProductToCart(product).subscribe(() => {
+          this.added = true;
+          setTimeout(() => {
+            this.added = false;
+          }, 7000);
+        });
       } else {
         this.saveProductInACookie();
       }
     });
   }
 
-  loginOrModal(): void {
-    this.auth.isAuthenticated$
+  async loginOrModal(): Promise<void> {
+    // Update the product for the stock
+    await this.getProducto();
+    if (this.product.stock > 0) {
+      this.auth.isAuthenticated$
       .pipe(
         switchMap((logged) => {
           if (!logged) {
@@ -173,19 +175,20 @@ export class ProductDetailComponent implements OnInit {
         })
       )
       .subscribe(
-        () => { },
+        () => {},
         (error) => {
           console.error(error);
           // Manejar el error en tu aplicación
         }
       );
+    } else {
+      this.outStockAlert = true;
+    }
   }
 
-  saveProductInACookie(): void {
-    this.added = true;
-    setTimeout(() => {
-      this.added = false;
-    }, 7000);
+  async saveProductInACookie(): Promise<void> {
+    // Update the product for the stock
+    await this.getProducto();
 
     // Create the product object to add
     const productToAdd = {
@@ -207,6 +210,18 @@ export class ProductDetailComponent implements OnInit {
       if (existingProductIndex !== -1) {
         // Si el producto ya está en el carrito, actualizar su cantidad
         cart[existingProductIndex].quantity += productToAdd.quantity;
+        if (cart[existingProductIndex].quantity <= this.product.stock) {
+          this.added = true;
+          setTimeout(() => {
+            this.added = false;
+          }, 7000);
+        } else {
+          cart[existingProductIndex].quantity = this.product.stock;
+          this.alertQuantity = true;
+          setTimeout(() => {
+            this.alertQuantity = false;
+          }, 7000);
+        }
         cart[existingProductIndex].added_date = productToAdd.added_date;
       } else {
         // Si el producto no está en el carrito, agregarlo
@@ -225,10 +240,6 @@ export class ProductDetailComponent implements OnInit {
     ) as HTMLSelectElement;
     // Parse to integer the quantity
     return parseInt(selectElement.value);
-  }
-
-  hideNotification(): void {
-    this.added = false;
   }
 
   sendShippingAddress(): void {
@@ -262,7 +273,7 @@ export class ProductDetailComponent implements OnInit {
           finalize(() => (this.loading = false))
         )
         .subscribe(
-          () => { },
+          () => {},
           (error) => {
             console.error('Error al iniciar la sesión de pago:', error);
             // Manejar el error en tu aplicación

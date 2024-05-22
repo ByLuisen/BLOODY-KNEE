@@ -11,6 +11,6 @@ export class AppComponent {
   title = 'Bloody Knee';
 
   constructor(private http: HttpService) {
-    this.http.initUser()
+    this.http.initUser();
   }
 }

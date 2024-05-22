@@ -1,31 +1,7 @@
 <div class="text-justify sm:text-center aclonica-font overflow-auto fondo_bk">
 
-  <!-- Banner -->
-  <div
-    class="sticky top-0 z-10 isolate flex items-center gap-x-6 overflow-hidden bg-red-200 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
-    <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      aria-hidden="true">
-      <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff4d4d] to-[#fc8989] opacity-30"
-        style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)">
-      </div>
-    </div>
-    <div class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      aria-hidden="true">
-      <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff4d4d] to-[#ff1111] opacity-30"
-        style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)">
-      </div>
-    </div>
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-      <p class="text-sm leading-6 text-gray-900">
-        <strong class="font-semibold">Bloody Knee 2024</strong><svg viewBox="0 0 2 2"
-          class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true">
-          <circle cx="1" cy="1" r="1" />
-        </svg>Actualmente sólo ofrecemos entregas a direcciones dentro de España.
-      </p>
-    </div>
-    <div class="flex flex-1 justify-end">
-    </div>
-  </div>
+  <!-- Merchandising banner component -->
+  <app-merchandising-banner></app-merchandising-banner>
 
   <div class="sm:px-24 text-center text-gray-800 overflow-auto p-4">
     <!-- Go merch -->
@@ -35,7 +11,10 @@
       <img src="../../../assets/img/eccommerce1.webp" alt="eccommerce1.webp" class="w-8 h-8 ml-1">
       <p class="text-white ml-2">Todos los productos</p>
     </div>
-    <div class="flex flex-wrap mt-9 sm:ml-5">
+    <div class="sm:ml-10 mt-10 flex items-center content-center" *ngIf="!loadingProduct && product">
+      <p>Merchandising > {{ product.category }} > {{ product.name }}</p>
+    </div>
+    <div class="flex flex-wrap sm:ml-5">
       <!-- Pantalla de carga mientras se obtienen el producto -->
       <div class="fixed inset-0 flex items-center justify-center shadow-xl"
         *ngIf="loadingProduct; else productContainer">
@@ -44,6 +23,7 @@
         <img src="../../../assets/img/my_logo.webp" class="rounded-full h-8 w-8">
       </div>
       <ng-template #productContainer>
+
         <!-- Galería de imágenes -->
         <div class="sm:w-1/3" *ngIf="product">
           <div class="flex justify-center">
@@ -66,21 +46,24 @@
         </div>
 
         <!-- Detalles del producto -->
-        <div class="sm:w-2/3 sm:ps-14 py-2 sm:py-0">
-          <div class="sm:flex-col sm:py-9" *ngIf="product">
-            <h1 class="text-center text-2xl sm:text-6xl font-bold text-red-600 mb-1 sm:text-start">{{ product.name }}<br><span class="sm:hidden text-black">{{product.price}}€</span></h1>
+        <div class="sm:w-2/3 sm:ps-14 py-2 sm:py-0" *ngIf="product">
+          <div class="sm:flex-col sm:pb-9">
+            <h1 class="text-center text-2xl sm:text-6xl font-bold text-red-600 mb-1 sm:text-start">{{ product.name
+              }}<br><span class="sm:hidden text-black">{{product.price}}€</span></h1>
             <div class="bg-red-700 w-auto h-0.5"></div>
             <div class="text-center sm:float-start sm:py-7 sm:w-1/2">
               <p class="hidden sm:block text-5xl text-start mr-2 mt-3">{{ product.price }}€</p>
               <p class="sm:text-base text-center sm:text-start sm:mt-3 ">{{ product.description }}</p>
+              <p class="sm:text-base text-center sm:text-start sm:mt-3 text-red-600">Marca: {{ product.brand }}</p>
             </div>
           </div>
           <div class="flex flex-col sm:w-1/2 pt-8 sm:pt-0">
             <div class="flex flex-col items-center text-center justify-center">
-              <div *ngIf="product.stock > 10" class="text-green-800"> Disponible en Stock ●</div>
-              <div *ngIf="product.stock < 10" class="text-orange-800">Quedan {{product.stock}} en Stock ●</div>
-              <div *ngIf="product.stock < 1" class="text-orange-800">Fuera de Stock ●</div>
-              <div class="flex justify-center items-center bg-red-700 w-52 rounded-full mt-4  ">
+              <div *ngIf="product.stock > 10" class="text-green-700 text-lg"> Disponible en Stock ●</div>
+              <div *ngIf="product.stock <= 10 && product.stock > 0" class="text-orange-700 text-lg">Queda/n
+                {{product.stock}} en Stock ●</div>
+              <div *ngIf="product.stock <= 0" class="text-orange-700 text-2xl">Fuera de Stock ●</div>
+              <div class="flex justify-center items-center bg-red-700 w-52 rounded-full mt-4" *ngIf="product.stock > 0">
                 <label for="quantity" class="text-md text-white">Cantidad:</label>
                 <select id="quantity" name="quantity"
                   class="text-white mt-1 block w-24 py-2 px-3 bg-red-700 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500-500">
@@ -90,22 +73,18 @@
                     <option value="{{ idx + 1 }}">{{ idx + 1 }}</option>
                   </ng-container>
                 </select>
-
               </div>
-              <button (click)="add()"
+              <button (click)="add()" *ngIf="product.stock > 0"
                 class="flex-col bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4  mt-4 transition duration-300 transform hover:scale-105 rounded-full">
                 Agregar a la cesta
               </button>
-              <button (click)="loginOrModal()"
+              <button (click)="loginOrModal()" *ngIf="product.stock > 0"
                 class="flex-col bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4  mt-4 transition duration-300 transform hover:scale-105 rounded-full">
                 Comprar ya
               </button>
             </div>
           </div>
-
-
         </div>
-
 
         <!-- Recommended products -->
         <div class="w-full mt-5 mb-5">
@@ -113,11 +92,18 @@
           <div class="sm:flex justify-center mt-8">
             <div class="mx-4" *ngFor="let product of topProducts">
               <div class="flex flex-col justify-center items-center">
-                <p class="text-sm mb-3 cursor-pointer" (click)="verDetallesProducto(product.id)">{{product.name}}</p>
-                <img [src]="'../../../assets/img/imgs_productos/' + product.url_img1 + '.webp'"
-                  class="cursor-pointer hover:border-2 hover:border-solid hover:border-red-600 w-50  sm:w-36 h-auto transition duration-300 transform hover:scale-110 mb"
+                <p class="text-sm mb-3 cursor-pointer" (click)="verDetallesProducto(product.id)">{{ product.name }}</p>
+                <div
+                  class="relative cursor-pointer transform transition duration-300 hover:scale-110 hover:border-2 hover:border-solid hover:border-red-600"
                   (click)="verDetallesProducto(product.id)">
-                <p class="text-red-500 mb-3 mt-3">{{product.price}} €</p>
+                  <p *ngIf="product.stock <= 0"
+                    class="absolute inset-0 flex items-center justify-center text-red-600 bg-black bg-opacity-50 text-2xl font-bold">
+                    Fuera de stock
+                  </p>
+                  <img [src]="'../../../assets/img/imgs_productos/' + product.url_img1 + '.webp'"
+                    class="w-50 sm:w-36 h-auto">
+                </div>
+                <p class="text-red-500 mb-3 mt-3">{{ product.price }} €</p>
               </div>
             </div>
           </div>
@@ -128,7 +114,7 @@
 </div>
 
 
-<!-- Cart -->
+<!-- Cart component -->
 <app-cart *ngIf="!loadingProduct"></app-cart>
 
 <!-- Product added to cart notification -->
@@ -144,7 +130,7 @@
     <span class="sr-only">Check icon</span>
   </div>
   <div class="ms-3 text-sm font-normal">Producto añadido a la cesta</div>
-  <button type="button" (click)="hideNotification()"
+  <button type="button" (click)="added = false"
     class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
     data-dismiss-target="#toast-success" aria-label="Close">
     <span class="sr-only">Close</span>
@@ -155,6 +141,32 @@
   </button>
 </div>
 
+
+<!-- Max quantity product notification alert -->
+<div id="toast-warning" *ngIf="alertQuantity"
+  class="absolute bottom-20 right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+  role="alert">
+  <div
+    class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+      <path
+        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z" />
+    </svg>
+    <span class="sr-only">Warning icon</span>
+  </div>
+  <div class="ms-3 text-sm font-normal">Has superado la cantidad de stock de este producto.</div>
+  <button type="button" (click)="alertQuantity = false"
+    class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+    data-dismiss-target="#toast-warning" aria-label="Close">
+    <span class="sr-only">Close</span>
+    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+    </svg>
+  </button>
+</div>
+
+<!-- Modal to buy the product-->
 <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20" *ngIf="openModal">
   <div tabindex="-1" class="relative w-full max-w-lg bg-white rounded-xl shadow">
     <form [formGroup]="shippingAddress" (ngSubmit)="sendShippingAddress()">
@@ -292,4 +304,7 @@
   </div>
 </div>
 
+<!-- Modal notifier when a product is out of stock -->
+<app-out-stock-modal *ngIf="outStockAlert"></app-out-stock-modal>
+<!-- Loading screen to load the payment gateway  -->
 <app-loading-screen *ngIf="loading"></app-loading-screen>

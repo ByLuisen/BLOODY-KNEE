@@ -62,7 +62,7 @@
       <div class="w-full px-3 min-[400px]:px-6 lg:max-h-[40vh] max-h-[80vh] overflow-y-scroll">
         <div class="flex flex-col lg:flex-row items-center py-6 border-b border-gray-200 gap-6 w-full"
           *ngFor="let product of order.order_details">
-          <div class="img-box max-lg:w-full cursor-pointer" [routerLink]="['/product', product.product_id]">
+          <div class="img-box max-lg:w-full cursor-pointer">
             <img [src]="'../../../assets/img/imgs_productos/' + product.img + '.webp'" alt="Product image"
               class="aspect-square w-full lg:max-w-[140px]">
           </div>
@@ -71,7 +71,7 @@
               <div class="flex items-center">
                 <div>
                   <h2 class="font-semibold text-xl leading-8 text-black mb-3 cursor-pointer"
-                    [routerLink]="['/product', product.product_id]">
+                    >
                     {{ product.name }}</h2>
                   <p class="font-normal text-lg leading-8 text-gray-500 mb-3 ">
                     By: {{ product.brand }}</p>
