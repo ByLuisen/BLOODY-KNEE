@@ -56,7 +56,8 @@ export class CartComponent {
         .getProductsById(ids)
         .pipe(
           switchMap((products: Product[]) => {
-            this.products = products
+            // Actualizar la cantidad de los productos y eliminar los que tienen stock 0 de la cookie
+            const updatedProducts = products
               .map((product) => {
                 const cartItem = this.cart.find(
                   (cart) => cart.id === product.id
@@ -72,21 +73,39 @@ export class CartComponent {
                     }, 10000);
                   }
                   product.added_date = cartItem.added_date;
+
+                  // Eliminar el producto de la cookie si el stock es igual a cero
+                  if (product.stock === 0) {
+                    const cartIndex = this.cart.findIndex(
+                      (p) => p.id === product.id
+                    );
+                    if (cartIndex !== -1) {
+                      this.cart.splice(cartIndex, 1); // Eliminar el producto de la cookie
+                    }
+                    return null; // No incluir este producto en el array
+                  }
                 }
                 return product;
               })
-              .sort((a, b) => {
-                // Ordena por fecha de forma descendente (más reciente primero)
-                return (
-                  new Date(b.added_date).getTime() -
-                  new Date(a.added_date).getTime()
-                );
-              });
+              .filter((product): product is Product => product !== null); // Filtrar los productos con stock 0
 
-            // Actualizar la cantidad en la cookie
-            this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+            // Ordenar los productos por fecha de forma descendente (más reciente primero)
+            this.products = updatedProducts.sort((a, b) => {
+              return (
+                new Date(b.added_date).getTime() -
+                new Date(a.added_date).getTime()
+              );
+            });
 
-            return of(products);
+            // Si no hay productos, eliminar la cookie
+            if (this.products.length === 0) {
+              this.cookie.delete('cart', '/');
+            } else {
+              // Actualizar la cantidad en la cookie
+              this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+            }
+
+            return of(this.products);
           }),
           catchError((error) => {
             console.error('Error al obtener los productos:', error);
@@ -118,18 +137,30 @@ export class CartComponent {
    * Function to delete a product from the cart
    * @param index
    */
-  deleteProduct(index: number): void {
+  deleteProduct(productId: number): void {
     this.auth.isAuthenticated$.subscribe((logged) => {
-      if (logged) {
-        this.http.deleteProductCart(this.products[index].id).subscribe();
+      const productIndex = this.products.findIndex(
+        (product) => product.id === productId
+      );
+
+      if (productIndex !== -1) {
+        if (logged) {
+          this.http
+            .deleteProductCart(this.products[productIndex].id)
+            .subscribe();
+        }
+
         // Eliminar el producto del array products
-        this.products.splice(index, 1);
-      } else {
-        // Eliminar el producto del array products
-        this.products.splice(index, 1);
+        this.products.splice(productIndex, 1);
 
         // Eliminar el producto del array cart
-        this.cart.splice(index, 1);
+        const cartIndex = this.cart.findIndex(
+          (cartItem) => cartItem.id === productId
+        );
+
+        if (cartIndex !== -1) {
+          this.cart.splice(cartIndex, 1);
+        }
 
         // Verificar si todavía hay productos en el carrito
         if (this.cart.length === 0) {

@@ -83,7 +83,7 @@
                             <!-- Product quantity and button to delete it -->
                             <p class="text-gray-500">Cantidad {{ product.quantity }}</p>
                             <div class="flex" *ngIf="document.location.pathname != '/address-form'">
-                              <button type="button" (click)="deleteProduct(i)"
+                              <button type="button" (click)="deleteProduct(product.id)"
                                 class="font-medium text-red-600 hover:text-red-500">Eliminar</button>
                             </div>
                           </div>
