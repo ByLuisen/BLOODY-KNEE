@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { CookieService } from 'ngx-cookie-service';
@@ -16,13 +17,15 @@ export class CartComponent {
   products: Product[] = []; // Array to hold cart products
   cart!: any[]; // Array to hold cart items
   loading: boolean = false; // Flag to indicate loading state
+  updated: boolean = false;
 
   constructor(
     private auth: AuthService, // Instance of AuthService
     private http: HttpService, // Instance of HttpService
     private cookie: CookieService, // Instance of CookieService
-    private router: Router // Instance of Router
-  ) { }
+    private router: Router, // Instance of Router
+    @Inject(DOCUMENT) public document: Document
+  ) {}
 
   // Function to toggle cart visibility
   toggleCart() {
@@ -44,7 +47,7 @@ export class CartComponent {
   getProductsFromACookie(): void {
     // Verify if the cart cookie exists
     if (this.cookie.check('cart')) {
-      this.loading = true;// Set loading flag to true
+      this.loading = true; // Set loading flag to true
       // Parse the cart cookie value
       this.cart = JSON.parse(this.cookie.get('cart'));
       // Obtener solo los IDs de los productos
@@ -60,6 +63,14 @@ export class CartComponent {
                 );
                 if (cartItem) {
                   product.quantity = cartItem.quantity;
+                  if (product.quantity > product.stock) {
+                    cartItem.quantity = product.stock;
+                    product.quantity = product.stock;
+                    this.updated = true;
+                    setTimeout(() => {
+                      this.updated = false;
+                    }, 10000);
+                  }
                   product.added_date = cartItem.added_date;
                 }
                 return product;
@@ -71,6 +82,10 @@ export class CartComponent {
                   new Date(a.added_date).getTime()
                 );
               });
+
+            // Actualizar la cantidad en la cookie
+            this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+
             return of(products);
           }),
           catchError((error) => {
@@ -78,7 +93,7 @@ export class CartComponent {
             return of([]); // Devolver un observable vacío o un valor por defecto
           }),
           finalize(() => {
-            this.loading = false;// Set loading flag to false after completion
+            this.loading = false; // Set loading flag to false after completion
           })
         )
         .subscribe();
@@ -104,47 +119,51 @@ export class CartComponent {
    * @param index
    */
   deleteProduct(index: number): void {
-    if (this.auth.isAuthenticated$) {
-      this.http.deleteProductCart(this.products[index].id).subscribe();
-      // Eliminar el producto del array products
-      this.products.splice(index, 1);
-    } else {
-      // Eliminar el producto del array products
-      this.products.splice(index, 1);
-
-      // Eliminar el producto del array cart
-      this.cart.splice(index, 1);
-
-      // Verificar si todavía hay productos en el carrito
-      if (this.cart.length === 0) {
-        // Si no hay productos en el carrito, eliminar la cookie
-        this.cookie.delete('cart', '/');
+    this.auth.isAuthenticated$.subscribe((logged) => {
+      if (logged) {
+        this.http.deleteProductCart(this.products[index].id).subscribe();
+        // Eliminar el producto del array products
+        this.products.splice(index, 1);
       } else {
-        // Si todavía hay productos en el carrito, actualizar la cookie
-        this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+        // Eliminar el producto del array products
+        this.products.splice(index, 1);
+
+        // Eliminar el producto del array cart
+        this.cart.splice(index, 1);
+
+        // Verificar si todavía hay productos en el carrito
+        if (this.cart.length === 0) {
+          // Si no hay productos en el carrito, eliminar la cookie
+          this.cookie.delete('cart', '/');
+        } else {
+          // Si todavía hay productos en el carrito, actualizar la cookie
+          this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+        }
       }
-    }
+    });
   }
   /**
    * Function to calculate the total number of products in the cart
    * @returns
    */
   calculateTotalProducts(): number {
-    if (this.auth.isAuthenticated$) {
-      // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
-      const totalProducts = this.products.reduce(
-        (total, product) => total + product.quantity,
-        0
-      );
-      return totalProducts;
-    } else {
-      // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
-      const totalProducts = this.cart.reduce(
-        (total, product) => total + product.quantity,
-        0
-      );
-      return totalProducts;
-    }
+    let total: number = 0;
+    this.auth.isAuthenticated$.subscribe((logged) => {
+      if (logged) {
+        // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
+        total = this.products.reduce(
+          (total, product) => total + product.quantity,
+          0
+        );
+      } else {
+        // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
+        total = this.cart.reduce(
+          (total, product) => total + product.quantity,
+          0
+        );
+      }
+    });
+    return total;
   }
 
   /**
@@ -152,17 +171,22 @@ export class CartComponent {
    * @returns
    */
   calculateTotalAmount(): number {
-    if (this.auth.isAuthenticated$) {
-      // Si el usuario está autenticado, calcular el precio total utilizando this.products
-      return this.products
-        .map((product) => product.price * product.quantity)
-        .reduce((total, current) => total + current, 0);
-    } else {
-      // Si el usuario no está autenticado, calcular el precio total utilizando this.cart
-      return this.products
-        .map((product, index) => product.price * this.cart[index].quantity)
-        .reduce((total, current) => total + current, 0);
-    }
+    let total: number = 0;
+    this.auth.isAuthenticated$.subscribe((logged) => {
+      if (logged) {
+        // Si el usuario está autenticado, calcular el precio total utilizando this.products
+        total = this.products
+          .map((product) => product.price * product.quantity)
+          .reduce((total, current) => total + current, 0);
+      } else {
+        // Si el usuario no está autenticado, calcular el precio total utilizando this.cart
+        total = this.products
+          .map((product, index) => product.price * this.cart[index].quantity)
+          .reduce((total, current) => total + current, 0);
+      }
+    });
+    // Redondea el total a dos decimales
+    return parseFloat(total.toFixed(2));
   }
 
   /**
@@ -170,6 +194,7 @@ export class CartComponent {
    */
   closeCart() {
     this.cartOpen = false;
+    this.updated = false;
   }
 
   /**
@@ -184,13 +209,12 @@ export class CartComponent {
    * Function to handle login or address form submission
    */
   loginOrAdressForm(): void {
-
     // Check if user is authenticated
     this.auth.isAuthenticated$
       .pipe(
         switchMap((logged) => {
           if (!logged) {
-            return this.auth.loginWithPopup();// Redirect to login if not authenticated
+            return this.auth.loginWithPopup(); // Redirect to login if not authenticated
           }
           return of(null); // Emit null if already authenticated
         }),
@@ -200,7 +224,7 @@ export class CartComponent {
         })
       )
       .subscribe(
-        () => { },// Do nothing on success
+        () => {}, // Do nothing on success
         (error) => {
           console.error(error);
           // Handle error in your application

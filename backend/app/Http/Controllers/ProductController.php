@@ -53,6 +53,21 @@ class ProductController extends Controller
         }
     }
 
+    public function noStock(Request $request)
+    {
+        try {
+            $products = $request->products;
+            foreach ($products as $key => $product) {
+                if ($product->stock <= 0) {
+                    unset($products[$key]);
+                }
+            }
+        } catch (\Exception $e) {
+            // Handle errors, log, etc.
+            return ApiResponse::error($e->getMessage());
+        }
+    }
+
     /**
      * Añadir un nuevo producto.
      *

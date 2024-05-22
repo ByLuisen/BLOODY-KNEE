@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, take, tap } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
 import { Diet } from '../models/Diet';
@@ -30,15 +30,16 @@ export class HttpService {
     private _http: HttpClient,
     private auth: AuthService,
     private cookie: CookieService
-  ) { }
+  ) {}
 
   initUser(): void {
     this.auth.user$.subscribe((user) => {
       if (user) {
         this.addNewUserAndRole(user).subscribe();
         if (this.cookie.check('cart')) {
-          this.storeCartInDDBB(user).subscribe(() => {
+          this.storeCartInDDBB(user).subscribe((response) => {
             this.cookie.delete('cart', '/');
+            console.log(response);
           });
         }
       }
@@ -98,7 +99,7 @@ export class HttpService {
       user: user,
       cart: JSON.parse(this.cookie.get('cart')),
     };
-
+    console.log(body);
     return this._http.post(url, body);
   }
 
@@ -120,18 +121,24 @@ export class HttpService {
 
   addProductToCart(product: Product): Observable<any> {
     const url = `${this.url}/add-product-to-cart`;
-    return this.auth.user$.pipe(
-      switchMap((user) => {
-        if (user && user.sub) {
-          const email = user.email;
-          const connection = user.sub.split('|')[0]; // Obtiene la conexión del usuario actual
-          const body = { product, email, connection };
-          console.log(body);
-          // Realiza la solicitud POST al servidor con el cuerpo construido
-          return this._http.post(url, body).pipe(map((response) => response));
+    return this.auth.isAuthenticated$.pipe(
+      take(1),
+      switchMap((isAuthenticated) => {
+        if (isAuthenticated) {
+          return this.auth.user$.pipe(
+            take(1),
+            switchMap((user) => {
+              if (user && user.sub) {
+                const email = user.email;
+                const connection = user.sub.split('|')[0];
+                const body = { product, email, connection };
+                return this._http.post(url, body);
+              }
+              return of(null); // No hay usuario autenticado o no hay sub
+            })
+          );
         } else {
-          // Si el usuario no está autenticado o no tiene sub, devuelve un Observable vacío
-          return of([]);
+          return of(null); // No está autenticado
         }
       })
     );
@@ -587,7 +594,6 @@ export class HttpService {
       })
     );
   }
-
 
   getOrders(): Observable<Order[]> {
     const url = `${this.url}/get-orders`;

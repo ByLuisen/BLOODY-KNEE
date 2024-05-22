@@ -70,7 +70,7 @@ class CartController extends Controller
         // Obtener los productos en el carrito con información adicional, ordenados por added_date en orden descendente
         $cartProducts = CartStoreProduct::where('cart_id', $cart->id)
             ->orderBy('updated_at', 'desc')
-            ->with('product.brand', 'product.category') // Cargar la relación 'product' para obtener información sobre los productos
+            ->with('product') // Cargar la relación 'product' para obtener información sobre los productos
             ->get();
 
         return ApiResponse::success(CartProductResource::collection($cartProducts), 'Productos del carrito obtenidos correctamente');

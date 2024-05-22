@@ -23,7 +23,6 @@ class UserController extends Controller
                 $newUser->nickname = $request['nickname'];
                 $newUser->email = $request['email'];
                 $newUser->connection = explode('|', $request['sub'])[0];
-                // Asigna otros campos si es necesario
                 $newUser->save();
 
                 $newUser->assignRole('Basic');
@@ -62,6 +61,32 @@ class UserController extends Controller
 
     public function storeUserAddress(Request $request)
     {
+
+        // Definir las reglas de validación
+        $rules = [
+            'shippingAddress.country' => 'required|string',
+            'shippingAddress.fullName' => 'required|string|regex:/^[a-zA-ZáéíóúñçÁÉÍÓÚÑÇ\'\s]*$/',
+            'shippingAddress.phone' => 'required|regex:/^(\+)?[0-9]+$/',
+            'shippingAddress.address' => 'required|string|regex:/^[a-zA-Z0-9ñáéíóúÑÁÉÍÓÚªº\'·\s\-\.\,]*$/',
+            'shippingAddress.province' => 'nullable|string|regex:/^[a-zA-ZáéíóúñçÁÉÍÓÚÑÇ\'\s]*$/',
+            'shippingAddress.city' => 'required|string|regex:/^[a-zA-ZáéíóúñçÁÉÍÓÚÑÇ\'\s]*$/',
+            'shippingAddress.zip' => 'required|regex:/^\d{4,5}$/',
+            'email' => 'required|email',
+            'connection' => 'required|string',
+        ];
+
+        // Mensajes de error personalizados (opcional)
+        $messages = [
+            'shippingAddress.fullName.regex' => 'El nombre completo solo puede contener letras y espacios.',
+            'shippingAddress.phone.regex' => 'El número de teléfono debe ser válido.',
+            'shippingAddress.address.regex' => 'La dirección solo puede contener letras, números y caracteres especiales permitidos.',
+            'shippingAddress.province.regex' => 'La provincia solo puede contener letras y espacios.',
+            'shippingAddress.city.regex' => 'La ciudad solo puede contener letras y espacios.',
+            'shippingAddress.zip.regex' => 'El código postal debe tener 4 o 5 dígitos.',
+        ];
+
+        // Validar la solicitud
+        $request->validate($rules, $messages);
         $shippingAddress = $request->shippingAddress;
 
         $user = User::where('email', $request->email)->where('connection', $request->connection)->first();

@@ -37,6 +37,8 @@ import { CartComponent } from './components/cart/cart.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ShippingAddressPageComponent } from './components/shipping-address-page/shipping-address-page.component';
 import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
+import { OutStockModalComponent } from './components/out-stock-modal/out-stock-modal.component';
+import { MerchandisingBannerComponent } from './components/merchandising-banner/merchandising-banner.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +65,8 @@ import { OrderSummaryComponent } from './components/order-summary/order-summary.
     CartComponent,
     ShippingAddressPageComponent,
     OrderSummaryComponent,
+    OutStockModalComponent,
+    MerchandisingBannerComponent,
 
   ],
   imports: [
