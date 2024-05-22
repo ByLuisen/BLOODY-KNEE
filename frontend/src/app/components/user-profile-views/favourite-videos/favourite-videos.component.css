@@ -16,6 +16,7 @@
     justify-content: center;
     background: linear-gradient(90deg, #ff0000 0%, #850000 22.31%);
   }
+ 
   
   .content_profile_firstInfo {
     display: flex;
@@ -98,6 +99,5 @@
     display: flex;
     align-items: center;
   }
-  @media (max-width: 600px) {
-  }
+  
   

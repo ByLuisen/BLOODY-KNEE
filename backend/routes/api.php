@@ -75,5 +75,5 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/save-as-favorite/{videoId}', [VideoController::class, 'saveAsFavorite']);
     Route::post('/make-order', [OrderController::class, 'makeOrder']);
     Route::post('/get-orders', [OrderController::class, 'getOrders']);
-
+    Route::post('/favorite-videos', [VideoController::class, 'getFavoriteVideos']);
 });

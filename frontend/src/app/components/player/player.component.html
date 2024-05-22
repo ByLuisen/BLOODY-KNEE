@@ -29,6 +29,7 @@
               <div class="flex items-center">
                 <div class="w-18 h-7 flex items-center">
                   <!-- Like Button -->
+                  {{video.likes}}
                   <div class="like-button transition-transform duration-300 transform hover:scale-110"
                     (click)="islogged()">
                     <svg class="w-18 h-7" viewBox="0 0 24 24" fill="none" (click)="likeVideo(video.id)">
@@ -40,7 +41,7 @@
 
                   <!-- Espacio entre los botones -->
                   <div class="px-4"></div>
-
+{{video.dislikes}}
                   <!-- Dislike Button -->
                   <div class="dislike-button transition-transform duration-300 transform hover:scale-110"
                     (click)="islogged()">
@@ -139,7 +140,7 @@
                   </path>
                 </svg>
               </div>
-              <img src="../../../assets/img/conequipamiento.webp" alt="{{ destacado.title }}" class="w-30 h-30">
+              <img [src]="'../../../assets/img/' + destacado.modality_id + '.webp'" alt="{{ destacado.title }}" class="w-30 h-30">
               <p class="font-bold pb-4">{{ destacado.title }}</p>
             </a>
           </ng-container>

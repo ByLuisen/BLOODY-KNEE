@@ -85,10 +85,12 @@
                 </path>
               </svg>
             </div>
-            <div class="flex items-center justify-center sm:justify-start">
-              <img src="../../../assets/img/boxeopareja.webp"
+          
+              <div class="flex items-center justify-center sm:justify-start">
+                <img *ngIf="video" [src]="'../../../assets/img/' + video.modality_id + '.webp'"
                 class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
-            </div>
+              </div>
+       
             <h3 class="text-lg font-bold sm:mt-4">{{video.title}}</h3>
           </a>
         </ng-container>

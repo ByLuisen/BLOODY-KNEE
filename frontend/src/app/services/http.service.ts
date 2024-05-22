@@ -642,4 +642,32 @@ export class HttpService {
       })
     );
   }
+
+
+  getFavoriteVideos(): Observable<Video[]> {
+    const url = `${this.url}/favorite-videos`;
+  
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return throwError('Usuario no autenticado');
+        }
+  
+        const body = {
+          email: user.email,
+          connection: user.sub?.split('|')[0],
+        };
+  
+        return this._http.post<{ data: Video[] }>(url, body).pipe(
+          map(response => response.data)
+        );
+      }),
+      catchError((error) => {
+        console.error('Error al obtener los vídeos favoritos:', error);
+        return throwError('Error al obtener los vídeos favoritos');
+      })
+    );
+  }
+  
+  
 }
