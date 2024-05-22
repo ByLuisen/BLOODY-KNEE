@@ -35,6 +35,7 @@ export class PlayerComponent implements OnInit {
   isCommentInputEmpty: boolean = true; // Propiedad para controlar si el campo de entrada está vacío
   currentUser: User | null = null;
   loadingPlayer: boolean = false;
+  userEmail: string | null = null; // Variable para almacenar el correo electrónico del token
   @ViewChild('commentInput') commentInput!: ElementRef;
   constructor(
     private elementRef: ElementRef,
@@ -47,6 +48,12 @@ export class PlayerComponent implements OnInit {
   ) {
     this.auth.isAuthenticated$.subscribe((isauth) => {
       if (isauth) {
+        this.auth.idTokenClaims$.subscribe((claims) => {
+          if (claims  && claims.email) {
+            this.userEmail = claims.email; // Almacenar el correo electrónico en la variable
+            console.log('User Email:', this.userEmail); // Verificar el correo electrónico en la consola
+          }
+        });
         this.http.getRole().subscribe((role) => {
           console.log(role.data);
           this.role = role.data;
@@ -56,6 +63,7 @@ export class PlayerComponent implements OnInit {
       }
     });
   }
+  
   ngOnInit() {
     this.loadingPlayer = true;
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
@@ -105,10 +113,10 @@ export class PlayerComponent implements OnInit {
         console.log('Comentarios obtenidos:', comments);
         this.comments = comments;
         this.loadInitialComments();
-        this.loadingPlayer = false;
+        
       },
       (error) => {
-        this.loadingPlayer = false;
+       
         console.error('Error al obtener comentarios:', error);
       }
     );
@@ -225,9 +233,11 @@ export class PlayerComponent implements OnInit {
       (videos) => {
         console.log('Videos destacados obtenidos:', videos);
         this.destacados = videos;
+        this.loadingPlayer = false;
         this.videosAleatorios = this.getRandomVideos(this.destacados, 7);
       },
       (error) => {
+        this.loadingPlayer = false;
         console.error('Error al obtener los videos destacados:', error);
       }
     );
