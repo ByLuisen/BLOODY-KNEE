@@ -59,7 +59,7 @@ export class BoxingvideosComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Basic';
+        this.role = 'admin';
       }
     });
 
@@ -207,34 +207,32 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   /**
-   * Close edit modal
+   * Clean editedVideo & close edit modal
    */
   closeEditModal() {
-    this.editingVideo = null;
+    // Limpia el video editado y cierra el modal
+    this.editedVideo = new Video();
+    this.editModal = false;
   }
 
   /**
    * Submit edit form
    */
   submitEditForm() {
-    if (this.editingVideo && this.editForm) {
-      // Update video data with form values
-      this.editingVideo.title = this.editForm.value.title;
-      this.editingVideo.coach = this.editForm.value.coach;
-      this.editingVideo.description = this.editForm.value.description;
-
-      // Send HTTP request to edit the video
-      // this.http.updateVideo(this.editingVideo).subscribe(
-      //   (updatedVideo) => {
-      //     console.log('Video edited successfully:', updatedVideo);
-      //     // Close the modal after saving changes
-      //     this.closeEditModal();
-      //   },
-      //   (error) => {
-      //     console.error('Error editing video:', error);
-      //   }
-      // );
-    }
+    this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
+      (updatedVideo) => {
+        console.log("Video actualizado exitosamente", updatedVideo);
+        //Actualizo el video en lista local
+        const index = this.todos.findIndex(video => video.id === updatedVideo.id);
+        if (index !== -1) {
+          this.todos[index] = updatedVideo;
+        }
+        this.closeEditModal();
+      },
+      (error) => {
+        console.error("Error al actualizar el Video:", error)
+      }
+    )
   }
   /**
    *

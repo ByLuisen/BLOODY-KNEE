@@ -85,7 +85,6 @@
       </div>
     </div>
 
-    <!-- Modals for admins -->
     <!-- Modal para editar producto -->
     <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
       <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
@@ -104,15 +103,17 @@
             <label for="brand_id" class="block text-black">Marca:</label>
             <select id="brand_id" name="brand_id" [(ngModel)]="editedProduct.brandId"
               class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
-              <option *ngFor="let brand of brands" [ngValue]="brand.id">{{ brand.name }}</option>
+              <option *ngFor="let brand of brands" [ngValue]="brand.id" [selected]="brand.id === editedProduct.brandId">
+                {{ brand.name }}</option>
             </select>
           </div>
           <!-- Category -->
           <div class="mb-4">
-            <label for="category_id" class="block text-black">Marca:</label>
+            <label for="category_id" class="block text-black">Categoría:</label>
             <select id="category_id" name="category_id" [(ngModel)]="editedProduct.categoryId"
               class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
-              <option *ngFor="let cateogry of categories" [ngValue]="cateogry.id">{{ cateogry.name }}</option>
+              <option *ngFor="let category of categories" [ngValue]="category.id"
+                [selected]="category.id === editedProduct.categoryId">{{ category.name }}</option>
             </select>
           </div>
 
@@ -242,8 +243,16 @@
               class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
             <!-- Error requerido -->
             <span *ngIf="creationForm.get('url1')?.hasError('required') && creationForm.get('url1')?.touched"
-              class="text-red-500">Campo
-              obligatorio</span>
+              class="text-red-500">Campo obligatorio</span>
+          </div>
+          <!-- Upload image 1 -->
+          <div class="mb-4">
+            <label for="url1" class="block text-black">Imagen 1 del producto:</label>
+            <div class="items-center justify-center">
+              <input type="file" id="url1" name="url1" (change)="handleImageUpload1($event)"
+                class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
+                formControlName="url1">
+            </div>
           </div>
           <!-- Image 2 -->
           <div class="mb-4">
@@ -255,6 +264,15 @@
               class="text-red-500">Campo
               obligatorio</span>
           </div>
+          <!-- Upload image 2 -->
+          <div class="mb-4">
+            <label for="url2" class="block text-black">Imagen 2 del producto:</label>
+            <div class="items-center justify-center">
+              <input type="file" id="url2" name="url2" (change)="handleImageUpload2($event)"
+                class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
+                formControlName="url2">
+            </div>
+          </div>
           <!-- Image 3 -->
           <div class="mb-4">
             <label for="url3" class="block text-black">Nombre de la tercera foto:</label>
@@ -264,6 +282,15 @@
             <span *ngIf="creationForm.get('url3')?.hasError('required') && creationForm.get('url3')?.touched"
               class="text-red-500">Campo
               obligatorio</span>
+          </div>
+          <!-- Upload image 3 -->
+          <div class="mb-4">
+            <label for="url3" class="block text-black">Imagen 3 del producto:</label>
+            <div class="items-center justify-center">
+              <input type="file" id="url3" name="url3" (change)="handleImageUpload3($event)"
+                class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
+                formControlName="url3">
+            </div>
           </div>
           <!-- Stock -->
           <div class="mb-4">
@@ -280,12 +307,13 @@
           <div class="flex justify-center">
             <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
               (click)="closeCreateModal()">Cancelar</button>
+            <!-- <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg" [disabled]="creationForm.invalid">Guardar Producto</button> -->
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar Producto</button>
           </div>
         </form>
       </div>
     </div>
-
+    <!-- End creation form -->
 
     <!-- Modal para confirmar eliminación de producto -->
     <div *ngIf="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">

@@ -49,7 +49,7 @@ export class FitnessvideoComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Basic';
+        this.role = 'admin';
       }
     });
 

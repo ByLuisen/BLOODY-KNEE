@@ -57,9 +57,7 @@ export class DietsComponent implements OnInit {
       ]),
       dietContent: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z\s.ñÑ]*$/) // String,ñ
       ]),
-      dietImage: new FormControl('', []),
       dietAuthor: new FormControl('', [
         Validators.required,
         Validators.pattern(/^[a-zA-Z\s]*$/) // String
@@ -215,25 +213,26 @@ export class DietsComponent implements OnInit {
   // CREATION
   // Envia el formulario de crear dieta
   submitCreateDietForm() {
-    // Lógica para guardar la imagen localmente
-    const fileInput = document.getElementById('dietImage') as HTMLInputElement;
-    if (fileInput && fileInput.files && fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      const fileName = file.name;
 
-      // Establecer el nombre del archivo en el campo content de la dieta
-      this.newDiet.content = fileName;
-    }
+    // Relleno newDiet con los datos de creationDietForm
+    this.newDiet.author = this.createDietForm.value.dietAuthor;
+    this.newDiet.content = this.createDietForm.value.dietContent;
+    this.newDiet.description = this.createDietForm.value.dietDescription;
+    this.newDiet.title = this.createDietForm.value.dietTitle;
 
     // Llamar al método createDiet() del servicio HttpService para crear la dieta
-    this.http.createDiet(this.newDiet)
-      .subscribe((dietaCreada) => {
-        console.log('Dieta creada:', dietaCreada);
-        // Realizar acciones adicionales después de crear la dieta, como redirigir a otra página
-      }, (error) => {
-        console.error('Error al crear la dieta:', error);
-        // Manejar el error adecuadamente, mostrar un mensaje al usuario, etc.
-      });
+    this.http.createDiet(this.newDiet).subscribe(
+      (response) => {
+        console.log('Dieta creada correctamente:', response);
+        this.diets.push(response);
+        this.createDietForm.reset();
+      },
+      (error) => {
+        console.error('Error al crear el producto:', error);
+        console.log('Dieta a crear', this.newDiet);
+        console.log('Formulario creación de dieta', this.createDietForm.value);
+      }
+    );
   }
 
 

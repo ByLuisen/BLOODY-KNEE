@@ -45,7 +45,8 @@ export class MerchandisingComponent implements OnInit {
   categories: Category[] = [];
   // Formulario de creación del producto
   creationForm!: FormGroup;
-
+  // Captura las imagenes que se van a subir de los productos
+  archivos: any = [];
   constructor(private http: HttpService, private router: Router, private auth: AuthService) { }
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
@@ -262,14 +263,16 @@ export class MerchandisingComponent implements OnInit {
    * @param productId
    */
   openEditModal(productId: number) {
+    this.getBrands();
+    this.getCategories();
     const selectedProduct = this.productos.find(producto => producto.id === productId);
     if (selectedProduct) {
       this.editedProduct = { ...selectedProduct } as Product;
-      this.getBrands();
-      this.getCategories();
+      console.log('Producto editado:', this.editedProduct);
       this.editModal = true;
     }
   }
+  
   // Método para obtener el nombre de la marca del producto
   getBrandNameById(brandId: number): string {
     const brand = this.brands.find(brand => brand.id === brandId);
@@ -306,23 +309,31 @@ export class MerchandisingComponent implements OnInit {
    *
    */
   submitCreateProductForm() {
-    if (this.creationForm.valid) {
-      this.newProduct.name = this.creationForm.value.name;
-      this.newProduct.brandId = this.creationForm.value.brandId;
-      this.newProduct.description = this.creationForm.value.description;
-      this.newProduct.price = this.creationForm.value.price;
-      this.newProduct.url_img1 = this.creationForm.value.url1;
-      this.newProduct.url_img2 = this.creationForm.value.url2;
-      this.newProduct.url_img3 = this.creationForm.value.url3;
-      this.newProduct.stock = this.creationForm.value.stock;
-    }
-    this.http.addProduct(this.newProduct).subscribe(() => {
-      this.creationForm.reset();
-      this.closeCreateModal();
-      this.getProductos();
-    });
-  }
+    // Relleno newProduct con los datos de creationForm
+    this.newProduct.name = this.creationForm.value.name;
+    this.newProduct.categoryId = this.creationForm.value.categoryId;
+    this.newProduct.brandId = this.creationForm.value.brandId;
+    this.newProduct.description = this.creationForm.value.description;
+    this.newProduct.price = this.creationForm.value.price;
+    this.newProduct.url_img1 = this.creationForm.value.url1;
+    this.newProduct.url_img2 = this.creationForm.value.url2;
+    this.newProduct.url_img3 = this.creationForm.value.url3;
+    this.newProduct.quantity = this.creationForm.value.stock;
+    this.newProduct.stock = this.creationForm.value.stock;
 
+    this.http.addProduct(this.newProduct).subscribe(
+      (response) => {
+        console.log('Producto creado:', response);
+        this.productos.push(response);
+        this.creationForm.reset();
+      },
+      (error) => {
+        console.error('Error al crear el producto:', error);
+        console.log('Producto', this.newProduct);
+        console.log('Formulario creación', this.creationForm.value);
+      }
+    );
+  }
 
   /**
    * Busca el producto que se seleccione por ID para mostrar el modal
@@ -341,7 +352,10 @@ export class MerchandisingComponent implements OnInit {
     this.selectedProduct = null;
     this.deleteModal = false;
   }
-
+  /**
+   * Se utiliza dentro del modal de confirmar eliminación de producto.
+   * Elimina el producto que ha seleccionado previamente el usuario
+   */
   confirmDelete() {
     if (this.selectedProduct !== null) {
       this.http.deleteProduct(this.selectedProduct.id).subscribe(() => {
@@ -352,9 +366,39 @@ export class MerchandisingComponent implements OnInit {
     }
   }
 
-  // CREATE PRODUCT MODAL
+  /**
+   * Cierra el modal de creación de producto
+   */
   closeCreateModal() {
     this.createModal = false;
   }
 
+  /**
+   * Función que maneja
+   * @param event
+   */
+  handleImageUpload1(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const fileName = input.files[0].name;
+      this.archivos.push(input.files[0])
+      this.creationForm.patchValue({ url1: fileName });
+    }
+  }
+  handleImageUpload2(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const fileName = input.files[0].name;
+      this.archivos.push(input.files[0])
+      this.creationForm.patchValue({ url2: fileName });
+    }
+  }
+  handleImageUpload3(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const fileName = input.files[0].name;
+      this.archivos.push(input.files[0])
+      this.creationForm.patchValue({ url3: fileName });
+    }
+  }
 }
