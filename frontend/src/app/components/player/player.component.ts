@@ -188,12 +188,16 @@ export class PlayerComponent implements OnInit {
               this.UpdateLikeCloseModal2();
               this.UpdateDislikeCloseModal();
               this.UpdateDislikeCloseModal2();
+              this.SaveCloseModal();
+              this.SaveCloseModal2();
             } else if (response.message === 'Like quitado exitosamente') {
               this.UpdateLikeOpenModal2();
 
               this.UpdateLikeCloseModal();
               this.UpdateDislikeCloseModal();
               this.UpdateDislikeCloseModal2();
+              this.SaveCloseModal();
+              this.SaveCloseModal2();
             }
           },
           (error) => {
@@ -222,9 +226,12 @@ export class PlayerComponent implements OnInit {
             if (response.message === 'Dislike registrado correctamente') {
               this.UpdateDislikeOpenModal();
 
+              
               this.UpdateDislikeCloseModal2();
               this.UpdateLikeCloseModal();
               this.UpdateLikeCloseModal2();
+              this.SaveCloseModal();
+              this.SaveCloseModal2();
             } else if (response.message === 'Dislike quitado exitosamente') {
               this.UpdateDislikeOpenModal2();
 
@@ -232,6 +239,8 @@ export class PlayerComponent implements OnInit {
               this.UpdateDislikeOpenModal2();
               this.UpdateLikeCloseModal();
               this.UpdateLikeCloseModal2();
+              this.SaveCloseModal();
+              this.SaveCloseModal2();
             }
           },
           (error) => {
@@ -462,12 +471,23 @@ export class PlayerComponent implements OnInit {
             console.log('Guardando video como favorito:', videoId); // Verifica que este mensaje se imprima en la consola al hacer clic en el botón
             // Aquí puedes realizar otras acciones después de que el video se guarde como favorito
             this.SaveOpenModal();
+
+         
+            this.UpdateLikeCloseModal();
+            this.UpdateLikeCloseModal2();
+            this.UpdateDislikeCloseModal();
+            this.UpdateDislikeCloseModal2();
           },
           (error) => {
             console.error('El video ya está gurdado', error);
             // Manejar el error, mostrar un mensaje de error, o realizar otras acciones según sea necesario
-            this.SaveCloseModal();
             this.SaveOpenModal2();
+
+            this.SaveCloseModal();
+            this.UpdateLikeCloseModal();
+            this.UpdateLikeCloseModal2();
+            this.UpdateDislikeCloseModal();
+            this.UpdateDislikeCloseModal2();
           }
         );
       } else {
