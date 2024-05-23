@@ -201,14 +201,6 @@ export class FitnessvideoComponent implements OnInit {
     )
   }
 
-  /**
-   *
-   * @param video
-   */
-  deleteVideo(video: Video) {
-    // Aquí implementa la lógica para eliminar el video
-    console.log('Eliminando video:', video);
-  }
 
   /**
  * Busca el video que se seleccione por ID para mostrar el modal
@@ -231,7 +223,6 @@ export class FitnessvideoComponent implements OnInit {
         this.deleteModal = false;
       });
     }
-    
   }
   /**
    *

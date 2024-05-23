@@ -17,6 +17,8 @@ import { Comment } from '../models/Comment';
 import { CookieService } from 'ngx-cookie-service';
 import { FormGroup } from '@angular/forms';
 import { Order } from '../models/Order';
+import { Brand } from '../models/Brand';
+import { Category } from '../models/Category';
 
 @Injectable({
   providedIn: 'root',
@@ -431,6 +433,24 @@ export class HttpService {
     const url = `${this.url}/videos/${id}`;
     return this._http.delete<void>(url);
   }
+  /**
+   * Retrieves all brands.
+   * @returns An observable that emits an array of quotes after the request is completed.
+   */
+  getBrands(): Observable<Brand[]> {
+    return this._http
+      .get<any>(`${this.url}/brands`)
+      .pipe(map((response) => response.data as Brand[]));
+  }
+  /**
+    * Retrieves all categories.
+    * @returns An observable that emits an array of quotes after the request is completed.
+    */
+  getCategories(): Observable<Category[]> {
+    return this._http
+      .get<any>(`${this.url}/categories`)
+      .pipe(map((response) => response.data as Category[]));
+  }
 
   /**
    * Get the brand of a product by ID
@@ -565,7 +585,8 @@ export class HttpService {
    * @returns
    */
   addProduct(product: Product): Observable<Product> {
-    return this._http.post<Product>(this.url, product);
+    const url = `${this.url}/products/`;
+    return this._http.post<Product>(url, product);
   }
 
   /**

@@ -34,6 +34,17 @@ export class BoxingvideosComponent implements OnInit {
 
   // Edit form
   editForm: FormGroup;
+  // Modal for create a video form
+  createModal: boolean = false;
+  editModal: boolean = false;
+  deleteModal: boolean = false;
+  // Variable para almacenar el video que se está editando
+  editedVideo: Video = new Video;
+  // Selected video to delete
+  selectedVideo: Video | null = null;
+
+  // Formulario de creación del video
+  createVideoForm!: FormGroup;
 
   constructor(private http: HttpService, private router: Router, private auth: AuthService) {
     this.editForm = new FormGroup({
@@ -48,9 +59,35 @@ export class BoxingvideosComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Basic';
+        this.role = 'admin';
       }
     });
+
+    this.createVideoForm = new FormGroup({
+      videoTitle: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]*$/) // Texto y numeros
+      ]),
+      videoCoach: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z\s]*$/) // Texto
+      ]),
+      videoDescription: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s.ñÑ]*$/) // String,ñ
+      ]),
+      videoUrl: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^(https?:\/\/)?(www\.)?[a-zA-Z0-9]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,5}([/?#].*)?$/)
+      ]),
+      videoDuration: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9\s:.]*$/), // String
+      ]),
+      videoExclusive: new FormControl('', [
+        Validators.required
+      ]),
+    })
   }
   /**
    *
@@ -157,50 +194,52 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   /**
-  * Edit a video
-  * @param video The video to edit
-  */
-  editVideo(video: Video) {
-    // Assign the video to editingVideo property
-    this.editingVideo = video;
-    console.log('Editando video:', video);
+   *
+   * @param video
+   */
+  editVideo(videoId: number) {
+    const selectedVideo = this.todos.find(video => video.id === videoId)
+    if (selectedVideo) {
+      this.editedVideo = selectedVideo; // Asignar directamente el video seleccionado
+      this.editModal = true;
+    }
 
-    // Set the edit form values with the video data
-    this.editForm!.setValue({
-      title: video.title,
-      coach: video.coach,
-      description: video.description,
-    });
   }
 
   /**
-   * Close edit modal
+   * Clean editedVideo & close edit modal
    */
   closeEditModal() {
-    this.editingVideo = null;
+    // Limpia el video editado y cierra el modal
+    this.editedVideo = new Video();
+    this.editModal = false;
   }
 
   /**
    * Submit edit form
    */
   submitEditForm() {
-    if (this.editingVideo && this.editForm) {
-      // Update video data with form values
-      this.editingVideo.title = this.editForm.value.title;
-      this.editingVideo.coach = this.editForm.value.coach;
-      this.editingVideo.description = this.editForm.value.description;
-
-      // Send HTTP request to edit the video
-      // this.http.updateVideo(this.editingVideo).subscribe(
-      //   (updatedVideo) => {
-      //     console.log('Video edited successfully:', updatedVideo);
-      //     // Close the modal after saving changes
-      //     this.closeEditModal();
-      //   },
-      //   (error) => {
-      //     console.error('Error editing video:', error);
-      //   }
-      // );
+    this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
+      (updatedVideo) => {
+        console.log("Video actualizado exitosamente", updatedVideo);
+        //Actualizo el video en lista local
+        const index = this.todos.findIndex(video => video.id === updatedVideo.id);
+        if (index !== -1) {
+          this.todos[index] = updatedVideo;
+        }
+        this.closeEditModal();
+      },
+      (error) => {
+        console.error("Error al actualizar el Video:", error)
+      }
+    )
+  }
+  /**
+   *
+   */
+  addVideo() {
+    if (!this.createModal) {
+      this.createModal = true;
     }
   }
 
@@ -253,4 +292,93 @@ export class BoxingvideosComponent implements OnInit {
         this.filteredItems = this.todos;
     }
   }
+
+  /**
+  *
+  */
+  submitCreateVideoForm() {
+    if (this.createVideoForm.valid) {
+      const newVideo = {
+        title: this.createVideoForm.value.videoTitle,
+        coach: this.createVideoForm.value.videoCoach,
+        description: this.createVideoForm.value.videoDescription,
+        url: this.createVideoForm.value.videoUrl,
+        duration: this.createVideoForm.value.videoDuration,
+        exclusive: this.createVideoForm.value.videoExclusive
+      };
+
+      // this.http.createVideo(newVideo).subscribe(
+      //   (createdVideo) => {
+      //     console.log("Video creado exitosamente", createdVideo);
+      //     // Agregar el nuevo video a la lista local si es necesario
+      //     this.todos.push(createdVideo);
+      //     this.closeCreateModal();
+      //   },
+      //   (error) => {
+      //     console.error("Error al crear el Video:", error)
+      //   }
+      // );
+    }
+  }
+
+  /**
+   *
+   */
+  closeCreateModal() {
+    if (this.createModal) {
+      this.createModal = false;
+    }
+  }
+
+  /**
+   *
+   */
+  submitEditVideoForm() {
+    this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
+      (updatedVideo) => {
+        console.log("Video actualizado exitosamente", updatedVideo);
+        //Actualizo el video en lista local
+        const index = this.todos.findIndex(video => video.id === updatedVideo.id);
+        if (index !== -1) {
+          this.todos[index] = updatedVideo;
+        }
+        this.closeEditModal();
+      },
+      (error) => {
+        console.error("Error al actualizar el Video:", error)
+      }
+    )
+  }
+
+  /**
+   *
+   */
+  cancelDelete() {
+    this.selectedVideo = null;
+    this.deleteModal = false;
+  }
+
+  /**
+ *
+ */
+  confirmDelete() {
+    if (this.selectedVideo !== null) {
+      this.http.destroyVideo(this.selectedVideo.id).subscribe(() => {
+        this.todos = this.todos.filter(video => video.id !== this.selectedVideo?.id);
+        this.selectedVideo = null;
+        this.deleteModal = false;
+      });
+    }
+  }
+
+  /**
+* Busca el video que se seleccione por ID para mostrar el modal
+*
+* @param video
+*/
+  openDeleteModal(video: Video) {
+    this.selectedVideo = video;
+    this.deleteModal = true;
+  }
+
 }

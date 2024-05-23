@@ -4,6 +4,9 @@ import { catchError, finalize, of, switchMap } from 'rxjs';
 import { Product } from 'src/app/models/Product';
 import { HttpService } from 'src/app/services/http.service';
 import { AuthService } from '@auth0/auth0-angular';
+import { Brand } from 'src/app/models/Brand';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Category } from 'src/app/models/Category';
 
 @Component({
   selector: 'app-merchandising',
@@ -19,34 +22,35 @@ export class MerchandisingComponent implements OnInit {
   // Variable para almacenar el precio máximo seleccionado
   precioMaximo: number = 150;
   loading: boolean = false;
-
   // Variable para simular el role del usuario
   role!: string;
-
   // Modos para los admins
   editAdminMode: boolean = false;
   deleteAdminMode: boolean = false;
-
   // Modos para los modales
   editModal: boolean = false;
   deleteModal: boolean = false;
-  createModal: boolean = false;
-
+  createModal: boolean = true;
   // Variable para almacenar el producto que se está editando
   editedProduct: Product = new Product; // Asegúrate de inicializarlo con las propiedades correctas del tipo Product
-
+  // Variable para almacenar el producto a añadir
+  newProduct: Product = new Product;
   // Mensaje para informar al admin
   infoAdmin: string = "";
-
   // variable para almacenar la ID del producto seleccionado para eliminar
   selectedProduct: Product | null = null;
-
+  // Almacena las marcas
+  brands: Brand[] = [];
+  // Almacena las categorias
+  categories: Category[] = [];
+  // Formulario de creación del producto
+  creationForm!: FormGroup;
+  // Captura las imagenes que se van a subir de los productos
+  archivos: any = [];
   constructor(private http: HttpService, private router: Router, private auth: AuthService) { }
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
   ngOnInit(): void {
-    this.getProductos();
-    console.log(this.productos);
     this.auth.isAuthenticated$.subscribe((isauth) => {
       if (isauth) {
         this.http.getRole().subscribe((role) => {
@@ -57,6 +61,72 @@ export class MerchandisingComponent implements OnInit {
         this.role = 'admin'; // TODO cambiar a "Basic"
       }
     });
+
+    this.getProductos();
+    this.getBrands();
+    this.getCategories();
+    console.log("Nuevo producto" + this.newProduct.toJSON);
+    this.creationForm = new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]*$/)
+      ]),
+      brandId: new FormControl('', [
+        Validators.required,
+      ]),
+      categoryId: new FormControl('', [
+        Validators.required,
+      ]),
+      description: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]*$/)
+      ]),
+      price: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^(?:[5-9]|[1-9][0-9]|1[0-9]{2}|200)$/)
+      ]),
+      url1: new FormControl('', [
+        Validators.required,
+      ]),
+      url2: new FormControl('', [
+        Validators.required,
+      ]),
+      url3: new FormControl('', [
+        Validators.required,
+      ]),
+      stock: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9\s]*$/)
+      ])
+    })
+  }
+  /**
+   *
+   */
+  getBrands(): void {
+    this.http.getBrands().subscribe(
+      (brands) => {
+        this.brands = brands;
+        console.log(brands)
+      },
+      (error) => {
+        console.error('Error al obtener las marcas:', error);
+      }
+    );
+  }
+  /**
+   *
+   */
+  getCategories(): void {
+    this.http.getCategories().subscribe(
+      (categories) => {
+        this.categories = categories;
+        console.log(categories)
+      },
+      (error) => {
+        console.error('Error al obtener las categorias:', error);
+      }
+    );
   }
 
   getProductos(): void {
@@ -131,7 +201,6 @@ export class MerchandisingComponent implements OnInit {
         );
       }
     }
-
     // Filtrar por rango de precio
     productosFiltrados = productosFiltrados.filter(
       (producto) => producto.price <= this.precioMaximo
@@ -194,11 +263,20 @@ export class MerchandisingComponent implements OnInit {
    * @param productId
    */
   openEditModal(productId: number) {
+    this.getBrands();
+    this.getCategories();
     const selectedProduct = this.productos.find(producto => producto.id === productId);
     if (selectedProduct) {
-      this.editedProduct = { ...selectedProduct } as Product; // Clonar el producto seleccionado para evitar modificar el original directamente
+      this.editedProduct = { ...selectedProduct } as Product;
+      console.log('Producto editado:', this.editedProduct);
       this.editModal = true;
     }
+  }
+  
+  // Método para obtener el nombre de la marca del producto
+  getBrandNameById(brandId: number): string {
+    const brand = this.brands.find(brand => brand.id === brandId);
+    return brand ? brand.name : ''; // Devolver el nombre de la marca si se encuentra, de lo contrario, cadena vacía
   }
 
   /**
@@ -211,26 +289,51 @@ export class MerchandisingComponent implements OnInit {
     this.editModal = false;
   }
 
-  /**
-   *
-   */
+  // Método en el componente Angular para actualizar el producto
   submitEditProductForm() {
-    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(() => {
-      this.closeEditModal();
-      this.getProductos();
-    });
+    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(
+      response => {
+        // Manejo de la respuesta
+        console.log('Producto actualizado correctamente', response);
+        this.closeEditModal();
+      },
+      error => {
+        // Manejo del error
+        console.error('Error al actualizar el producto', error);
+      }
+    );
   }
+
 
   /**
    *
    */
   submitCreateProductForm() {
-    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(() => {
-      this.closeEditModal();
-      this.getProductos();
-    });
-  }
+    // Relleno newProduct con los datos de creationForm
+    this.newProduct.name = this.creationForm.value.name;
+    this.newProduct.categoryId = this.creationForm.value.categoryId;
+    this.newProduct.brandId = this.creationForm.value.brandId;
+    this.newProduct.description = this.creationForm.value.description;
+    this.newProduct.price = this.creationForm.value.price;
+    this.newProduct.url_img1 = this.creationForm.value.url1;
+    this.newProduct.url_img2 = this.creationForm.value.url2;
+    this.newProduct.url_img3 = this.creationForm.value.url3;
+    this.newProduct.quantity = this.creationForm.value.stock;
+    this.newProduct.stock = this.creationForm.value.stock;
 
+    this.http.addProduct(this.newProduct).subscribe(
+      (response) => {
+        console.log('Producto creado:', response);
+        this.productos.push(response);
+        this.creationForm.reset();
+      },
+      (error) => {
+        console.error('Error al crear el producto:', error);
+        console.log('Producto', this.newProduct);
+        console.log('Formulario creación', this.creationForm.value);
+      }
+    );
+  }
 
   /**
    * Busca el producto que se seleccione por ID para mostrar el modal
@@ -249,23 +352,53 @@ export class MerchandisingComponent implements OnInit {
     this.selectedProduct = null;
     this.deleteModal = false;
   }
-
+  /**
+   * Se utiliza dentro del modal de confirmar eliminación de producto.
+   * Elimina el producto que ha seleccionado previamente el usuario
+   */
   confirmDelete() {
     if (this.selectedProduct !== null) {
       this.http.deleteProduct(this.selectedProduct.id).subscribe(() => {
-        // Eliminar el producto de la lista después de la eliminación exitosa
         this.productos = this.productos.filter(producto => producto.id !== this.selectedProduct!.id);
-        // Restablecer la variable selectedProduct
         this.selectedProduct = null;
-        // Cerrar el modal después de la eliminación
         this.deleteModal = false;
       });
     }
   }
 
-  // CREATE PRODUCT MODAL
+  /**
+   * Cierra el modal de creación de producto
+   */
   closeCreateModal() {
     this.createModal = false;
   }
 
+  /**
+   * Función que maneja
+   * @param event
+   */
+  handleImageUpload1(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const fileName = input.files[0].name;
+      this.archivos.push(input.files[0])
+      this.creationForm.patchValue({ url1: fileName });
+    }
+  }
+  handleImageUpload2(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const fileName = input.files[0].name;
+      this.archivos.push(input.files[0])
+      this.creationForm.patchValue({ url2: fileName });
+    }
+  }
+  handleImageUpload3(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const fileName = input.files[0].name;
+      this.archivos.push(input.files[0])
+      this.creationForm.patchValue({ url3: fileName });
+    }
+  }
 }
