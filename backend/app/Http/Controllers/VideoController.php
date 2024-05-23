@@ -125,8 +125,7 @@ class VideoController extends Controller
 
             return response()->json(['message' => 'Dislike registrado correctamente']);
         } catch (\Exception $e) {
-            \Log::error('Error en updateDislikes: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
+            return ApiResponse::error($e->getMessage());
         }
     }
 
@@ -185,8 +184,7 @@ class VideoController extends Controller
 
             return response()->json(['message' => 'Likes actualizados correctamente']);
         } catch (\Exception $e) {
-            \Log::error('Error en updateLikes: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
+            return ApiResponse::error($e->getMessage());
         }
     }
 
