@@ -79,7 +79,7 @@ button.active {
   .premium-icon {
     position: absolute;
     top: 30px;
-    right: 55px;
+    right: 70px;
     z-index: 1;
     transition: transform 0.3s;
   }

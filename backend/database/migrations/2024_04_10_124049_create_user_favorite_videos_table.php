@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('user_favorite_videos', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('iso_code');
-            $table->string('currency');
-            $table->string('tax');
+            $table->unsignedBigInteger('video_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
+
+            $table->foreign('video_id')->references('id')->on('videos')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('user_favorite_videos');
     }
 };

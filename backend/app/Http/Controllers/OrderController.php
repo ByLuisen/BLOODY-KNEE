@@ -9,9 +9,13 @@ use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+    /**
+     * Function that creates an order
+     */
     public function makeOrder(Request $request)
     {
         try {
@@ -68,7 +72,6 @@ class OrderController extends Controller
 
                     $orderDetail = new OrderDetail();
                     $orderDetail->order_id = $order->id;
-                    $orderDetail->product_id = $product->id;
                     $orderDetail->img = $product->url_img1;
                     $orderDetail->name = $product->name;
                     $orderDetail->brand = $product->brand->name;
@@ -85,19 +88,70 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Function that get the orders
+     */
     public function getOrders(Request $request)
     {
         // Get the user who made the request
         $user = User::where('email', $request->email)->where('connection', $request->connection)->first();
 
-        // Verifica si el usuario existe
+        // Verify if the user exist
         if (!$user) {
             return ApiResponse::error(null, 'Usuario no encontrado');
         }
 
-        // Obtén los pedidos del usuario ordenados por fecha de creación descendente
+        // Get the user's orders sorted by descending creation date
         $userOrders = $user->orders()->with('orderDetails')->orderByDesc('created_at')->get();
 
         return ApiResponse::success($userOrders, 'Pedidos del usuario obtenidos correctamente');
+    }
+
+    /**
+     * Function to cancel an order by changing the order status, canceling and returning the payment
+     * to the user, and updating the product stock.
+     */
+    public function cancelOrder(Request $request)
+    {
+        try {
+            $orderToCancel = $request->order;
+            // Get the order from the request
+            $order = Order::find($orderToCancel['id']);
+
+            // If the order exists
+            if ($order) {
+                // Use a transaction to ensure data integrity
+                DB::beginTransaction();
+
+                // Change the order status to Canceled
+                $order->status = 'Cancelado';
+                // Save the changes
+                $order->save();
+
+                // Refunds the stripe payment
+                $stripe = new \Stripe\StripeClient(env('stripeSecretKey'));
+                $stripe->refunds->create(['payment_intent' => $order->payment_id]);
+
+                // Return and update the products stock
+                foreach ($orderToCancel['order_details'] as $productToReturn) {
+                    $product = Product::where('name', $productToReturn['name'])->first();
+                    if ($product) {
+                        $product->stock += $productToReturn['quantity'];
+                        $product->save();
+                    }
+                }
+
+                // Commit the transaction
+                DB::commit();
+
+                return ApiResponse::success($order, 'Pedido cancelado exitosamente');
+            } else {
+                return ApiResponse::error('Pedido no encontrado');
+            }
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of an error
+            DB::rollBack();
+            return ApiResponse::error('Ha habido un error al cancelar el pedido: ' . $e->getMessage());
+        }
     }
 }

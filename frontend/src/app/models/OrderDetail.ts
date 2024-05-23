@@ -1,7 +1,6 @@
 export class OrderDetail {
   #id: number;
   #order_id: number;
-  #product_id: number;
   #img: string;
   #name: string;
   #brand: string;
@@ -10,7 +9,6 @@ export class OrderDetail {
   constructor(
     id: number = 0,
     order_id: number = 0,
-    product_id: number = 0,
     img: string = '',
     name: string = '',
     brand: string = '',
@@ -19,7 +17,6 @@ export class OrderDetail {
   ) {
     this.#id = id;
     this.#order_id = order_id;
-    this.#product_id = product_id;
     this.#img = img;
     this.#name = name;
     this.#brand = brand;
@@ -34,9 +31,6 @@ export class OrderDetail {
   }
   get order_id(): number {
     return this.#order_id;
-  }
-  get product_id(): number {
-    return this.#product_id;
   }
   get img(): string {
     return this.#img;
@@ -62,9 +56,6 @@ export class OrderDetail {
   set order_id(order_id: number) {
     this.#order_id = order_id;
   }
-  set product_id(product_id: number) {
-    this.#product_id = product_id;
-  }
   set img(img: string) {
     this.#img = img;
   }
@@ -87,7 +78,6 @@ export class OrderDetail {
     return {
       id: this.#id,
       order_id: this.#order_id,
-      product_id: this.#product_id,
       img: this.#img,
       name: this.#name,
       brand: this.#brand,

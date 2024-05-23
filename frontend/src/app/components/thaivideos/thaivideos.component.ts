@@ -89,6 +89,8 @@ export class ThaivideosComponent implements OnInit {
         switchMap((videos) => {
           this.videosSaco = videos;
           this.todos = this.todos.concat(videos);
+          console.log('videosSaco:', this.videosSaco);
+          console.log('todos:', this.todos);
           this.filteredItems = [...this.todos];
           return of(videos);
         }),
@@ -98,6 +100,8 @@ export class ThaivideosComponent implements OnInit {
         tap((videos) => {
           this.videosPareja = videos;
           this.todos = this.todos.concat(videos);
+          console.log('videosPareja:', this.videosPareja);
+          console.log('todos:', this.todos);
           this.filteredItems = [...this.todos];
           return of(videos);
         }),
@@ -107,6 +111,8 @@ export class ThaivideosComponent implements OnInit {
         tap((videos) => {
           this.videosConEquipamiento = videos;
           this.todos = this.todos.concat(videos);
+          console.log('videosConEquipamiento:', this.videosConEquipamiento);
+          console.log('todos:', this.todos);
           this.filteredItems = [...this.todos];
           return of(videos);
         }),
@@ -116,19 +122,24 @@ export class ThaivideosComponent implements OnInit {
         tap((videos) => {
           this.videosSinEquipamiento = videos;
           this.todos = this.todos.concat(videos);
+          console.log('videosSinEquipamiento:', this.videosSinEquipamiento);
+          console.log('todos:', this.todos);
           this.filteredItems = [...this.todos];
           return videos;
         }),
-        finalize(() => (this.loading = false))
+        finalize(() => {
+          this.loading = false;
+          console.log('Final todos:', this.todos);
+        })
       )
       .subscribe();
   }
+
   openModal() {
     this.modalOpen = true;
     document.body.classList.add('modal-open');
   }
 
-  // Método para cerrar el modal
   closeModal() {
     this.modalOpen = false;
     document.body.classList.remove('modal-open');
@@ -144,7 +155,6 @@ export class ThaivideosComponent implements OnInit {
     }
   }
 
-  // Método que se ejecutará cuando cambien los elementos filtrados
   onFilteredItemsChanged(filteredItems: Video[]) {
     this.filteredItems = filteredItems;
   }
@@ -173,7 +183,6 @@ export class ThaivideosComponent implements OnInit {
     }
   }
 
-  // Método para activar o desactivar el modo admin
   toggleAdminMode() {
     this.adminModeActivated = !this.adminModeActivated;
   }
@@ -191,7 +200,6 @@ export class ThaivideosComponent implements OnInit {
   }
 
   deleteVideo(video: Video) {
-    // Aquí implementa la lógica para eliminar el video
     console.log('Eliminando video:', video);
   }
   /**
@@ -207,18 +215,6 @@ export class ThaivideosComponent implements OnInit {
         duration: this.createVideoForm.value.videoDuration,
         exclusive: this.createVideoForm.value.videoExclusive
       };
-
-      // this.http.createVideo(newVideo).subscribe(
-      //   (createdVideo) => {
-      //     console.log("Video creado exitosamente", createdVideo);
-      //     // Agregar el nuevo video a la lista local si es necesario
-      //     this.todos.push(createdVideo);
-      //     this.closeCreateModal();
-      //   },
-      //   (error) => {
-      //     console.error("Error al crear el Video:", error)
-      //   }
-      // );
     }
   }
   /**

@@ -25,7 +25,7 @@ class ProductSeeder extends Seeder
             'name' => 'Jogger Venum',
             'description' => 'Cómodos y estilosos joggers, perfectos tanto para entrenamiento como para uso casual.',
             'price' => 75.50,
-            'stock' => 50,
+            'stock' => 0,
             'url_img1' => 'VenumJogger_1',
             'url_img2' => 'VenumJogger_2',
             'url_img3' => 'VenumJogger_3'
@@ -157,7 +157,7 @@ class ProductSeeder extends Seeder
             'name' => 'Camiseta Venum Negra',
             'description' => 'Camiseta Venum negra que combina comodidad con un diseño elegante.',
             'price' => 24.99,
-            'stock' => 50,
+            'stock' => 10,
             'url_img1' => 'CamisetaVenum_1',
             'url_img2' => 'CamisetaVenum_2',
             'url_img3' => 'CamisetaVenum_3'

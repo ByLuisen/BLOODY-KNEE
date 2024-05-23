@@ -53,7 +53,7 @@ export class Video {
   get typeId(): number {
     return this.#type_id;
   }
-  get modalityId(): number {
+  get modality_id(): number {
     return this.#modality_id;
   }
   get title(): string {
@@ -97,7 +97,7 @@ export class Video {
   set typeId(type_id: number) {
     this.#type_id = type_id;
   }
-  set modalityId(modality_id: number) {
+  set modality_id(modality_id: number) {
     this.#modality_id = modality_id;
   }
   set title(title: string) {

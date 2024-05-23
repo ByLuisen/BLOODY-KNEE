@@ -15,12 +15,17 @@ import { PricingComponent } from './components/pricing/pricing.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { ShippingAddressPageComponent } from './components/shipping-address-page/shipping-address-page.component';
 import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'diets', component: DietsComponent },
   { path: 'menu', component: MenuComponent },
-  { path: 'profile', component: UserProfileComponent },
+  {
+    path: 'profile',
+    component: UserProfileComponent,
+    canActivate: [authGuard],
+  },
   { path: 'thaivideos', component: ThaivideosComponent },
   { path: 'boxingvideos', component: BoxingvideosComponent },
   { path: 'fitnessvideos', component: FitnessvideoComponent },
@@ -28,8 +33,16 @@ const routes: Routes = [
   { path: 'pricing', component: PricingComponent },
   { path: 'merchandising', component: MerchandisingComponent },
   { path: 'product/:productId', component: ProductDetailComponent },
-  { path: 'address-form', component: ShippingAddressPageComponent },
-  { path: 'order-summary', component: OrderSummaryComponent },
+  {
+    path: 'address-form',
+    component: ShippingAddressPageComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'order-summary',
+    component: OrderSummaryComponent,
+    canActivate: [authGuard],
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];

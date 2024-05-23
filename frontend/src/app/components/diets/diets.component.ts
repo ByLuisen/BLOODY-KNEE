@@ -8,7 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-diets',
   templateUrl: './diets.component.html',
-  styleUrls: ['./diets.component.css']
+  styleUrls: ['./diets.component.css'],
 })
 export class DietsComponent implements OnInit {
   height!: number;
@@ -41,8 +41,10 @@ export class DietsComponent implements OnInit {
   // Formulario de creación de dieta
   createDietForm!: FormGroup;
   newDiet: Diet = new Diet();
+  infoAdmin: string = '';
+  loading: boolean = false;
 
-  constructor(private http: HttpService, private auth: AuthService) { }
+  constructor(private http: HttpService, private auth: AuthService) {}
 
   ngOnInit(): void {
     this.createDietForm = new FormGroup({
@@ -77,14 +79,19 @@ export class DietsComponent implements OnInit {
   }
 
   openPopup() {
-    const url = "https://mediafiles.botpress.cloud/3f57b270-55b9-4672-b183-05107ff22d9d/webchat/bot.html";
+    const url =
+      'https://mediafiles.botpress.cloud/3f57b270-55b9-4672-b183-05107ff22d9d/webchat/bot.html';
     let width = 400;
     let height = 700;
     let leftPosition = 1500;
     let topPosition = 150;
 
     // Verificar si es un dispositivo móvil
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
       // Ajustar dimensiones y posición para móviles
       width = window.innerWidth * 0.8; // 80% del ancho de la ventana
       height = window.innerHeight * 0.8; // 80% de la altura de la ventana
@@ -93,9 +100,19 @@ export class DietsComponent implements OnInit {
     }
 
     // Abrir el popup usando window.open
-    window.open(url, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=" + topPosition + ",left=" + leftPosition + ",width=" + width + ",height=" + height);
+    window.open(
+      url,
+      '_blank',
+      'toolbar=yes,scrollbars=yes,resizable=yes,top=' +
+        topPosition +
+        ',left=' +
+        leftPosition +
+        ',width=' +
+        width +
+        ',height=' +
+        height
+    );
   }
-
 
   openModal(image: string) {
     this.modalStates[image] = true; // Abrir el modal correspondiente a la imagen
@@ -110,17 +127,20 @@ export class DietsComponent implements OnInit {
   }
 
   getDietData(): void {
-    this.http.getDiets()
-      .subscribe((diets: Diet[]) => {
-        this.diets = diets;
-        console.log(this.diets);
-      });
+    this.loading = true;
+    this.http.getDiets().subscribe((diets: Diet[]) => {
+      this.diets = diets;
+      this.loading = false
+      console.log(this.diets);
+    });
   }
 
   calculate() {
     if (this.height && this.weight) {
-      if (isNaN(this.height) || isNaN(this.weight)) { // Verifica si la entrada es un número
-        this.errorMessage = "Por favor, introduce números válidos para la altura y el peso.";
+      if (isNaN(this.height) || isNaN(this.weight)) {
+        // Verifica si la entrada es un número
+        this.errorMessage =
+          'Por favor, introduce números válidos para la altura y el peso.';
         return; // Sale de la función si hay un error
       }
       const heightInMeters = this.height / 100;
@@ -136,13 +156,14 @@ export class DietsComponent implements OnInit {
       } else {
         this.flashingIndex = 3;
       }
-      this.errorMessage = "";
+      this.errorMessage = '';
       // Lógica para detener el parpadeo después de unos segundos
       setTimeout(() => {
         this.flashingIndex = null;
       }, 2500);
     } else {
-      this.errorMessage = "Por favor, introduce valores para la altura y el peso.";
+      this.errorMessage =
+        'Por favor, introduce valores para la altura y el peso.';
     }
   }
 

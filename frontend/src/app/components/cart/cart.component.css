@@ -11,6 +11,19 @@
   }
 }
 
+.fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 .slide-over {
   animation: slideOver ease-in-out 0.7s;
 }
@@ -23,3 +36,4 @@
     transform: translateX(0);
   }
 }
+

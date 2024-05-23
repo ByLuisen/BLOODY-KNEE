@@ -86,11 +86,15 @@ class StripeController extends Controller
     public function retrieveCheckoutSession(Request $request)
     {
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
+        try {
+            $checkout_session = \Stripe\Checkout\Session::retrieve(
+                $request->checkout_session_id,
+                []
+            );
+        } catch (\Exception $e) {
+            return ApiResponse::success(null, 'La checkout session no existe');
+        }
 
-        $checkout_session = \Stripe\Checkout\Session::retrieve(
-            $request->checkout_session_id,
-            []
-        );
 
         return ApiResponse::success(['checkout_session' => $checkout_session], 'Checkout Seesion obtenida correctamente');
     }
@@ -98,18 +102,15 @@ class StripeController extends Controller
     public function retrieveLineItems(Request $request)
     {
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
-
-        $line_items = \Stripe\Checkout\Session::allLineItems(
-            $request->checkout_session_id,
-            []
-        );
+        try {
+            $line_items = \Stripe\Checkout\Session::allLineItems(
+                $request->checkout_session_id,
+                []
+            );
+        } catch (\Exception $e) {
+            return ApiResponse::success(null, 'Line Items no obtenidos');
+        }
 
         return ApiResponse::success(['line_items' => $line_items], 'Line Items obtenido correctamente');
-    }
-
-    public function cancelOrder(Request $request)
-    {
-        $stripe = new \Stripe\StripeClient(env('stripeSecretKey'));
-        $stripe->paymentIntents->cancel('pi_3MtwBwLkdIwHu7ix28a3tqPa', []);
     }
 }
