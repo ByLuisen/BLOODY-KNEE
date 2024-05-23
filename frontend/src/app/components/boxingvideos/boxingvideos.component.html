@@ -154,21 +154,21 @@
 
           <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
 
-          <div class="bg-white p-8 rounded-lg z-50">
+          <div class="bg-red-100 p-8 rounded-lg z-50">
 
             <!-- Error message for premium content -->
-            <h2 class="text-2xl font-bold mb-4">¡Ups!
+            <h2 class="text-2xl font-bold font-sans mb-4">¡Ups!
               Contenido Premium</h2>
 
-            <p>Este video es contenido
+            <p class="font-sans">Este video es contenido
               premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
 
             <!-- Button to close the modal -->
-            <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+            <button class="mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mx-1"
               (click)="closeModal()">Volver</button>
 
             <!-- Button to subscribe -->
-            <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+            <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mx-1"
               routerLink="/pricing">Subscribirse</button>
           </div>
         </div>

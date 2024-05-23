@@ -47,16 +47,6 @@ export class MerchandisingComponent implements OnInit {
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
   ngOnInit(): void {
-    this.auth.isAuthenticated$.subscribe((isauth) => {
-      if (isauth) {
-        this.http.getRole().subscribe((role) => {
-          console.log(role.data);
-          this.role = role.data;
-        });
-      } else {
-        this.role = 'Basic';
-      }
-    });
     this.getProductos();
     this.getBrands();
     this.getCategories();
@@ -93,6 +83,10 @@ export class MerchandisingComponent implements OnInit {
         Validators.pattern(/^[0-9\s]*$/)
       ])
     })
+    this.http.getRole().subscribe((response) => {
+      this.role = response
+    });
+    this.getProductos();
   }
 
   /**

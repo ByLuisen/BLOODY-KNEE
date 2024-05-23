@@ -60,18 +60,15 @@ export class PlayerComponent implements OnInit {
             console.log('User Email:', this.userEmail); // Verificar el correo electrónico en la consola
           }
         });
-        this.http.getRole().subscribe((role) => {
-          console.log(role.data);
-          this.role = role.data;
-        });
-      } else {
-        this.role = 'Basic';
       }
     });
   }
 
   ngOnInit() {
     this.loadingPlayer = true;
+    this.http.getRole().subscribe((response) => {
+      this.role = response
+    });
     this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       'https://player.vimeo.com/video/942272495?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
     );
@@ -400,7 +397,7 @@ export class PlayerComponent implements OnInit {
 
 
   getExclusive(video: Video) {
-    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
+    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium' && this.role != 'Admin') {
       this.openModal();
       // Abre el modal si el video es premium y el usuario no tiene un rol premium
     } else {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\VideoResource; // Corrección en el espacio de nombres
+use App\Http\Resources\VideoResource;
 use App\Http\Responses\ApiResponse;
 use App\Models\Video;
 use App\Models\User;
@@ -21,10 +21,13 @@ class VideoController extends Controller
     public function index()
     {
         try {
+            // Retrieve all videos from the database
             $videos = Video::get();
 
-            return ApiResponse::success(VideoResource::collection($videos), 'Lista de videos obtenida correctamente'); // Corrección en el nombre de la clase VideoResource
+            // Return success response with the list of videos
+            return ApiResponse::success(VideoResource::collection($videos), 'Lista de videos obtenida correctamente');
         } catch (\Exception $e) {
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage());
         }
     }
@@ -38,14 +41,16 @@ class VideoController extends Controller
      */
     public function modalities($modality_id, $type_id)
     {
-
         try {
+            // Retrieve videos based on modality and type from the database
             $videos = Video::where('modality_id', $modality_id)
                 ->where('type_id', $type_id)
                 ->get();
 
+            // Return success response with the filtered list of videos
             return ApiResponse::success(VideoResource::collection($videos), 'Lista de videos ordenada por modalidad y tipo obtenida correctamente');
         } catch (\Exception $e) {
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage());
         }
     }
@@ -59,110 +64,122 @@ class VideoController extends Controller
     public function videoById($id)
     {
         try {
-            // Utiliza first() para obtener solo el primer objeto
+            // Retrieve a video by its ID
             $video = Video::where('id', $id)->first();
 
-            // Verifica si se encontró un video
+            // Check if the video exists
             if ($video) {
+                // Return success response with the video data
                 return ApiResponse::success(new VideoResource($video), 'Video único por id obtenido correctamente');
             } else {
+                // Return error response if the video is not found
                 return ApiResponse::error('No se encontró ningún video con el ID proporcionado');
             }
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage());
         }
     }
 
-
+    /**
+     * Update dislikes for a video.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateDislikes(Request $request, $id)
     {
         try {
-            // Obtener el correo electrónico y la conexión del cuerpo de la solicitud
+            // Get user's email and connection from the request body
             $email = $request->input('email');
             $connection = $request->input('connection');
 
-            // Encuentra al usuario por su correo electrónico y conexión
+            // Find the user by email and connection
             $user = User::where('email', $email)
                 ->where('connection', $connection)
                 ->first();
 
-            // Verificar si el usuario existe
+            // Check if the user exists
             if (!$user) {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
 
-            // Encontrar el video por su ID
+            // Find the video by ID
             $video = Video::findOrFail($id);
 
-            // Verificar si el video existe
+            // Check if the video exists
             if (!$video) {
                 return response()->json(['error' => 'Video no encontrado'], 404);
             }
 
-            // Verificar si el usuario ya ha dado dislike a este video con el tipo "dislike"
+            // Check if the user has already disliked the video
             $existingDislike = $video->dislikedByUsers()->where('type', 'dislike')->where('user_id', $user->id)->first();
 
             if ($existingDislike) {
-                // Eliminar el dislike existente
+                // Remove the existing dislike
                 $video->dislikedByUsers()->detach($user);
-                // Decrementar el contador de dislikes del video
+                // Decrement the dislike count of the video
                 $video->dislikes--;
                 $video->save();
                 return response()->json(['message' => 'Dislike quitado exitosamente']);
             }
 
-            // Eliminar like si existe
+            // Remove like if exists
             if ($video->likedByUsers->contains($user)) {
                 $video->likedByUsers()->detach($user);
                 $video->likes--;
             }
 
-            // Registrar el dislike del usuario en la tabla intermedia
+            // Record the user's dislike in the pivot table
             $user->likes()->attach($video->id, ['type' => 'dislike', 'date' => now()]);
             $video->dislikes++;
             $video->save();
 
             return response()->json(['message' => 'Dislike registrado correctamente']);
         } catch (\Exception $e) {
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage());
         }
     }
 
+    /**
+     * Update likes for a video.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateLikes(Request $request, $id)
     {
         try {
-            // Obtener el correo electrónico y la conexión del cuerpo de la solicitud
+            // Get user's email and connection from the request body
             $email = $request->input('email');
             $connection = $request->input('connection');
 
-            // Encuentra al usuario por su correo electrónico y conexión
+            // Find the user by email and connection
             $user = User::where('email', $email)
                 ->where('connection', $connection)
                 ->first();
 
-            // Verificar si el usuario existe
+            // Check if the user exists
             if (!$user) {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
 
-            // Encontrar el video por su ID
+            // Find the video by ID
             $video = Video::findOrFail($id);
 
-            // Verificar si el video existe
+            // Check if the video exists
             if (!$video) {
                 return response()->json(['error' => 'Video no encontrado'], 404);
             }
 
-            // Verificar si el usuario ya ha dado like a este video con el tipo "like"
-            //  if ($video->likedByUsers()->where('type', 'like')->where('user_id', $user->id)->exists()) {
-            // return response()->json(['message' => 'Ya diste like a este video'], 400);
-            // }
-
+            // Check if the user has already liked the video
             $existingLike = $video->likedByUsers()->where('type', 'like')->where('user_id', $user->id)->first();
 
             if ($existingLike) {
-                // Decrementar el contador de likes del video
+                // Decrement the like count of the video
                 $video->likedByUsers()->detach($user);
                 $video->likes--;
                 $video->save();
@@ -170,25 +187,23 @@ class VideoController extends Controller
                 return response()->json(['message' => 'Like quitado exitosamente']);
             }
 
-
-            // Eliminar dislike si existe
+            // Remove dislike if exists
             if ($video->dislikedByUsers->contains($user)) {
                 $video->dislikedByUsers()->detach($user);
                 $video->dislikes--;
             }
 
-            // Registrar el like del usuario en la tabla intermedia
+            // Record the user's like in the pivot table
             $user->likes()->attach($video->id, ['type' => 'Like', 'date' => now()]);
             $video->likes++;
             $video->save();
 
             return response()->json(['message' => 'Likes actualizados correctamente']);
         } catch (\Exception $e) {
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage());
         }
     }
-
-
     /**
      * Increment the visit count for a video.
      *
@@ -209,7 +224,6 @@ class VideoController extends Controller
             // Get the video by its ID
             $video = Video::findOrFail($id);
 
-
             // If a user is found, record the user's visit to the video
             if ($user) {
                 // Use the attach() method on the pivot table relationship
@@ -222,34 +236,8 @@ class VideoController extends Controller
 
             return ApiResponse::success(null, 'Visita registrada correctamente');
         } catch (\Exception $e) {
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage());
-        }
-    }
-
-    /**
-     * Create a new video.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function create(Request $request)
-    {
-        try {
-            // Validate the incoming request data
-            $validatedData = $request->validate([
-                'title' => 'required|string',
-                'description' => 'nullable|string',
-                'url' => 'required|url',
-                'modality_id' => 'required|exists:modalities,id',
-                'type_id' => 'required|exists:types,id',
-            ]);
-
-            // Create the video
-            $video = Video::create($validatedData);
-
-            return ApiResponse::success(new VideoResource($video), 'Video creado correctamente');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), 500);
         }
     }
 
@@ -276,6 +264,7 @@ class VideoController extends Controller
 
             return ApiResponse::success(new VideoResource($video), 'Video actualizado correctamente');
         } catch (\Exception $e) {
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage(), 500);
         }
     }
@@ -302,10 +291,18 @@ class VideoController extends Controller
 
             return ApiResponse::success(null, 'Video eliminado correctamente');
         } catch (\Exception $e) {
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage(), 500);
         }
     }
 
+    /**
+     * Save a video as favorite for a user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $videoId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function saveAsFavorite(Request $request, $videoId)
     {
         try {
@@ -339,13 +336,16 @@ class VideoController extends Controller
 
             return ApiResponse::success(null, 'Video guardado como favorito correctamente');
         } catch (\Exception $e) {
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage());
         }
     }
 
-
     /**
+     * Retrieve favorite videos for a user.
      *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getFavoriteVideos(Request $request)
     {
@@ -362,11 +362,12 @@ class VideoController extends Controller
                 return ApiResponse::error('Usuario no encontrado', 404);
             }
 
-            // Obtain all the videos the user has saved.
+            // Obtain all the videos the user has saved as favorites
             $favoriteVideos = $user->favorites;
 
             return ApiResponse::success(VideoResource::collection($favoriteVideos), 'Lista de videos favoritos obtenida correctamente');
         } catch (\Exception $e) {
+            // Return error response if an exception occurs
             return ApiResponse::error($e->getMessage());
         }
     }

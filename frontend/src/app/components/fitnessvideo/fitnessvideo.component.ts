@@ -50,16 +50,7 @@ export class FitnessvideoComponent implements OnInit {
     private router: Router,
     private auth: AuthService
   ) {
-    this.auth.isAuthenticated$.subscribe((isauth) => {
-      if (isauth) {
-        this.http.getRole().subscribe((role) => {
-          console.log(role.data);
-          this.role = role.data;
-        });
-      } else {
-        this.role = 'Basic';
-      }
-    });
+
     this.editForm = new FormGroup({
       title: new FormControl('', Validators.required),
       coach: new FormControl('', Validators.required),
@@ -95,6 +86,9 @@ export class FitnessvideoComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
+    this.http.getRole().subscribe((response) => {
+      this.role = response
+    });
     this.http
       .getVideosModality(3, 3)
       .pipe(
@@ -121,6 +115,7 @@ export class FitnessvideoComponent implements OnInit {
 
 
   }
+
 
   // Método que se ejecutará cuando cambien los elementos filtrados
   onFilteredItemsChanged(filteredItems: Video[]) {
@@ -342,5 +337,4 @@ export class FitnessvideoComponent implements OnInit {
       this.router.navigate(['/player', video.id]);
     }
   }
-
 }

@@ -43,16 +43,6 @@ export class ThaivideosComponent implements OnInit {
 
 
   constructor(private http: HttpService, private router: Router, private auth: AuthService) {
-    this.auth.isAuthenticated$.subscribe((isauth) => {
-      if (isauth) {
-        this.http.getRole().subscribe((role) => {
-          console.log(role.data);
-          this.role = role.data;
-        });
-      } else {
-        this.role = 'Basic';
-      }
-    });
 
     this.createVideoForm = new FormGroup({
       videoTitle: new FormControl('', [
@@ -83,6 +73,9 @@ export class ThaivideosComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
+    this.http.getRole().subscribe((response) => {
+      this.role = response
+    });
     this.http
       .getVideosModality(2, 1)
       .pipe(
@@ -146,7 +139,7 @@ export class ThaivideosComponent implements OnInit {
   }
 
   selectVideo(video: Video) {
-    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
+    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium' && this.role != 'Admin') {
       this.openModal();
       // Abre el modal si el video es premium y el usuario no tiene un rol premium
     } else {

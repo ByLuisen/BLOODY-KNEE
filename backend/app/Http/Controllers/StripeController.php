@@ -19,9 +19,11 @@ class StripeController extends Controller
     {
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
 
+        // Get all the products
         $products = $request->input('products');
         $lineItems = [];
 
+        // Set up for the checkout payment setting the currency, name, price and quantity of the product
         foreach ($products as $product) {
             $lineItems[] = [
                 'price_data' => [
@@ -36,6 +38,12 @@ class StripeController extends Controller
             ];
         }
 
+        /**
+         * Create the checkout session passing the user email, the line items, the mode that will
+         * be payment since it is a single payment, the shipping_options to collect shipping, the
+         * success_url that will go to the order summary if the purchase is successful and the cancel_url
+         * if the client doesn't want to complete the payment.
+         */
         $checkout_session = \Stripe\Checkout\Session::create([
             'customer_email' => $request->input('user_email'),
             'line_items' => $lineItems,
@@ -66,6 +74,13 @@ class StripeController extends Controller
     {
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
 
+        /**
+         * Create the checkout session passing the user email, the line items that in this case is the price_id
+         * of the susbcription (It is configured in stripe since for the charge to be recurring it has to be previously
+         * created in stripe, otherwise the charge could not be recurring), the mode that will
+         * be subscription for a recurrent payment, the success_url if the purchase is successful and the cancel_url
+         * if the client doesn't want to complete the payment.
+         */
         $checkout_session = \Stripe\Checkout\Session::create([
             'customer_email' => $request->input('user_email'),
             'line_items' => [
@@ -83,6 +98,10 @@ class StripeController extends Controller
         return ApiResponse::success(['checkout_url' => $checkout_session->url], 'Checkout Seesion subscription creada correctamente');
     }
 
+    /**
+     * Function that returns the checkout object get by the checkout session id that contains all
+     * the information about the checkout
+     */
     public function retrieveCheckoutSession(Request $request)
     {
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));
@@ -99,6 +118,9 @@ class StripeController extends Controller
         return ApiResponse::success(['checkout_session' => $checkout_session], 'Checkout Seesion obtenida correctamente');
     }
 
+    /**
+     * Function that returns the line items for the checkouts used to purchase products for the merchandise.
+     */
     public function retrieveLineItems(Request $request)
     {
         \Stripe\Stripe::setApiKey(env('stripeSecretKey'));

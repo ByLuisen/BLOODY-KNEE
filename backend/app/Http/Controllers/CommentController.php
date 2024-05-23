@@ -11,132 +11,169 @@ use App\Http\Responses\ApiResponse;
 
 class CommentController extends Controller
 {
+    /**
+     * Retrieve all comments.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         try {
+            // Retrieve all comments from the database
             $comments = UserCommentVideo::get();
 
-            return ApiResponse::success(CommentResource::collection($comments), 'Lista de dietas obtenida correctamente'); // Corrección en el nombre de la clase VideoResource
+            // Return success response with the list of comments
+            return ApiResponse::success(CommentResource::collection($comments), 'Lista de dietas obtenida correctamente');
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
+            // Log the error or perform other actions as needed
             return ApiResponse::error($e->getMessage());
         }
     }
 
+    /**
+     * Retrieve comments for a specific video by its ID.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function commentById($id)
     {
         try {
-            // Buscar los comentarios asociados al video especificado por su ID, ordenados por fecha de creación
+            // Find comments associated with the specified video ID, ordered by creation date
             $comments = UserCommentVideo::with('user')
                 ->where('video_id', $id)
-                ->orderBy('created_at', 'desc') // Ordenar por fecha de creación, puedes cambiar 'desc' a 'asc' si deseas orden ascendente
+                ->orderBy('created_at', 'desc')
                 ->get();
-            // Retorna la colección de comentarios en forma de recurso
+
+            // Return the collection of comments as a resource
             return ApiResponse::success($comments, 'Lista de comentarios obtenida correctamente');
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
+            // Log the error or perform other actions as needed
             return ApiResponse::error($e->getMessage());
         }
     }
 
-
+    /**
+     * Count comments for a video and update the video's comments count.
+     *
+     * @param  int  $videoId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function countAndUpdateComments($videoId)
     {
         try {
-            // Contar los comentarios asociados al video
+            // Count comments associated with the video
             $commentCount = UserCommentVideo::where('video_id', $videoId)->count();
 
-            // Actualizar el campo "comments" en la tabla de videos con el recuento obtenido
+            // Update the "comments" field in the videos table with the obtained count
             $video = Video::findOrFail($videoId);
             $video->comments = $commentCount;
             $video->update();
 
             return ApiResponse::success(null, 'Conteo y actualización de comentarios realizados correctamente');
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
+            // Log the error or perform other actions as needed
             return ApiResponse::error($e->getMessage());
         }
     }
 
+    /**
+     * Add a new comment for a video.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addComment(Request $request)
     {
         try {
-            // Validar los datos del comentario
+            // Validate the comment data
             $request->validate([
                 'video_id' => 'required|exists:videos,id',
                 'comment' => 'required|string|max:255',
-                'email' => 'required|email', // Asegúrate de que el campo de email esté presente y sea un correo electrónico válido
-                'connection' => 'required', // Asegúrate de que el campo de connection esté presente
+                'email' => 'required|email',
+                'connection' => 'required',
             ]);
 
-            // Obtener el correo electrónico y la conexión del cuerpo de la solicitud
+            // Get email and connection from the request body
             $email = $request->input('email');
             $connection = $request->input('connection');
 
-            // Encuentra al usuario por su correo electrónico y conexión
+            // Find the user by email and connection
             $user = User::where('email', $email)
                 ->where('connection', $connection)
                 ->first();
 
-            // Verifica si el usuario existe
+            // Check if the user exists
             if ($user) {
-                // Crear un nuevo comentario con los datos del usuario
+                // Create a new comment with user's data
                 $comment = new UserCommentVideo();
-                $comment->user_id = $user->id; // Asigna el user_id del usuario encontrado
+                $comment->user_id = $user->id;
                 $comment->video_id = $request->video_id;
                 $comment->comment = $request->comment;
-                $comment->date = now(); // Establecer la fecha actual
+                $comment->date = now();
                 $comment->save();
 
-                // Incluir los datos del usuario en la respuesta
+                // Include user data in the response
                 $comment->user = $user;
 
                 return ApiResponse::success($comment, 'Comentario añadido correctamente');
             } else {
-                // Manejar el caso en el que el usuario no fue encontrado
+                // Handle case where user is not found
                 return ApiResponse::error('El usuario no fue encontrado.');
             }
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
+            // Log the error or perform other actions as needed
             return ApiResponse::error($e->getMessage());
         }
     }
 
-
+    /**
+     * Edit an existing comment.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $commentId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function editComment(Request $request, $commentId)
     {
         try {
-            // Validar los datos del comentario
+            // Validate the comment data
             $request->validate([
                 'comment' => 'required|string|max:255',
             ]);
 
-            // Buscar el comentario por su ID
+            // Find the comment by its ID
             $comment = UserCommentVideo::findOrFail($commentId);
 
-            // Actualizar el comentario con los nuevos datos
+            // Update the comment with new data
             $comment->comment = $request->comment;
             $comment->save();
 
             return ApiResponse::success($comment, 'Comentario editado correctamente');
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
+            // Log the error or perform other actions as needed
             return ApiResponse::error($e->getMessage());
         }
     }
 
+    /**
+     * Delete a comment.
+     *
+     * @param  int  $commentId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteComment($commentId)
     {
         try {
-            // Buscar el comentario por su ID
+            // Find the comment by its ID
             $comment = UserCommentVideo::findOrFail($commentId);
 
-            // Eliminar el comentario
+            // Delete the comment
             $comment->delete();
 
             return ApiResponse::success(null, 'Comentario eliminado correctamente');
         } catch (\Exception $e) {
-            // Loguear el error o realizar otras acciones según tus necesidades
+            // Log the error or perform other actions as needed
             return ApiResponse::error($e->getMessage());
         }
     }

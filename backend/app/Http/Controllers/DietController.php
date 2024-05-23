@@ -10,9 +10,7 @@ use App\Http\Responses\ApiResponse;
 class DietController extends Controller
 {
     /**
-     * Display a listing of the diets.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * Get all diets
      */
     public function index()
     {
