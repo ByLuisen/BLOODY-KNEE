@@ -154,6 +154,7 @@ export class ProductDetailComponent implements OnInit {
             const { message } = response;
             if (message == 'Producto agregado al carrito con éxito') {
               // Show added succesfully notification for 7 seconds
+              this.added = false;
               this.added = true;
               setTimeout(() => {
                 this.added = false;
@@ -163,6 +164,7 @@ export class ProductDetailComponent implements OnInit {
             ) {
               // Show quantity alert notification for 7 seconds
               this.alertQuantity = true;
+              this.added = false;
               setTimeout(() => {
                 this.alertQuantity = false;
               }, 7000);
@@ -240,6 +242,7 @@ export class ProductDetailComponent implements OnInit {
           if (this.product.stock > 0) {
             // Show quantity alert notification for 7 seconds
             this.alertQuantity = true;
+            this.added = false;
             setTimeout(() => {
               this.alertQuantity = false;
             }, 7000);
@@ -247,6 +250,7 @@ export class ProductDetailComponent implements OnInit {
         } else {
           if (this.product.stock > 0) {
             // Show added succesfully notification for 7 seconds
+            this.added = false;
             this.added = true;
             setTimeout(() => {
               this.added = false;
@@ -260,6 +264,7 @@ export class ProductDetailComponent implements OnInit {
         cart.push(productToAdd);
         if (this.product.stock > 0) {
           // Show added succesfully notification for 7 seconds
+          this.added = false;
           this.added = true;
           setTimeout(() => {
             this.added = false;
@@ -281,6 +286,7 @@ export class ProductDetailComponent implements OnInit {
       if (this.product.stock > 0) {
         this.cookie.set('cart', JSON.stringify([productToAdd]), 365, '/'); // Convert the array to JSON and save it in the cookie
         // Show added succesfully notification for 7 seconds
+        this.added = false;
         this.added = true;
         setTimeout(() => {
           this.added = false;
@@ -321,11 +327,10 @@ export class ProductDetailComponent implements OnInit {
 
       await this.getProducto();
 
-      if(this.product.stock == 0) {
+      if (this.product.stock == 0) {
         this.outStockAlert = true;
         this.openModal = false;
-      }
-      else if (quantity > this.product.stock) {
+      } else if (quantity > this.product.stock) {
         this.outStockAlert = true;
       } else {
         this.loading = true;
