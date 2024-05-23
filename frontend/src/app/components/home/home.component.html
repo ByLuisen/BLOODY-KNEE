@@ -31,7 +31,7 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 text-center sm:text-justify">
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-12 sm:px-96 text-center sm:text-justify" *ngIf="role">
     <div class="group relative" *ngFor="let video of videosAleatorios">
       <ng-container>
         <a (click)="selectVideo(video)">

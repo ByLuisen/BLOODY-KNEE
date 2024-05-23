@@ -488,6 +488,7 @@ export class HttpService {
           price_id: quotePriceId,
           user_email: user.email ?? '',
           href: window.location.href,
+          origin: window.location.origin,
         };
         return this._http.post(url, body).pipe(
           catchError((error) => {

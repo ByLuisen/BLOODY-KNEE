@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('quote_id');
-            $table->string('sub_id')->unique();
+            $table->string('sub_id')->unique()->nullable();
             $table->enum('status', ['Active', 'Cancelled']);
             $table->timestamps();
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { finalize, map, of, switchMap, tap, zip } from 'rxjs';
 import { Quote } from 'src/app/models/Quote';
@@ -14,13 +14,13 @@ export class PricingComponent implements OnInit {
   quotes!: Quote[];
   arrayAdvantages!: any;
   loading: boolean = false;
-  sub_id!: string;
   role!: string;
   openModal: boolean = false;
+  message!: string;
   constructor(
     private http: HttpService,
     public auth: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -41,20 +41,27 @@ export class PricingComponent implements OnInit {
           .pipe(
             switchMap(([checkoutSession, lineItems]) => {
               if (checkoutSession.data && lineItems.data) {
-                this.loading = false
                 // Procesamos los resultados de ambas llamadas
-                this.role = lineItems.data.line_items.data[0].description;
-                this.sub_id = checkoutSession.data.checkout_session.subscription;
-                console.log(this.role, this.sub_id);
-                this.openModal = true;
+                const role = lineItems.data.line_items.data[0].description;
+                const sub_id =
+                  checkoutSession.data.checkout_session.subscription;
                 // Llamamos a makeOrder con los resultados de las dos llamadas
-                return this.http.updateRole(this.role, this.sub_id);
+                return this.http.updateRole(role, sub_id);
               } else {
                 this.loading = false;
                 this.http.getRole().subscribe((response) => {
                   this.role = response;
                 });
                 return of();
+              }
+            }),tap((response) => {
+              if(response) {
+                this.role = response.data
+                if(this.role == 'Admin') {
+                  this.message = response.message;
+                }
+                this.loading = false;
+                this.openModal = true;
               }
             })
           )
@@ -101,6 +108,16 @@ export class PricingComponent implements OnInit {
   }
 
   getBasic(): void {
-    this.http.updateRole('Basic').subscribe();
+    this.loading = true;
+    this.http.updateRole('Basic').subscribe((response) => {
+      this.role = response.data;
+      this.loading = false;
+      this.openModal = true;
+    });
+  }
+
+  closeModal(): void {
+    this.openModal = false;
+    window.location.href = window.location.origin + '/home';
   }
 }

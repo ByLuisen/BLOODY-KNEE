@@ -11,10 +11,14 @@ export class ProfileOrdersComponent implements OnInit {
   loading: boolean = false;
   orders!: Order[];
   openModal: boolean = false;
+  role!: string;
 
   constructor(private http: HttpService) {}
 
   ngOnInit(): void {
+    this.http.getRole().subscribe((response) => {
+      this.role = response
+    });
     this.loading = true;
     this.http.getOrders().subscribe((orders) => {
       this.loading = false;

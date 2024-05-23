@@ -91,7 +91,7 @@ class StripeController extends Controller
             ],
             'mode' => 'subscription',
             'payment_method_configuration' => 'pmc_1P680fByhCj4S0lhpHMBLSHL',
-            'success_url' => $request->input('href') . '?success=true&session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => $request->input('origin') . '/home?success=true&session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $request->input('href'),
         ]);
 

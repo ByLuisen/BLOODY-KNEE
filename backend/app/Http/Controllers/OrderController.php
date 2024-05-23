@@ -101,10 +101,15 @@ class OrderController extends Controller
             return ApiResponse::error(null, 'Usuario no encontrado');
         }
 
-        // Get the user's orders sorted by descending creation date
-        $userOrders = $user->orders()->with('orderDetails')->orderByDesc('created_at')->get();
-
-        return ApiResponse::success($userOrders, 'Pedidos del usuario obtenidos correctamente');
+        if ($user->getRoleNames()[0] != 'Admin') {
+            // Get the user's orders sorted by descending creation date
+            $userOrders = $user->orders()->with('orderDetails')->orderByDesc('created_at')->get();
+            return ApiResponse::success($userOrders, 'Pedidos del usuario obtenidos correctamente');
+        }
+        if ($user->getRoleNames()[0] == 'Admin') {
+            $userOrders = Order::with('orderDetails')->orderByDesc('created_at')->get();
+            return ApiResponse::success($userOrders, 'Pedidos del todos los usuario obtenidos correctamente');
+        }
     }
 
     /**
