@@ -47,41 +47,115 @@
   <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
     <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
       <h2 class="text-xl font-semibold mb-4">Edit <span class="text-red-600">{{ editedVideo.title }}</span></h2>
-      <form (submit)="submitEditVideoForm()">
+      <form [formGroup]="editVideoForm" (submit)="submitEditVideoForm()">
         <!-- Title -->
         <div class="mb-4">
           <label for="videoTitle" class="block text-black">Title:</label>
-          <input type="text" id="videoTitle" name="videoTitle" [(ngModel)]="editedVideo.title"
+          <input type="text" id="videoTitle" name="videoTitle" formControlName="title"
             class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          <!-- Mensaje de error required-->
+          <p *ngIf="editVideoForm.get('title')!.hasError('required') && editVideoForm.get('title')?.touched"
+            class="text-red-600">El título es requerido.
+          </p>
+          <!-- Mensaje de error pattern-->
+          <p *ngIf="editVideoForm.get('title')!.hasError('pattern')  && editVideoForm.get('title')?.dirty"
+            class="text-red-600">Formato no válido.
+          </p>
+          <!-- Mensaje de error maxlength-->
+          <p *ngIf="editVideoForm.get('title')!.hasError('maxlength')  && editVideoForm.get('title')?.dirty"
+            class="text-red-600">El título es demasiado
+            largo.
+          </p>
+          <!-- Mensaje de error minlength-->
+          <p *ngIf="editVideoForm.get('title')!.hasError('minlength')  && editVideoForm.get('title')?.dirty"
+            class="text-red-600">El título es demasiado
+            corto.
+          </p>
         </div>
         <!-- Coach -->
         <div class="mb-4">
           <label for="videoCoach" class="block text-black">Coach:</label>
-          <input type="text" id="videoCoach" name="videoCoach" [(ngModel)]="editedVideo.coach"
+          <input type="text" id="videoCoach" name="videoCoach" formControlName="coach"
             class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          <!-- Mensaje de error required-->
+          <p *ngIf="editVideoForm.get('coach')!.hasError('required') && editVideoForm.get('coach')?.touched"
+            class="text-red-600">El título es requerido.
+          </p>
+          <!-- Mensaje de error pattern-->
+          <p *ngIf="editVideoForm.get('coach')!.hasError('pattern') && editVideoForm.get('coach')?.dirty"
+            class="text-red-600">Formato no válido.
+          </p>
+          <!-- Mensaje de error maxlength-->
+          <p *ngIf="editVideoForm.get('coach')!.hasError('maxlength') && editVideoForm.get('coach')?.dirty"
+            class="text-red-600">El título es demasiado
+            largo.
+          </p>
+          <!-- Mensaje de error minlength-->
+          <p *ngIf="editVideoForm.get('coach')!.hasError('minlength') && editVideoForm.get('coach')?.dirty"
+            class="text-red-600">El título es demasiado
+            corto.
+          </p>
         </div>
         <!-- Description -->
         <div class="mb-4">
           <label for="videoDescription" class="block text-black">Description:</label>
-          <textarea id="videoDescription" name="videoDescription" [(ngModel)]="editedVideo.description"
+          <textarea id="videoDescription" name="videoDescription" formControlName="description"
             class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700 h-52"></textarea>
+          <!-- Mensaje de error required-->
+          <p *ngIf="editVideoForm.get('description')!.hasError('required') && editVideoForm.get('description')?.touched"
+            class="text-red-600">La descripción es requerida.
+          </p>
+          <!-- Mensaje de error maxlength-->
+          <p *ngIf="editVideoForm.get('description')!.hasError('maxlength') && editVideoForm.get('description')?.dirty"
+            class="text-red-600">La descripción es demasiado
+            larga.
+          </p>
+          <!-- Mensaje de error minlength-->
+          <p *ngIf="editVideoForm.get('description')!.hasError('minlength') && editVideoForm.get('description')?.dirty"
+            class="text-red-600">La descripcion es demasiado
+            corta.
+          </p>
         </div>
         <!-- URL -->
         <div class="mb-4">
           <label for="videoUrl" class="block text-black">URL:</label>
-          <input type="text" id="videoUrl" name="videoUrl" [(ngModel)]="editedVideo.url"
+          <input type="text" id="videoUrl" name="videoUrl" formControlName="url"
             class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          <!-- Mensaje de error required-->
+          <p *ngIf="editVideoForm.get('url')!.hasError('required') && editVideoForm.get('url')?.touched"
+            class="text-red-600">El url es requerido.
+          </p>
+          <!-- Mensaje de error minLength-->
+          <p *ngIf="editVideoForm.get('url')!.hasError('minlength') && editVideoForm.get('url')?.touched"
+            class="text-red-600">El url es demasiado corto.
+          </p>
+          <!-- Mensaje de error pattern-->
+          <p *ngIf="editVideoForm.get('url')!.hasError('pattern') && editVideoForm.get('url')?.dirty"
+            class="text-red-600">Formato no válido.
+          </p>
         </div>
         <!-- Duración -->
         <div class="mb-4">
           <label for="videoDuration" class="block text-black">Duración:</label>
-          <input type="text" id="videoDuration" name="videoDuration" [(ngModel)]="editedVideo.duration"
+          <input type="text" id="videoDuration" name="videoDuration" formControlName="duration"
             class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+          <!-- Mensaje de error required-->
+          <p *ngIf="editVideoForm.get('duration')!.hasError('required') && editVideoForm.get('duration')?.touched"
+            class="text-red-600">La duración es requerida.
+          </p>
+          <!-- Mensaje de error pattern-->
+          <p *ngIf="editVideoForm.get('duration')!.hasError('pattern') && editVideoForm.get('duration')?.dirty"
+            class="text-red-600">Formato no válido.
+          </p>
+          <!-- Mensaje de error maxlength-->
+          <p *ngIf="editVideoForm.get('duration')!.hasError('maxlength') && editVideoForm.get('duration')?.dirty"
+            class="text-red-600">Formato no válido.
+          </p>
         </div>
         <!-- Exclusivo -->
         <div class="mb-4">
           <label for="videoExclusive" class="block text-black">Exclusivo:</label>
-          <input type="checkbox" id="videoExclusive" name="videoExclusive" [(ngModel)]="editedVideo.exclusive"
+          <input type="checkbox" id="videoExclusive" name="videoExclusive" formControlName="exclusive"
             class="border-gray-300 border rounded-lg px-4 py-2 text-center text-red-700">
         </div>
         <!-- Buttons -->
