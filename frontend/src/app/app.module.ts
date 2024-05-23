@@ -38,6 +38,7 @@ import { ShippingAddressPageComponent } from './components/shipping-address-page
 import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
 import { OutStockModalComponent } from './components/out-stock-modal/out-stock-modal.component';
 import { MerchandisingBannerComponent } from './components/merchandising-banner/merchandising-banner.component';
+import { CookiePopupComponent } from './components/cookie-popup/cookie-popup.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { MerchandisingBannerComponent } from './components/merchandising-banner/
     OrderSummaryComponent,
     OutStockModalComponent,
     MerchandisingBannerComponent,
+    CookiePopupComponent,
 
   ],
   imports: [
