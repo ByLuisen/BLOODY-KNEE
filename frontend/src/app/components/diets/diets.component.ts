@@ -43,33 +43,36 @@ export class DietsComponent implements OnInit {
   newDiet: Diet = new Diet();
   infoAdmin: string = '';
   loading: boolean = false;
+  editDietForm!: FormGroup;
 
   constructor(private http: HttpService, private auth: AuthService) { }
 
   ngOnInit(): void {
-    this.createDietForm = new FormGroup({
-      dietTitle: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9\s]*$/), // String
-        Validators.maxLength(255)
-      ]),
-      dietDescription: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z\s]*$/) // String
-      ]),
-      dietContent: new FormControl('', [
-        Validators.required,
-      ]),
-      dietAuthor: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z\s]*$/) // String
-      ])
-    })
+
     this.getDietData();
     this.http.getRole().subscribe((response) => {
       this.role = response
     });
     this.getDietData();
+    // Inicializa el formulario de edición con las validaciones requeridas
+    this.editDietForm = new FormGroup({
+      title: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/),
+        Validators.maxLength(20),
+        Validators.minLength(7)
+      ]), // Título requerido
+      description: new FormControl('', [
+        Validators.required,
+        Validators.minLength(20),
+        Validators.maxLength(1000)
+      ]),
+      content: new FormControl('', Validators.required), // Contenido requerido
+      author: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/)
+      ]),
+    });
   }
 
   openPopup() {
@@ -216,9 +219,19 @@ export class DietsComponent implements OnInit {
     const selectedDiet = this.diets.find(diet => diet.id === dietId);
     if (selectedDiet) {
       this.editedDiet = selectedDiet; // Asignar directamente la dieta seleccionada
+
+      // Actualizar los valores del formulario con los valores de la dieta seleccionada
+      this.editDietForm.patchValue({
+        title: selectedDiet.title,
+        description: selectedDiet.description,
+        content: selectedDiet.content,
+        author: selectedDiet.author
+      });
+
       this.editModal = true;
     }
   }
+
 
   closeEditModal() {
     // Limpia el producto editado y cierra el modal
@@ -230,6 +243,12 @@ export class DietsComponent implements OnInit {
    *
    */
   submitEditDietForm() {
+    // Actualizar editedDiet con los valores del formulario
+    this.editedDiet.title = this.editDietForm.get('title')?.value;
+    this.editedDiet.description = this.editDietForm.get('description')?.value;
+    this.editedDiet.content = this.editDietForm.get('content')?.value;
+    this.editedDiet.author = this.editDietForm.get('author')?.value;
+
     // Llamar al servicio para actualizar la dieta en el servidor
     this.http.updateDiet(this.editedDiet.id, this.editedDiet).subscribe(
       (updatedDiet) => {
@@ -246,7 +265,6 @@ export class DietsComponent implements OnInit {
       }
     );
   }
-
 
   // CREATION
   // Envia el formulario de crear dieta

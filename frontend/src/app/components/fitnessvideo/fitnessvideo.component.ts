@@ -197,7 +197,7 @@ export class FitnessvideoComponent implements OnInit {
 
 
   /**
-   *
+   * Cancel delete operation
    */
   cancelDelete() {
     this.selectedVideo = null;
@@ -205,8 +205,8 @@ export class FitnessvideoComponent implements OnInit {
   }
 
   /**
- *
- */
+   * Confirm delete operation
+   */
   confirmDelete() {
     if (this.selectedVideo !== null) {
       this.http.destroyVideo(this.selectedVideo.id).subscribe(() => {

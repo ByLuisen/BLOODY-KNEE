@@ -122,30 +122,63 @@
       <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
         <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
           <h2 class="text-xl font-semibold mb-4">Editar <span class="text-red-600">{{editedDiet.title}}</span></h2>
-          <form (submit)="submitEditDietForm()">
+          <form [formGroup]="editDietForm" (submit)="submitEditDietForm()">
             <!-- Title -->
             <div class="mb-4">
-              <label for="dietTitle" class="block text-black">Título de la Dieta:</label>
-              <input type="text" id="dietTitle" name="dietTitle" [(ngModel)]="editedDiet.title"
+              <label for="title" class="block text-black">Título de la Dieta:</label>
+              <input type="text" id="title" formControlName="title"
                 class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+              <!-- Mensaje de error required-->
+              <p *ngIf="editDietForm.get('title')!.hasError('required')" class="text-red-600">El título es requerido.
+              </p>
+              <!-- Mensaje de error pattern -->
+              <p *ngIf="editDietForm.get('title')!.hasError('pattern') && editDietForm.get('title')?.dirty"
+                class="text-red-600">Formato no valido.
+              </p>
+              <!-- Mensaje de error minLength -->
+              <p *ngIf="editDietForm.get('title')!.hasError('minlength') && editDietForm.get('title')?.dirty"
+                class="text-red-600">El título es demasiado
+                corto.
+              </p>
+              <!-- Mensaje de error maxLength -->
+              <p *ngIf="editDietForm.get('title')!.hasError('maxlength') && editDietForm.get('title')?.dirty"
+                class="text-red-600">El título es demasiado largo.
+              </p>
             </div>
             <!-- Description -->
             <div class="mb-4">
-              <label for="dietDescription" class="block text-black">Descripción de la Dieta:</label>
-              <textarea id="dietDescription" name="dietDescription" [(ngModel)]="editedDiet.description"
+              <label for="description" class="block text-black">Descripción de la Dieta:</label>
+              <textarea id="description" formControlName="description"
                 class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700 h-52"></textarea>
+              <!-- Mensaje de error si el campo está vacío -->
+              <p *ngIf="editDietForm.get('description')!.hasError('required')" class="text-red-600">La descripción es
+                requerida.</p>
+              <!-- Mensaje de error si la descripción es demasiado corta -->
+              <p *ngIf="editDietForm.get('description')!.hasError('minlength')" class="text-red-600">La descripción es
+                demasiado corta.</p>
+              <!-- Mensaje de error si la descripción es demasiado larga -->
+              <p *ngIf="editDietForm.get('description')!.hasError('maxlength')" class="text-red-600">La descripción es
+                demasiado larga.</p>
             </div>
             <!-- Content -->
             <div class="mb-4">
-              <label for="dietContent" class="block text-black">Contenido de la Dieta:</label>
-              <input id="dietContent" name="dietContent" [(ngModel)]="editedDiet.content"
+              <label for="content" class="block text-black">Contenido de la Dieta:</label>
+              <input id="content" formControlName="content"
                 class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+              <!-- Mensaje de error si el campo está vacío -->
+              <p *ngIf="editDietForm.get('content')!.hasError('required')" class="text-red-600">El contenido es
+                requerido.</p>
             </div>
             <!-- Author -->
             <div class="mb-4">
-              <label for="dietAuthor" class="block text-black">Autor de la Dieta:</label>
-              <input type="text" id="dietAuthor" name="dietAuthor" [(ngModel)]="editedDiet.author"
+              <label for="author" class="block text-black">Autor de la Dieta:</label>
+              <input type="text" id="author" formControlName="author"
                 class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
+              <!-- Mensaje de error si el campo está vacío -->
+              <p *ngIf="editDietForm.get('author')!.hasError('required')" class="text-red-600">El autor es requerido.
+              </p>
+              <p *ngIf="editDietForm.get('author')!.hasError('pattern')" class="text-red-600">Formato no válido.
+              </p>
             </div>
             <!-- Botones de acción -->
             <div class="flex justify-center">
@@ -156,11 +189,8 @@
           </form>
         </div>
       </div>
-      <!-- END EDIT MODAL -->
     </ng-template>
-
   </div>
-
   <div>
     <button (click)="openPopup()"
       class="w-14 h-14 sm:w-16 sm:h-16 flex justify-center items-center chatbot-toggle-button transition-transform duration-300 transform hover:scale-110">
@@ -185,12 +215,10 @@
     </div>
   </div>
   <!-- END DELETE MODAL -->
-
   <div>
     <button (click)="openPopup()"
       class="w-16 h-16 flex justify-center items-center chatbot-toggle-button transition-transform duration-300 transform hover:scale-110">
       <img src="../../../assets/img/bot4.webp" alt="Chatbot Toggle">
     </button>
   </div>
-
 </div>
