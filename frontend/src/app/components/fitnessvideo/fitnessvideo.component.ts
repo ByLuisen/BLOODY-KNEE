@@ -122,12 +122,14 @@ export class FitnessvideoComponent implements OnInit {
 
   }
 
-
   // Método que se ejecutará cuando cambien los elementos filtrados
   onFilteredItemsChanged(filteredItems: Video[]) {
     this.filteredItems = filteredItems;
   }
-
+  /**
+   *
+   * @param type
+   */
   filterVideos(type: string) {
     this.selectedType = type;
 
@@ -168,6 +170,7 @@ export class FitnessvideoComponent implements OnInit {
     }
   }
 
+
   /**
    *
    */
@@ -196,6 +199,7 @@ export class FitnessvideoComponent implements OnInit {
       }
     )
   }
+
 
   /**
    *

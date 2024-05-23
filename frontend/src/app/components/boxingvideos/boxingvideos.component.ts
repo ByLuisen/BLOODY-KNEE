@@ -153,7 +153,9 @@ export class BoxingvideosComponent implements OnInit {
    */
   toggleAdminMode() {
     this.adminModeActivated = !this.adminModeActivated;
+    console.log("adminModeActivated: " + this.adminModeActivated);
   }
+
 
   /**
    * Open modal video premium

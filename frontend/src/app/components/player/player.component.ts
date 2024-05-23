@@ -173,8 +173,8 @@ export class PlayerComponent implements OnInit {
 
   }
   /**
-   * 
-   * @param videoId 
+   *
+   * @param videoId
    */
   likeVideo(videoId: number): void {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
@@ -214,8 +214,8 @@ export class PlayerComponent implements OnInit {
 
 
   /**
-   * 
-   * @param videoId 
+   *
+   * @param videoId
    */
   dislikeVideo(videoId: number): void {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
@@ -226,7 +226,7 @@ export class PlayerComponent implements OnInit {
             if (response.message === 'Dislike registrado correctamente') {
               this.UpdateDislikeOpenModal();
 
-              
+
               this.UpdateDislikeCloseModal2();
               this.UpdateLikeCloseModal();
               this.UpdateLikeCloseModal2();
@@ -472,7 +472,7 @@ export class PlayerComponent implements OnInit {
             // Aquí puedes realizar otras acciones después de que el video se guarde como favorito
             this.SaveOpenModal();
 
-         
+
             this.UpdateLikeCloseModal();
             this.UpdateLikeCloseModal2();
             this.UpdateDislikeCloseModal();

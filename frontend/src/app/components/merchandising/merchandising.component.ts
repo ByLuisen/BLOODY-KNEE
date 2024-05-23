@@ -30,7 +30,7 @@ export class MerchandisingComponent implements OnInit {
   // Modos para los modales
   editModal: boolean = false;
   deleteModal: boolean = false;
-  createModal: boolean = true;
+  createModal: boolean = false;
   // Variable para almacenar el producto que se está editando
   editedProduct: Product = new Product; // Asegúrate de inicializarlo con las propiedades correctas del tipo Product
   // Variable para almacenar el producto a añadir
@@ -58,7 +58,7 @@ export class MerchandisingComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'admin'; // TODO cambiar a "Basic"
+        this.role = 'Basic';
       }
     });
 
@@ -272,7 +272,7 @@ export class MerchandisingComponent implements OnInit {
       this.editModal = true;
     }
   }
-  
+
   // Método para obtener el nombre de la marca del producto
   getBrandNameById(brandId: number): string {
     const brand = this.brands.find(brand => brand.id === brandId);
@@ -352,6 +352,7 @@ export class MerchandisingComponent implements OnInit {
     this.selectedProduct = null;
     this.deleteModal = false;
   }
+
   /**
    * Se utiliza dentro del modal de confirmar eliminación de producto.
    * Elimina el producto que ha seleccionado previamente el usuario

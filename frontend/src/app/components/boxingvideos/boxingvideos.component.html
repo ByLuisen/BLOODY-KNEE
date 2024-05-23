@@ -247,7 +247,7 @@
     <ng-template #boxingContainer>
       <!-- Individual video item -->
       <div class="group relative" *ngFor="let video of filteredItems">
-
+        <!-- Show only if in admin mode -->
         <ng-container>
           <a (click)="selectVideo(video)">
 
@@ -271,6 +271,7 @@
             <h3 class="text-lg font-bold sm:mt-4">{{video.title}}</h3>
           </a>
         </ng-container>
+
         <!-- Modal for premium content -->
         <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
 
@@ -294,7 +295,7 @@
               routerLink="/pricing">Subscribirse</button>
           </div>
         </div>
-        <!-- Show only if in admin mode -->
+        <!-- Botones editar y eliminar cada video -->
         <div class="mb-2" *ngIf="adminModeActivated">
           <div class="flex flex-row">
             <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#6AA328' class="w-9 mx-2"
@@ -306,9 +307,9 @@
                 d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2z">
               </path>
             </svg>
-
             <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#DC2626' class="w-9 mx-2"
               (click)="deleteVideo(video)">
+              <!-- O openDeleteVideo(video) -->
               <path
                 d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z">
               </path>

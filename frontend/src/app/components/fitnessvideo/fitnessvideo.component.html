@@ -4,8 +4,8 @@
   <!-- Buscador de videos -->
   <app-searchbar [todos]="todos" (filteredItemsChanged)="onFilteredItemsChanged($event)"></app-searchbar>
 
+  <!-- Botón para activar el modo admin -->
   <div class="flex flex-col justify-center items-center mb-4" *ngIf="role == 'Admin'">
-    <!-- Botón para activar el modo admin -->
     <div
       class="border-solid border-2 w-44 bg-red-800 rounded-full hover:bg-red-900 transition duration-300 hover:scale-105 items-center "
       role="button" (click)="toggleAdminMode()">
@@ -236,7 +236,6 @@
     </div>
     <ng-template #fitnessContainer>
       <div class="group relative" *ngFor="let video of filteredItems">
-
         <ng-container>
           <a (click)="selectVideo(video)">
             <div class="premium-icon" *ngIf="video.exclusive">
@@ -267,8 +266,8 @@
               routerLink="/pricing">Subscribirse</button>
           </div>
         </div>
-        <!-- Mostrar solo si está en modo admin -->
-        <div *ngIf="adminModeActivated">
+        <!-- Botones editar y eliminar cada video -->
+        <div class="m-2" *ngIf="adminModeActivated">
           <div class="flex flex-row">
             <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#6AA328' class="w-9 mx-2"
               (click)="editVideo(video.id)">

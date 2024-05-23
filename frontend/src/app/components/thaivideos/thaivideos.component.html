@@ -286,8 +286,8 @@
               routerLink="/pricing">Subscribirse</button>
           </div>
         </div>
-        <!-- Mostrar solo si está en modo admin -->
-        <div *ngIf="adminModeActivated">
+        <!-- Botones editar y eliminar cada video -->
+        <div class="m-2" *ngIf="adminModeActivated">
           <div class="flex flex-row">
             <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#6AA328' class="w-9 mx-2"
               (click)="editVideo(video.id)">

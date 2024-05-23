@@ -202,7 +202,6 @@ export class DietsComponent implements OnInit {
     }
   }
 
-
   closeEditModal() {
     // Limpia el producto editado y cierra el modal
     this.editedDiet = new Diet();

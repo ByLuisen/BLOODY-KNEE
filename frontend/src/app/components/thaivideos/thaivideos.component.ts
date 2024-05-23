@@ -234,18 +234,6 @@ export class ThaivideosComponent implements OnInit {
         duration: this.createVideoForm.value.videoDuration,
         exclusive: this.createVideoForm.value.videoExclusive
       };
-
-      // this.http.createVideo(newVideo).subscribe(
-      //   (createdVideo) => {
-      //     console.log("Video creado exitosamente", createdVideo);
-      //     // Agregar el nuevo video a la lista local si es necesario
-      //     this.todos.push(createdVideo);
-      //     this.closeCreateModal();
-      //   },
-      //   (error) => {
-      //     console.error("Error al crear el Video:", error)
-      //   }
-      // );
     }
   }
   /**

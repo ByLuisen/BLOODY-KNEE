@@ -96,4 +96,23 @@ class DietController extends Controller
             return ApiResponse::error($e->getMessage());
         }
     }
+
+    /**
+     * Remove the specified diet from storage.
+     *
+     * @param  \App\Models\Diet  $diet
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadImage(Request $request)
+    {
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('public/diet_images', $filename);
+
+            return response()->json(['path' => $path, 'filename' => $filename]);
+        }
+
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
 }
