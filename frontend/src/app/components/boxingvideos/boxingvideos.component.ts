@@ -41,25 +41,14 @@ export class BoxingvideosComponent implements OnInit {
       coach: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
     });
-    this.auth.isAuthenticated$.subscribe((isauth) => {
-      if (isauth) {
-        this.http.getRole().subscribe((role) => {
-          console.log(role.data);
-          this.role = role.data;
-        });
-      } else {
-        this.role = 'Basic';
-      }
-    });
   }
   /**
    *
    */
   ngOnInit(): void {
-    // this.http.getRole().subscribe((data) => {
-    //   this.role = data[0].name;
-    //   console.log(this.role)
-    // })
+    this.http.getRole().subscribe((response) => {
+      this.role = response
+    });
 
     // Set loading flag to true
     this.loading = true;
@@ -104,11 +93,11 @@ export class BoxingvideosComponent implements OnInit {
           this.filteredItems = [...this.todos];
           return videos;
         }),
-       
+
         // Set loading flag to false after all requests are completed
         finalize(() => (this.loading = false))
       )
-   
+
       // Subscribe to the observable
       .subscribe();
 
@@ -143,7 +132,7 @@ export class BoxingvideosComponent implements OnInit {
    */
   selectVideo(video: Video) {
     // Check if video is exclusive and user role permits access
-    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
+    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium' && this.role != 'Admin') {
       // Open modal if access is restricted
       this.openModal();
     } else {

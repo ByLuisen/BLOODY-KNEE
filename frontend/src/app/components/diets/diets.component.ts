@@ -27,17 +27,10 @@ export class DietsComponent implements OnInit {
   constructor(private http: HttpService, private auth: AuthService) {}
 
   ngOnInit(): void {
-    this.getDietData();
-    this.auth.isAuthenticated$.subscribe((isauth) => {
-      if (isauth) {
-        this.http.getRole().subscribe((role) => {
-          console.log(role.data);
-          this.role = role.data;
-        });
-      } else {
-        this.role = 'admin'; // TODO cambiar a "Basic"
-      }
+    this.http.getRole().subscribe((response) => {
+      this.role = response
     });
+    this.getDietData();
   }
 
   openPopup() {

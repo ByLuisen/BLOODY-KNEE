@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('quote_id');
-            $table->date('start_date')->default(now()); // Establece la fecha actual como valor predeterminado
-            $table->date('expiration_date')->default(now()->addMonth()); // Calcula la fecha de vencimiento como un mes después de la fecha actual
-            $table->enum('status', ['Active', 'Expirated', 'Cancelled']);
+            $table->string('sub_id')->unique();
+            $table->enum('status', ['Active', 'Cancelled']);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

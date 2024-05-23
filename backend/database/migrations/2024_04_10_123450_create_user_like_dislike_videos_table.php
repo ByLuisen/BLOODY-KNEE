@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('video_id');
             $table->enum('type', ['Like', 'Dislike']);
-            $table->date('date')->default(now()); // Establece la fecha actual como valor predeterminado
+            $table->date('date')->default(now()); // Set the current date as the default value
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

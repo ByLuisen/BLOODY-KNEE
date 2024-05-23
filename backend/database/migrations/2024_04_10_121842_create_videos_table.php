@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('comments');
             $table->integer('likes');
             $table->integer('dislikes');
-            $table->date('upload_date')->default(now()); // Establece la fecha actual como valor predeterminado
+            $table->date('upload_date')->default(now()); // Set the current date as the default value
             $table->string('duration');
             $table->boolean('exclusive');
             $table->timestamps();
