@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetail extends Model
 {
     use HasFactory;
-
+   // Define the table name
     protected $table = 'order_details';
 }
