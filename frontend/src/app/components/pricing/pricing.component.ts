@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { loadStripe } from '@stripe/stripe-js';
@@ -11,7 +11,7 @@ import { HttpService } from 'src/app/services/http.service';
   templateUrl: './pricing.component.html',
   styleUrls: ['./pricing.component.css'],
 })
-export class PricingComponent {
+export class PricingComponent implements OnInit {
   quotes!: Quote[];
   arrayAdvantages!: any;
   loading: boolean = false;
@@ -23,16 +23,10 @@ export class PricingComponent {
   ) {}
 
   ngOnInit(): void {
-    this.auth.isAuthenticated$.subscribe((isauth) => {
-      if (isauth) {
-        this.http.getRole().subscribe((role) => {
-          console.log(role.data);
-          this.role = role.data;
-        });
-      } else {
-        this.role = 'Basic';
-      }
+    this.http.getRole().subscribe((response) => {
+      this.role = response;
     });
+
     this.http.getQuotes().subscribe((quotes: any[]) => {
       this.quotes = quotes;
       this.arrayAdvantages = this.quotes.map((quote) =>
@@ -49,7 +43,6 @@ export class PricingComponent {
         });
       }
     });
-
     if (window.location.pathname == '/pricing') {
       document.getElementById('pricing_section')?.classList.add('fondo_bk');
     }

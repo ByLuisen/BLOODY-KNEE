@@ -42,18 +42,30 @@ export class HttpService {
     });
   }
 
-  getRole(): Observable<any> {
+  getRole(): Observable<string> {
     const url = `${this.url}/get-role`;
     return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
-        // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
-        const body = {
-          email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
-          connection: user ? user['sub'].split('|')[0] : '', // Obtén la conexión del usuario actual
-        };
+        if (user) {
+          // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
+          const body = {
+            email: user.email, // Obtén el correo electrónico del usuario actual
+            connection: user['sub'].split('|')[0], // Obtén la conexión del usuario actual
+          };
 
-        // Realiza la solicitud PUT al servidor con el cuerpo construido
-        return this._http.post(url, body);
+          // Realiza la solicitud POST al servidor con el cuerpo construido
+          return this._http.post<any>(url, body).pipe(
+            map((response) => response.data), // Extrae solo el nombre del rol desde la respuesta
+            catchError((error) => {
+              console.error('Error al obtener el rol:', error);
+              // En caso de error, devolver un rol básico
+              return of('Basic');
+            })
+          );
+        } else {
+          // Si el usuario no está autenticado, devolver un rol básico
+          return of('Basic');
+        }
       })
     );
   }
@@ -633,24 +645,23 @@ export class HttpService {
     );
   }
 
-
   getFavoriteVideos(): Observable<Video[]> {
     const url = `${this.url}/favorite-videos`;
-  
+
     return this.auth.user$.pipe(
       switchMap((user) => {
         if (!user) {
           return throwError('Usuario no autenticado');
         }
-  
+
         const body = {
           email: user.email,
           connection: user.sub?.split('|')[0],
         };
-  
-        return this._http.post<{ data: Video[] }>(url, body).pipe(
-          map(response => response.data)
-        );
+
+        return this._http
+          .post<{ data: Video[] }>(url, body)
+          .pipe(map((response) => response.data));
       }),
       catchError((error) => {
         console.error('Error al obtener los vídeos favoritos:', error);
@@ -658,6 +669,4 @@ export class HttpService {
       })
     );
   }
-  
-  
 }

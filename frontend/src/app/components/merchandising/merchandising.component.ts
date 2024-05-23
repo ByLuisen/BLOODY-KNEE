@@ -46,18 +46,10 @@ export class MerchandisingComponent implements OnInit {
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
   ngOnInit(): void {
-    this.getProductos();
-    console.log(this.productos);
-    this.auth.isAuthenticated$.subscribe((isauth) => {
-      if (isauth) {
-        this.http.getRole().subscribe((role) => {
-          console.log(role.data);
-          this.role = role.data;
-        });
-      } else {
-        this.role = 'Basic'; // TODO cambiar a "Basic"
-      }
+    this.http.getRole().subscribe((response) => {
+      this.role = response
     });
+    this.getProductos();
   }
 
   getProductos(): void {
