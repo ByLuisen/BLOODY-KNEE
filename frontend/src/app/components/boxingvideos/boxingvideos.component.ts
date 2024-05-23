@@ -12,39 +12,25 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./boxingvideos.component.css'],
 })
 export class BoxingvideosComponent implements OnInit {
-  // Array to hold all videos
-  todos: Video[] = [];
-  // Arrays to hold videos of different modalities
-  videosSaco: Video[] = [];
-  videosPareja: Video[] = [];
-  videosConEquipamiento: Video[] = [];
-  videosSinEquipamiento: Video[] = [];
-  editingVideo: Video | null = null;
-  loading: boolean = false;
-
-  // Admin mode variable
-  adminModeActivated: boolean = false;
-
-  filteredItems: Video[] = [];
-  // Default selected type
-  selectedType: string = 'Todos';
-  // Flag to control modal visibility
-  modalOpen: boolean = false;
-  role!: string;
-
-  // Edit form
-  editForm: FormGroup;
-  // Modal for create a video form
-  createModal: boolean = false;
-  editModal: boolean = false;
-  deleteModal: boolean = false;
-  // Variable para almacenar el video que se está editando
-  editedVideo: Video = new Video;
-  // Selected video to delete
-  selectedVideo: Video | null = null;
-
-  // Formulario de creación del video
-  createVideoForm!: FormGroup;
+  todos: Video[] = [];  // List of all videos
+  videosSaco: Video[] = [];  // Videos with punching bag
+  videosPareja: Video[] = [];  // Partner videos
+  videosConEquipamiento: Video[] = [];  // Videos with equipment
+  videosSinEquipamiento: Video[] = [];  // Videos without equipment
+  editingVideo: Video | null = null;  // Currently editing video
+  loading: boolean = false;  // Loading indicator
+  adminModeActivated: boolean = false;  // Admin mode indicator
+  filteredItems: Video[] = [];  // Filtered list of videos
+  selectedType: string = 'Todos';  // Selected video type for filtering
+  modalOpen: boolean = false;  // Modal open indicator
+  role!: string;  // User role
+  editForm: FormGroup;  // Form for editing video details
+  createModal: boolean = false;  // Create modal open indicator
+  editModal: boolean = false;  // Edit modal open indicator
+  deleteModal: boolean = false;  // Delete modal open indicator
+  editedVideo: Video = new Video();  // Video being edited
+  selectedVideo: Video | null = null;  // Video selected for deletion
+  createVideoForm!: FormGroup;  // Form for creating a new video
 
   constructor(private http: HttpService, private router: Router, private auth: AuthService) {
     this.editForm = new FormGroup({
@@ -59,7 +45,7 @@ export class BoxingvideosComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Admin';
+        this.role = 'Basic';
       }
     });
 
@@ -89,8 +75,9 @@ export class BoxingvideosComponent implements OnInit {
       ]),
     })
   }
+
   /**
-   *
+   * Lifecycle hook for component initialization
    */
   ngOnInit(): void {
 
@@ -197,8 +184,8 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   /**
-   *
-   * @param video
+   * Open edit modal for selected video
+   * @param videoId The ID of the video to edit
    */
   editVideo(videoId: number) {
     const selectedVideo = this.todos.find(video => video.id === videoId)
@@ -210,41 +197,12 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   /**
-   * Clean editedVideo & close edit modal
+   * Close edit modal
    */
   closeEditModal() {
     // Limpia el video editado y cierra el modal
     this.editedVideo = new Video();
     this.editModal = false;
-  }
-
-  /**
-   * Submit edit form
-   */
-  submitEditForm() {
-    this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
-      (updatedVideo) => {
-        console.log("Video actualizado exitosamente", updatedVideo);
-        //Actualizo el video en lista local
-        const index = this.todos.findIndex(video => video.id === updatedVideo.id);
-        if (index !== -1) {
-          this.todos[index] = updatedVideo;
-        }
-        this.closeEditModal();
-      },
-      (error) => {
-        console.error("Error al actualizar el Video:", error)
-      }
-    )
-  }
-
-  /**
-   *
-   */
-  addVideo() {
-    if (!this.createModal) {
-      this.createModal = true;
-    }
   }
 
   /**
@@ -298,32 +256,15 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   /**
-  *
-  */
-  submitCreateVideoForm() {
-    if (this.createVideoForm.valid) {
-      const newVideo = {
-        title: this.createVideoForm.value.videoTitle,
-        coach: this.createVideoForm.value.videoCoach,
-        description: this.createVideoForm.value.videoDescription,
-        url: this.createVideoForm.value.videoUrl,
-        duration: this.createVideoForm.value.videoDuration,
-        exclusive: this.createVideoForm.value.videoExclusive
-      };
-    }
-  }
-
-  /**
-   *
+   * Close create modal
    */
   closeCreateModal() {
-    if (this.createModal) {
-      this.createModal = false;
-    }
+    this.createModal = false;
   }
 
+
   /**
-   *
+   * Submit edit form
    */
   submitEditVideoForm() {
     this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
@@ -343,7 +284,7 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   /**
-   *
+   * Cancel delete operation
    */
   cancelDelete() {
     this.selectedVideo = null;
@@ -351,8 +292,8 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   /**
- *
- */
+   * Confirm delete operation
+   */
   confirmDelete() {
     if (this.selectedVideo !== null) {
       this.http.destroyVideo(this.selectedVideo.id).subscribe(() => {
@@ -362,12 +303,10 @@ export class BoxingvideosComponent implements OnInit {
       });
     }
   }
-
   /**
-* Busca el video que se seleccione por ID para mostrar el modal
-*
-* @param video
-*/
+  * Open delete modal for selected video
+  * @param video The selected video
+  */
   openDeleteModal(video: Video) {
     this.selectedVideo = video;
     this.deleteModal = true;

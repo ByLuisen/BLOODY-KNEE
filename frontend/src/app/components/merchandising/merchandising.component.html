@@ -37,10 +37,10 @@
           <p class="py-1">{{infoAdmin}}</p>
         </div>
         <div class="flex flex-row my-3 justify-center">
-          <button
+          <!-- <button
             class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300"
             (click)="addProduct()">Agregar producto
-          </button>
+          </button> -->
           <button
             class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-yellow-500 border border-solid border-yellow-500 hover:scale-125 transition-transform duration-300"
             (click)="editProduct()">Editar producto</button>
@@ -50,7 +50,6 @@
         </div>
       </div>
     </div>
-
     <!-- Modal para editar producto -->
     <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
       <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
@@ -117,7 +116,7 @@
           <div class="mb-4">
             <label for="stock" class="block text-black">Información del stock</label>
             <input type="number" id="stock" name="stock" [(ngModel)]="editedProduct.stock"
-              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700" readonly>
+              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
           </div>
           <!-- Botones de acción -->
           <div class="flex justify-center">

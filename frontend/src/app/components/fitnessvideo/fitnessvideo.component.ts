@@ -57,7 +57,7 @@ export class FitnessvideoComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Admin';
+        this.role = 'Basic';
       }
     });
     this.editForm = new FormGroup({

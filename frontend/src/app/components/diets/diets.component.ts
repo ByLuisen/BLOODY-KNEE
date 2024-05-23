@@ -44,7 +44,7 @@ export class DietsComponent implements OnInit {
   infoAdmin: string = '';
   loading: boolean = false;
 
-  constructor(private http: HttpService, private auth: AuthService) {}
+  constructor(private http: HttpService, private auth: AuthService) { }
 
   ngOnInit(): void {
     this.createDietForm = new FormGroup({
@@ -73,7 +73,7 @@ export class DietsComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Admin';
+        this.role = 'Basic';
       }
     });
   }
@@ -104,13 +104,13 @@ export class DietsComponent implements OnInit {
       url,
       '_blank',
       'toolbar=yes,scrollbars=yes,resizable=yes,top=' +
-        topPosition +
-        ',left=' +
-        leftPosition +
-        ',width=' +
-        width +
-        ',height=' +
-        height
+      topPosition +
+      ',left=' +
+      leftPosition +
+      ',width=' +
+      width +
+      ',height=' +
+      height
     );
   }
 

@@ -14,40 +14,36 @@ import { Category } from 'src/app/models/Category';
   styleUrls: ['./merchandising.component.css'],
 })
 export class MerchandisingComponent implements OnInit {
-  // Array para almacenar todos los productos
   productos: Product[] = [];
-  // Boolean para controlar los filtros de stock
   mostrarEnStock: boolean = false;
   mostrarFueraDeStock: boolean = false;
-  // Variable para almacenar el precio máximo seleccionado
   precioMaximo: number = 150;
   loading: boolean = false;
-  // Variable para simular el role del usuario
   role!: string;
-  // Modos para los admins
   editAdminMode: boolean = false;
   deleteAdminMode: boolean = false;
-  // Modos para los modales
   editModal: boolean = false;
   deleteModal: boolean = false;
   createModal: boolean = false;
-  // Variable para almacenar el producto que se está editando
-  editedProduct: Product = new Product; // Asegúrate de inicializarlo con las propiedades correctas del tipo Product
-  // Variable para almacenar el producto a añadir
+  editedProduct: Product = new Product;
   newProduct: Product = new Product;
-  // Mensaje para informar al admin
   infoAdmin: string = "";
-  // variable para almacenar la ID del producto seleccionado para eliminar
   selectedProduct: Product | null = null;
-  // Almacena las marcas
   brands: Brand[] = [];
-  // Almacena las categorias
   categories: Category[] = [];
-  // Formulario de creación del producto
   creationForm!: FormGroup;
-  // Captura las imagenes que se van a subir de los productos
   archivos: any = [];
+
+  /**
+   * Constructor to inject services.
+   *
+   * @param http HttpService for making HTTP requests.
+   * @param router Router for navigation.
+   * @param auth AuthService for authentication.
+   */
   constructor(private http: HttpService, private router: Router, private auth: AuthService) { }
+
+  // ViewChild to reference the price range input element.
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
   ngOnInit(): void {
@@ -61,11 +57,9 @@ export class MerchandisingComponent implements OnInit {
         this.role = 'Basic';
       }
     });
-
     this.getProductos();
     this.getBrands();
     this.getCategories();
-    console.log("Nuevo producto" + this.newProduct.toJSON);
     this.creationForm = new FormGroup({
       name: new FormControl('', [
         Validators.required,
@@ -100,8 +94,9 @@ export class MerchandisingComponent implements OnInit {
       ])
     })
   }
+
   /**
-   *
+   * Fetches the list of brands from the server.
    */
   getBrands(): void {
     this.http.getBrands().subscribe(
@@ -114,8 +109,9 @@ export class MerchandisingComponent implements OnInit {
       }
     );
   }
+
   /**
-   *
+   * Fetches the list of categories from the server.
    */
   getCategories(): void {
     this.http.getCategories().subscribe(
@@ -129,6 +125,9 @@ export class MerchandisingComponent implements OnInit {
     );
   }
 
+  /**
+   * Fetches the list of products from the server.
+   */
   getProductos(): void {
     this.loading = true;
     this.http
@@ -136,16 +135,14 @@ export class MerchandisingComponent implements OnInit {
       .pipe(
         switchMap((products) => {
           this.productos = products;
-          // Calcular precio mínimo y máximo
+
           const precios = this.productos.map((producto) => producto.price);
           const precioMinimo = Math.min(...precios);
           const precioMaximo = Math.max(...precios);
 
-          // Establecer los valores iniciales del rango de precios
           this.priceRangeInput.nativeElement.min = precioMinimo;
           this.priceRangeInput.nativeElement.max = precioMaximo;
 
-          // Asignar el valor inicial del rango de precios
           this.precioMaximo = precioMaximo;
           return of(products);
         }),
@@ -159,28 +156,34 @@ export class MerchandisingComponent implements OnInit {
   }
 
   /**
-   *
-   */
+    * Updates the maximum price filter when the price range input changes.
+    */
   onPriceChange() {
     this.precioMaximo = parseInt(this.priceRangeInput.nativeElement.value);
   }
 
-  // Metodos para filtrar los productos
+  /**
+   * Counts the number of in-stock products.
+   *
+   * @returns Number of in-stock products.
+   */
   contarProductosEnStock(): number {
     return this.productos.filter((producto) => producto.stock > 0).length;
   }
 
   /**
-   *
-   * @returns
-   */
+  * Counts the number of out-of-stock products.
+  *
+  * @returns Number of out-of-stock products.
+  */
   contarProductosFueraDeStock(): number {
     return this.productos.filter((producto) => producto.stock === 0).length;
   }
 
   /**
+   * Filters the products based on the selected filters.
    *
-   * @returns
+   * @returns Array of filtered products.
    */
   productosFiltrados(): Product[] {
     let productosFiltrados: Product[] = [];
@@ -209,8 +212,9 @@ export class MerchandisingComponent implements OnInit {
     return productosFiltrados;
   }
   /**
+   * Navigates to the product details or opens modals for editing or deleting.
    *
-   * @param product
+   * @param product The product to view details of or edit/delete.
    */
   verDetallesProducto(product: Product) {
     if (this.editAdminMode) {
@@ -223,8 +227,11 @@ export class MerchandisingComponent implements OnInit {
   }
 
 
-  // Método para manejar el clic en el botón de editar producto
+  /**
+   * Toggles edit admin mode.
+   */
   editProduct(): void {
+    this.deleteAdminMode = false;
     if (!this.editAdminMode) {
       this.editAdminMode = true;
       this.infoAdmin = "SELECCIONA EL PRODUCTO A EDITAR";
@@ -235,20 +242,14 @@ export class MerchandisingComponent implements OnInit {
     console.log("editAdminMode=" + this.editAdminMode);
   }
 
-  // Método para manejar el clic en el botón de agregar producto
-  addProduct(): void {
-    if (!this.createModal) {
-      this.createModal = true;
-    } else {
-      this.createModal = false;
-    }
-    console.log("createAdminMode=" + this.createModal);
-  }
-
-  // Método para manejar el clic en el botón de eliminar producto
+  /**
+   * Toggles edit admin mode.
+   */
   deleteProduct(): void {
+    this.editAdminMode = false;
     if (!this.deleteAdminMode) {
       this.deleteAdminMode = true;
+
       this.infoAdmin = "SELECCIONA EL PRODUCTO A ELIMINAR";
     } else {
       this.deleteAdminMode = false;
@@ -256,11 +257,26 @@ export class MerchandisingComponent implements OnInit {
     }
     console.log("deleteAdminMode=" + this.deleteAdminMode);
   }
+  /**
+   * Toggles create product modal.
+   */
+  addProduct(): void {
+    if (!this.createModal) {
+      this.createModal = true;
+      this.deleteAdminMode = false;
+
+    } else {
+      this.createModal = false;
+    }
+    console.log("createAdminMode=" + this.createModal);
+  }
+
+
 
   /**
-   * Abre un formulario en modal para editar los datos del producto
+   * Opens the edit modal for the selected product.
    *
-   * @param productId
+   * @param productId The ID of the product to edit.
    */
   openEditModal(productId: number) {
     this.getBrands();
@@ -273,43 +289,43 @@ export class MerchandisingComponent implements OnInit {
     }
   }
 
-  // Método para obtener el nombre de la marca del producto
+  /**
+   * Opens the edit modal for the selected product.
+   *
+   * @param productId The ID of the product to edit.
+   */
   getBrandNameById(brandId: number): string {
     const brand = this.brands.find(brand => brand.id === brandId);
     return brand ? brand.name : ''; // Devolver el nombre de la marca si se encuentra, de lo contrario, cadena vacía
   }
 
   /**
-   * Cierra el modal con el formulario para editar producto
-   *
+   * Closes the edit modal.
    */
   closeEditModal() {
-    // Limpia el producto editado y cierra el modal
     this.editedProduct = new Product();
     this.editModal = false;
   }
 
-  // Método en el componente Angular para actualizar el producto
+  /**
+   * Submits the edit product form and updates the product.
+   */
   submitEditProductForm() {
     this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(
       response => {
-        // Manejo de la respuesta
         console.log('Producto actualizado correctamente', response);
         this.closeEditModal();
       },
       error => {
-        // Manejo del error
         console.error('Error al actualizar el producto', error);
       }
     );
   }
 
-
   /**
-   *
+   * Submits the edit product form and updates the product.
    */
   submitCreateProductForm() {
-    // Relleno newProduct con los datos de creationForm
     this.newProduct.name = this.creationForm.value.name;
     this.newProduct.categoryId = this.creationForm.value.categoryId;
     this.newProduct.brandId = this.creationForm.value.brandId;
@@ -336,9 +352,9 @@ export class MerchandisingComponent implements OnInit {
   }
 
   /**
-   * Busca el producto que se seleccione por ID para mostrar el modal
+   * Opens the delete modal for the selected product.
    *
-   * @param productId
+   * @param product The product to delete.
    */
   openDeleteModal(product: Product) {
     this.selectedProduct = product;
@@ -346,7 +362,7 @@ export class MerchandisingComponent implements OnInit {
   }
 
   /**
-   * Cancela
+   * Cancels the delete operation and closes the delete modal.
    */
   cancelDelete() {
     this.selectedProduct = null;
@@ -354,8 +370,7 @@ export class MerchandisingComponent implements OnInit {
   }
 
   /**
-   * Se utiliza dentro del modal de confirmar eliminación de producto.
-   * Elimina el producto que ha seleccionado previamente el usuario
+   * Confirms the deletion of the selected product.
    */
   confirmDelete() {
     if (this.selectedProduct !== null) {
@@ -368,15 +383,16 @@ export class MerchandisingComponent implements OnInit {
   }
 
   /**
-   * Cierra el modal de creación de producto
+   * Closes the create modal.
    */
   closeCreateModal() {
     this.createModal = false;
   }
 
   /**
-   * Función que maneja
-   * @param event
+   * Handles the image upload for the first image URL.
+   *
+   * @param event The file input change event.
    */
   handleImageUpload1(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -386,6 +402,12 @@ export class MerchandisingComponent implements OnInit {
       this.creationForm.patchValue({ url1: fileName });
     }
   }
+
+  /**
+   * Handles the image upload for the second image URL.
+   *
+   * @param event The file input change event.
+   */
   handleImageUpload2(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -394,6 +416,12 @@ export class MerchandisingComponent implements OnInit {
       this.creationForm.patchValue({ url2: fileName });
     }
   }
+
+  /**
+   * Handles the image upload for the third image URL.
+   *
+   * @param event The file input change event.
+   */
   handleImageUpload3(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {

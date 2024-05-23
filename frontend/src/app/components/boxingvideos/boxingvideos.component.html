@@ -16,10 +16,6 @@
       </svg>
       <p class="text-white">MODE</p>
     </div>
-    <button *ngIf="adminModeActivated"
-      class="bg-transparent rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300 mt-2"
-      (click)="addVideo()">Agregar video
-    </button>
   </div>
 
   <!-- Filter buttons -->
@@ -46,125 +42,6 @@
       [class.active]="selectedType === 'SinEquipamiento'" (click)="filterVideos('SinEquipamiento')">Sin
       Equipamiento</button>
   </div>
-
-  <!-- Modal para crear video -->
-  <div *ngIf="createModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
-    <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
-      <h2 class="text-xl font-semibold mb-4">Crear video</h2>
-      <!-- Formulario para crear el video -->
-      <form [formGroup]="createVideoForm" (submit)="submitCreateVideoForm()">
-        <!-- Título -->
-        <div class="mb-4">
-          <label for="videoTitle" class="block text-black">Título del Video:</label>
-          <input type="text" id="videoTitle" name="videoTitle" [(ngModel)]="editedVideo.title"
-            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
-            formControlName="videoTitle">
-          <div class="mt-1">
-            <!-- required error -->
-            <span
-              *ngIf="createVideoForm.get('videoTitle')?.hasError('required') && createVideoForm.get('videoTitle')?.touched"
-              class="text-red-500">Campo
-              obligatorio</span>
-            <!-- invalid format error -->
-            <span
-              *ngIf="createVideoForm.get('videoTitle')!.hasError('pattern') && createVideoForm.get('videoTitle')?.dirty"
-              class="text-red-500">Formato
-              incorrecto</span>
-          </div>
-        </div>
-        <!-- Entrenador -->
-        <div class="mb-4">
-          <label for="videoCoach" class="block text-black">Entrenador:</label>
-          <input type="text" id="videoCoach" name="videoCoach" [(ngModel)]="editedVideo.coach"
-            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
-            formControlName="videoCoach">
-          <div class="mt-1">
-            <!-- required error -->
-            <span
-              *ngIf="createVideoForm.get('videoCoach')?.hasError('required') && createVideoForm.get('videoCoach')?.touched"
-              class="text-red-500">Campo
-              obligatorio</span>
-            <!-- invalid format error -->
-            <span
-              *ngIf="createVideoForm.get('videoCoach')!.hasError('pattern') && createVideoForm.get('videoCoach')?.dirty"
-              class="text-red-500">Formato
-              incorrecto</span>
-          </div>
-        </div>
-        <!-- Descripción -->
-        <div class="mb-4">
-          <label for="videoDescription" class="block text-black">Descripción del Video:</label>
-          <textarea id="videoDescription" name="videoDescription" [(ngModel)]="editedVideo.description"
-            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
-            formControlName="videoDescription"></textarea>
-          <div class="mt-1">
-            <!-- required error -->
-            <span
-              *ngIf="createVideoForm.get('videoDescription')?.hasError('required') && createVideoForm.get('videoDescription')?.touched"
-              class="text-red-500">Campo
-              obligatorio</span>
-            <!-- invalid format error -->
-            <span
-              *ngIf="createVideoForm.get('videoDescription')!.hasError('pattern') && createVideoForm.get('videoDescription')?.dirty"
-              class="text-red-500">Formato
-              incorrecto</span>
-          </div>
-        </div>
-        <!-- URL -->
-        <div class="mb-4">
-          <label for="videoUrl" class="block text-black">URL del Video:</label>
-          <input type="text" id="videoUrl" name="videoUrl" [(ngModel)]="editedVideo.url"
-            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
-            formControlName="videoUrl">
-          <div class="mt-1">
-            <!-- required error -->
-            <span
-              *ngIf="createVideoForm.get('videoUrl')?.hasError('required') && createVideoForm.get('videoUrl')?.touched"
-              class="text-red-500">Campo
-              obligatorio</span>
-            <!-- invalid format error -->
-            <span *ngIf="createVideoForm.get('videoUrl')!.hasError('pattern') && createVideoForm.get('videoUrl')?.dirty"
-              class="text-red-500">Formato
-              incorrecto</span>
-          </div>
-        </div>
-        <!-- Duración -->
-        <div class="mb-4">
-          <label for="videoDuration" class="block text-black">Duración:</label>
-          <input type="text" id="videoDuration" name="videoDuration" [(ngModel)]="editedVideo.duration"
-            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
-            formControlName="videoDuration">
-          <div class="mt-1">
-            <!-- required error -->
-            <span
-              *ngIf="createVideoForm.get('videoDuration')?.hasError('required') && createVideoForm.get('videoDuration')?.touched"
-              class="text-red-500">Campo
-              obligatorio</span>
-            <!-- invalid format error -->
-            <span
-              *ngIf="createVideoForm.get('videoDuration')!.hasError('pattern') && createVideoForm.get('videoDuration')?.dirty"
-              class="text-red-500">Formato
-              incorrecto</span>
-          </div>
-        </div>
-        <!-- Exclusivo -->
-        <div class="mb-4">
-          <label for="videoExclusive" class="block text-black">Exclusivo:</label>
-          <input type="checkbox" id="videoExclusive" name="videoExclusive" [(ngModel)]="editedVideo.exclusive"
-            class="border-gray-300 border rounded-lg px-4 py-2 text-center text-red-700"
-            formControlName="videoExclusive">
-        </div>
-        <!-- Botones de acción -->
-        <div class="flex justify-center">
-          <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
-            (click)="closeCreateModal()">Cancelar</button>
-          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            [disabled]="createVideoForm.invalid">Guardar Cambios</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <!-- end modal para crear video -->
 
   <!-- edit video modal -->
   <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">

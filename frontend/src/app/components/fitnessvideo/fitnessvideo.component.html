@@ -157,8 +157,8 @@
     </div>
   </div>
   <!-- end modal para crear video -->
-   <!-- edit video modal -->
-   <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+  <!-- edit video modal -->
+  <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
     <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
       <h2 class="text-xl font-semibold mb-4">Edit <span class="text-red-600">{{ editedVideo.title }}</span></h2>
       <form (submit)="submitEditVideoForm()">
