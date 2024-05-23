@@ -47,11 +47,26 @@ class UserController extends Controller
      */
     public function getRole(Request $request)
     {
-        $user = User::where('email', $request->email)->where('connection', $request->connection)->first();
+        // Find the user based on email and connection
+        $user = User::where('email', $request->email)
+            ->where('connection', $request->connection)
+            ->first();
 
-        $role = $user->getRoleNames();
+        // Check if the user was found
+        if ($user === null) {
+            return ApiResponse::error('Usuario no encontrado', 404);
+        }
 
-        return ApiResponse::success($role[0], 'Role obtenido correctamente');
+        // Get user role names
+        $roles = $user->getRoleNames();
+
+        // Check if the user has assigned roles
+        if ($roles->isEmpty()) {
+            return ApiResponse::error('El usuario no tiene roles asignados', 404);
+        }
+
+        // Return the first role found
+        return ApiResponse::success($roles[0], 'Role obtenido correctamente');
     }
 
     /**

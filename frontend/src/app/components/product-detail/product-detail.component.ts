@@ -274,7 +274,6 @@ export class ProductDetailComponent implements OnInit {
 
       // Remove products with zero stock from the cart
       const updatedCart = cart.filter((product: any) => product.quantity > 0);
-      console.log(updatedCart);
 
       // If the updated cart is empty, delete the cookie
       if (updatedCart.length === 0) {

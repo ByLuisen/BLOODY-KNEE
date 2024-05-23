@@ -22,7 +22,6 @@ export class FavouriteVideosComponent implements OnInit {
     this.http.getFavoriteVideos().subscribe(
       (videos) => {
         this.favoriteVideos = videos;
-        console.log(this.favoriteVideos)
       },
       (error) => {
         console.error('Error al obtener los vídeos favoritos:', error);
