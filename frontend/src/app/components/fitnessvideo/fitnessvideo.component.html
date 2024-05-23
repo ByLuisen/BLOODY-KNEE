@@ -21,6 +21,7 @@
       (click)="addVideo()">Agregar video
     </button>
   </div>
+
   <!-- Filter buttons -->
   <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-4 sm:px-96 pb-20 px-10">
     <!-- Button to filter all videos -->
@@ -156,9 +157,8 @@
     </div>
   </div>
   <!-- end modal para crear video -->
-
-  <!-- edit video modal -->
-  <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+   <!-- edit video modal -->
+   <div *ngIf="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
     <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
       <h2 class="text-xl font-semibold mb-4">Edit <span class="text-red-600">{{ editedVideo.title }}</span></h2>
       <form (submit)="submitEditVideoForm()">
@@ -236,6 +236,37 @@
     </div>
     <ng-template #fitnessContainer>
       <div class="group relative" *ngFor="let video of filteredItems">
+
+        <ng-container>
+          <a (click)="selectVideo(video)">
+            <div class="premium-icon" *ngIf="video.exclusive">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: #FFC300;"
+                class="star-icon">
+                <path
+                  d="M21.947 9.179a1.001 1.001 0 0 0-.868-.676l-5.701-.453-2.467-5.461a.998.998 0 0 0-1.822-.001L8.622 8.05l-5.701.453a1 1 0 0 0-.619 1.713l4.213 4.107-1.49 6.452a1 1 0 0 0 1.53 1.057L12 18.202l5.445 3.63a1.001 1.001 0 0 0 1.517-1.106l-1.829-6.4 4.536-4.082c.297-.268.406-.686.278-1.065z">
+                </path>
+              </svg>
+            </div>
+            <div class="flex items-center justify-center sm:justify-start">
+              <img [src]="'../../../assets/img/' + video.modality_id + '.webp'"
+                class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
+            </div>
+            <h3 class="text-lg font-bold sm:mt-4">{{video.title}}</h3>
+          </a>
+        </ng-container>
+        <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
+          <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
+          <div class="bg-white p-8 rounded-lg z-50">
+            <h2 class="text-2xl font-bold mb-4">¡Ups!
+              Contenido Premium</h2>
+            <p>Este video es contenido
+              premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
+            <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+              (click)="closeModal()">Cerrar</button>
+            <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
+              routerLink="/pricing">Subscribirse</button>
+          </div>
+        </div>
         <!-- Mostrar solo si está en modo admin -->
         <div *ngIf="adminModeActivated">
           <div class="flex flex-row">
@@ -255,36 +286,6 @@
               </path>
               <path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
             </svg>
-          </div>
-        </div>
-        <ng-container>
-          <a (click)="selectVideo(video)">
-            <div class="premium-icon" *ngIf="video.exclusive">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: #FFC300;"
-                class="star-icon">
-                <path
-                  d="M21.947 9.179a1.001 1.001 0 0 0-.868-.676l-5.701-.453-2.467-5.461a.998.998 0 0 0-1.822-.001L8.622 8.05l-5.701.453a1 1 0 0 0-.619 1.713l4.213 4.107-1.49 6.452a1 1 0 0 0 1.53 1.057L12 18.202l5.445 3.63a1.001 1.001 0 0 0 1.517-1.106l-1.829-6.4 4.536-4.082c.297-.268.406-.686.278-1.065z">
-                </path>
-              </svg>
-            </div>
-            <div class="flex items-center justify-center sm:justify-start">
-              <img [src]="'../../../assets/img/' + video.modality_id + '.webp'"
-              class="max-w-full sm:max-w-none transition duration-300 transform group-hover:scale-105">
-            </div>
-            <h3 class="text-lg font-bold sm:mt-4">{{video.title}}</h3>
-          </a>
-        </ng-container>
-        <div [ngClass]="{'fixed inset-0 flex items-center justify-center z-50': modalOpen, 'hidden': !modalOpen}">
-          <div class="absolute inset-0 bg-gray-500 opacity-10"></div>
-          <div class="bg-white p-8 rounded-lg z-50">
-            <h2 class="text-2xl font-bold mb-4">¡Ups!
-              Contenido Premium</h2>
-            <p>Este video es contenido
-              premium. Para acceder, actualiza tu suscripción a standard o premium.</p>
-            <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
-              (click)="closeModal()">Cerrar</button>
-            <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mx-1"
-              routerLink="/pricing">Subscribirse</button>
           </div>
         </div>
       </div>

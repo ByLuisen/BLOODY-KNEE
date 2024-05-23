@@ -20,6 +20,7 @@ export class FitnessvideoComponent implements OnInit {
   modalOpen: boolean = false;
   loading: boolean = false;
   role!: string;
+  editingVideo: Video | null = null;
 
   // Admin mode variable
   adminModeActivated: boolean = false;
@@ -36,7 +37,14 @@ export class FitnessvideoComponent implements OnInit {
 
   // Formulario de creación del video
   createVideoForm!: FormGroup;
+  editForm!: FormGroup;
 
+  /**
+   *
+   * @param http
+   * @param router
+   * @param auth
+   */
   constructor(
     private http: HttpService,
     private router: Router,
@@ -49,10 +57,14 @@ export class FitnessvideoComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'admin';
+        this.role = 'Admin';
       }
     });
-
+    this.editForm = new FormGroup({
+      title: new FormControl('', Validators.required),
+      coach: new FormControl('', Validators.required),
+      description: new FormControl('', Validators.required),
+    });
     // Formulario de creación de video
     this.createVideoForm = new FormGroup({
       videoTitle: new FormControl('', [
@@ -109,28 +121,8 @@ export class FitnessvideoComponent implements OnInit {
 
 
   }
-  openModal() {
-    this.modalOpen = true;
-    document.body.classList.add('modal-open');
-    // Agrega una clase para evitar el scroll del body
-  }
 
-  // Método para cerrar el modal
-  closeModal() {
-    this.modalOpen = false;
-    document.body.classList.remove('modal-open');
-    // Remueve la clase que evita el scroll del body
-  }
 
-  selectVideo(video: Video) {
-    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
-      this.openModal();
-      // Abre el modal si el video es premium y el usuario no tiene un rol premium
-    } else {
-      this.router.navigate(['/player', video.id]);
-      // Navega al componente de reproductor si el usuario tiene permiso para ver el video
-    }
-  }
   // Método que se ejecutará cuando cambien los elementos filtrados
   onFilteredItemsChanged(filteredItems: Video[]) {
     this.filteredItems = filteredItems;
@@ -154,33 +146,37 @@ export class FitnessvideoComponent implements OnInit {
     }
   }
 
-  // Método para activar o desactivar el modo admin
-  toggleAdminMode() {
-    this.adminModeActivated = !this.adminModeActivated;
-    console.log("adminModeActivated: " + this.adminModeActivated);
-  }
 
   /**
    *
-   * @param video
+   *
    */
-  editVideo(videoId: number) {
-    const selectedVideo = this.todos.find(video => video.id === videoId)
-    if (selectedVideo) {
-      this.editedVideo = selectedVideo; // Asignar directamente el video seleccionado
-      this.editModal = true;
+
+  /**
+  *
+  */
+  submitCreateVideoForm() {
+    if (this.createVideoForm.valid) {
+      const newVideo = {
+        title: this.createVideoForm.value.videoTitle,
+        coach: this.createVideoForm.value.videoCoach,
+        description: this.createVideoForm.value.videoDescription,
+        url: this.createVideoForm.value.videoUrl,
+        duration: this.createVideoForm.value.videoDuration,
+        exclusive: this.createVideoForm.value.videoExclusive
+      };
     }
-
   }
 
   /**
    *
    */
-  closeEditModal() {
-    // Limpia el video editado y cierra el modal
-    this.editedVideo = new Video();
-    this.editModal = false;
+  closeCreateModal() {
+    if (this.createModal) {
+      this.createModal = false;
+    }
   }
+
   /**
    *
    */
@@ -201,20 +197,17 @@ export class FitnessvideoComponent implements OnInit {
     )
   }
 
-
-  /**
- * Busca el video que se seleccione por ID para mostrar el modal
- *
- * @param video
- */
-  openDeleteModal(video: Video) {
-    this.selectedVideo = video;
-    this.deleteModal = true;
-  }
-
   /**
    *
    */
+  cancelDelete() {
+    this.selectedVideo = null;
+    this.deleteModal = false;
+  }
+
+  /**
+ *
+ */
   confirmDelete() {
     if (this.selectedVideo !== null) {
       this.http.destroyVideo(this.selectedVideo.id).subscribe(() => {
@@ -224,41 +217,57 @@ export class FitnessvideoComponent implements OnInit {
       });
     }
   }
+
   /**
-   *
-   */
-  cancelDelete() {
-    this.selectedVideo = null;
-    this.deleteModal = false;
+* Busca el video que se seleccione por ID para mostrar el modal
+*
+* @param video
+*/
+  openDeleteModal(video: Video) {
+    this.selectedVideo = video;
+    this.deleteModal = true;
   }
 
+  /**
+ *
+ * @param video
+ */
+  editVideo(videoId: number) {
+    const selectedVideo = this.todos.find(video => video.id === videoId)
+    if (selectedVideo) {
+      this.editedVideo = selectedVideo; // Asignar directamente el video seleccionado
+      this.editModal = true;
+    }
+
+  }
 
   /**
-   *
+   * Clean editedVideo & close edit modal
    */
-  submitCreateVideoForm() {
-    if (this.createVideoForm.valid) {
-      const newVideo = {
-        title: this.createVideoForm.value.videoTitle,
-        coach: this.createVideoForm.value.videoCoach,
-        description: this.createVideoForm.value.videoDescription,
-        url: this.createVideoForm.value.videoUrl,
-        duration: this.createVideoForm.value.videoDuration,
-        exclusive: this.createVideoForm.value.videoExclusive
-      };
+  closeEditModal() {
+    // Limpia el video editado y cierra el modal
+    this.editedVideo = new Video();
+    this.editModal = false;
+  }
 
-      // this.http.createVideo(newVideo).subscribe(
-      //   (createdVideo) => {
-      //     console.log("Video creado exitosamente", createdVideo);
-      //     // Agregar el nuevo video a la lista local si es necesario
-      //     this.todos.push(createdVideo);
-      //     this.closeCreateModal();
-      //   },
-      //   (error) => {
-      //     console.error("Error al crear el Video:", error)
-      //   }
-      // );
-    }
+  /**
+   * Submit edit form
+   */
+  submitEditForm() {
+    this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
+      (updatedVideo) => {
+        console.log("Video actualizado exitosamente", updatedVideo);
+        //Actualizo el video en lista local
+        const index = this.todos.findIndex(video => video.id === updatedVideo.id);
+        if (index !== -1) {
+          this.todos[index] = updatedVideo;
+        }
+        this.closeEditModal();
+      },
+      (error) => {
+        console.error("Error al actualizar el Video:", error)
+      }
+    )
   }
 
   /**
@@ -271,11 +280,62 @@ export class FitnessvideoComponent implements OnInit {
   }
 
   /**
-   *
+   * Delete a video
+   * @param video The video to delete
    */
-  closeCreateModal() {
-    if (this.createModal) {
-      this.createModal = false;
+  deleteVideo(video: Video) {
+    // Implement logic to delete the video
+    console.log('Eliminando video:', video);
+
+    this.http.destroyVideo(video.id).subscribe(
+      () => {
+        console.log('Video eliminado exitosamente');
+        // Remove the video from the local list if necessary
+        this.filteredItems = this.filteredItems.filter(
+          (item) => item.id !== video.id
+        );
+      },
+      (error) => {
+        console.error('Error deleting video:', error);
+      }
+    );
+  }
+
+  /**
+* Toggle admin mode
+*/
+  toggleAdminMode() {
+    this.adminModeActivated = !this.adminModeActivated;
+  }
+
+  /**
+   * Open modal video premium
+   */
+  openModal() {
+    this.modalOpen = true;
+    document.body.classList.add('modal-open');
+  }
+
+  /**
+   * Close modal dialog
+   */
+  closeModal() {
+    this.modalOpen = false;
+    document.body.classList.remove('modal-open');
+  }
+
+  /**
+   * Select a video to play
+   * @param video The selected video
+   */
+  selectVideo(video: Video) {
+    // Check if video is exclusive and user role permits access
+    if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
+      // Open modal if access is restricted
+      this.openModal();
+    } else {
+      // Navigate to video player if access is permitted
+      this.router.navigate(['/player', video.id]);
     }
   }
 

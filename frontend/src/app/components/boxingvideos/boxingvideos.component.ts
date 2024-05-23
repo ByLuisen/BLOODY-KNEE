@@ -59,7 +59,7 @@ export class BoxingvideosComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'admin';
+        this.role = 'Admin';
       }
     });
 
@@ -138,11 +138,11 @@ export class BoxingvideosComponent implements OnInit {
           this.filteredItems = [...this.todos];
           return videos;
         }),
-       
+
         // Set loading flag to false after all requests are completed
         finalize(() => (this.loading = false))
       )
-   
+
       // Subscribe to the observable
       .subscribe();
 
@@ -156,7 +156,7 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   /**
-   * Open modal dialog
+   * Open modal video premium
    */
   openModal() {
     this.modalOpen = true;
@@ -235,6 +235,7 @@ export class BoxingvideosComponent implements OnInit {
       }
     )
   }
+
   /**
    *
    */
@@ -307,18 +308,6 @@ export class BoxingvideosComponent implements OnInit {
         duration: this.createVideoForm.value.videoDuration,
         exclusive: this.createVideoForm.value.videoExclusive
       };
-
-      // this.http.createVideo(newVideo).subscribe(
-      //   (createdVideo) => {
-      //     console.log("Video creado exitosamente", createdVideo);
-      //     // Agregar el nuevo video a la lista local si es necesario
-      //     this.todos.push(createdVideo);
-      //     this.closeCreateModal();
-      //   },
-      //   (error) => {
-      //     console.error("Error al crear el Video:", error)
-      //   }
-      // );
     }
   }
 
