@@ -48,6 +48,7 @@ export class MerchandisingComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProductos();
+
     this.creationForm = new FormGroup({
       name: new FormControl('', [
         Validators.required,
@@ -202,6 +203,7 @@ export class MerchandisingComponent implements OnInit {
       this.editAdminMode = false;
       this.infoAdmin = "";
     }
+    console.log("editAdminMode=" + this.editAdminMode);
   }
 
   /**
@@ -217,6 +219,7 @@ export class MerchandisingComponent implements OnInit {
       this.deleteAdminMode = false;
       this.infoAdmin = "";
     }
+    console.log("deleteAdminMode=" + this.deleteAdminMode);
   }
   /**
    * Toggles create product modal.
@@ -229,6 +232,7 @@ export class MerchandisingComponent implements OnInit {
     } else {
       this.createModal = false;
     }
+    console.log("createAdminMode=" + this.createModal);
   }
 
 
@@ -242,6 +246,7 @@ export class MerchandisingComponent implements OnInit {
     const selectedProduct = this.productos.find(producto => producto.id === productId);
     if (selectedProduct) {
       this.editedProduct = { ...selectedProduct } as Product;
+      console.log('Producto editado:', this.editedProduct);
       this.editModal = true;
     }
   }
@@ -270,6 +275,7 @@ export class MerchandisingComponent implements OnInit {
   submitEditProductForm() {
     this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(
       response => {
+        console.log('Producto actualizado correctamente', response);
         this.closeEditModal();
       },
       error => {
@@ -295,11 +301,14 @@ export class MerchandisingComponent implements OnInit {
 
     this.http.addProduct(this.newProduct).subscribe(
       (response) => {
+        console.log('Producto creado:', response);
         this.productos.push(response);
         this.creationForm.reset();
       },
       (error) => {
         console.error('Error al crear el producto:', error);
+        console.log('Producto', this.newProduct);
+        console.log('Formulario creación', this.creationForm.value);
       }
     );
   }

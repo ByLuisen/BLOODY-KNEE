@@ -239,6 +239,7 @@ export class ThaivideosComponent implements OnInit {
       }
     )
   }
+
   /**
    *
    */
@@ -247,6 +248,7 @@ export class ThaivideosComponent implements OnInit {
       this.createModal = false;
     }
   }
+
   /**
    *
    */
@@ -255,6 +257,7 @@ export class ThaivideosComponent implements OnInit {
       this.createModal = true;
     }
   }
+
   /**
    *
    */
@@ -266,8 +269,8 @@ export class ThaivideosComponent implements OnInit {
         this.deleteModal = false;
       });
     }
-
   }
+
   /**
    *
    */

@@ -21,23 +21,13 @@ export class FitnessvideoComponent implements OnInit {
   loading: boolean = false;
   role!: string;
   editingVideo: Video | null = null;
-
-  // Admin mode variable
   adminModeActivated: boolean = false;
-
-  // Modal for create a video form
   createModal: boolean = false;
   editModal: boolean = false;
   deleteModal: boolean = false;
-
-  // Variable para almacenar el video que se está editando
   editedVideo: Video = new Video;
-  // Selected video to delete
   selectedVideo: Video | null = null;
-
-  // Formulario de creación del video
-  createVideoForm!: FormGroup;
-  editForm!: FormGroup;
+  editVideoForm!: FormGroup;
 
   /**
    *
@@ -49,40 +39,7 @@ export class FitnessvideoComponent implements OnInit {
     private http: HttpService,
     private router: Router,
     private auth: AuthService
-  ) {
-
-    this.editForm = new FormGroup({
-      title: new FormControl('', Validators.required),
-      coach: new FormControl('', Validators.required),
-      description: new FormControl('', Validators.required),
-    });
-    // Formulario de creación de video
-    this.createVideoForm = new FormGroup({
-      videoTitle: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9\s]*$/) // Texto y numeros
-      ]),
-      videoCoach: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z\s]*$/) // Texto
-      ]),
-      videoDescription: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9\s.ñÑ]*$/) // String,ñ
-      ]),
-      videoUrl: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^(https?:\/\/)?(www\.)?[a-zA-Z0-9]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,5}([/?#].*)?$/)
-      ]),
-      videoDuration: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[0-9\s:.]*$/), // String
-      ]),
-      videoExclusive: new FormControl('', [
-        Validators.required
-      ]),
-    })
-  }
+  ) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -112,8 +69,37 @@ export class FitnessvideoComponent implements OnInit {
         finalize(() => (this.loading = false))
       )
       .subscribe();
-
-
+    // Inicializa el formulario de edición con las validaciones requeridas
+    this.editVideoForm = new FormGroup({
+      title: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/),
+        Validators.maxLength(20),
+        Validators.minLength(7)
+      ]), // Título requerido
+      coach: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]+$/),
+        Validators.minLength(5),
+        Validators.maxLength(150)
+      ]),
+      description: new FormControl('', [
+        Validators.required,
+        Validators.minLength(20),
+        Validators.maxLength(1000)
+      ]),
+      url: new FormControl('', [
+        Validators.required,
+        Validators.minLength(35),
+        Validators.pattern(/^https:\/\/player\.vimeo\.com\/video\/\d+(\?.*)?$/)
+      ]),
+      duration: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9:]+$/),
+        Validators.maxLength(6)
+      ]),
+      exclusive: new FormControl('', []),
+    });
   }
 
 
@@ -143,42 +129,18 @@ export class FitnessvideoComponent implements OnInit {
     }
   }
 
-
-  /**
-   *
-   *
-   */
-
-  /**
-  *
-  */
-  submitCreateVideoForm() {
-    if (this.createVideoForm.valid) {
-      const newVideo = {
-        title: this.createVideoForm.value.videoTitle,
-        coach: this.createVideoForm.value.videoCoach,
-        description: this.createVideoForm.value.videoDescription,
-        url: this.createVideoForm.value.videoUrl,
-        duration: this.createVideoForm.value.videoDuration,
-        exclusive: this.createVideoForm.value.videoExclusive
-      };
-    }
-  }
-
-
-  /**
-   *
-   */
-  closeCreateModal() {
-    if (this.createModal) {
-      this.createModal = false;
-    }
-  }
-
   /**
    *
    */
   submitEditVideoForm() {
+    // Actualizar editedVideo con los valores del formulario
+    this.editedVideo.title = this.editVideoForm.get('title')?.value;
+    this.editedVideo.coach = this.editVideoForm.get('coach')?.value;
+    this.editedVideo.description = this.editVideoForm.get('description')?.value;
+    this.editedVideo.url = this.editVideoForm.get('url')?.value;
+    this.editedVideo.duration = this.editVideoForm.get('duration')?.value;
+    this.editedVideo.exclusive = this.editVideoForm.get('exclusive')?.value;
+
     this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
       (updatedVideo) => {
         //Actualizo el video en lista local
@@ -192,6 +154,15 @@ export class FitnessvideoComponent implements OnInit {
         console.error("Error al actualizar el Video:", error)
       }
     )
+  }
+
+  /**
+   *
+   */
+  closeCreateModal() {
+    if (this.createModal) {
+      this.createModal = false;
+    }
   }
 
 
@@ -217,26 +188,34 @@ export class FitnessvideoComponent implements OnInit {
   }
 
   /**
-* Busca el video que se seleccione por ID para mostrar el modal
-*
-* @param video
-*/
+  * Busca el video que se seleccione por ID para mostrar el modal
+  *
+  * @param video
+  */
   openDeleteModal(video: Video) {
     this.selectedVideo = video;
     this.deleteModal = true;
   }
 
   /**
- *
- * @param video
- */
+   *
+   * @param video
+   */
   editVideo(videoId: number) {
     const selectedVideo = this.todos.find(video => video.id === videoId)
     if (selectedVideo) {
-      this.editedVideo = selectedVideo; // Asignar directamente el video seleccionado
+      this.editedVideo = selectedVideo;
+      // Actualizar los valores del formulario con los valores de la dieta seleccionada
+      this.editVideoForm.patchValue({
+        title: selectedVideo.title,
+        coach: selectedVideo.coach,
+        description: selectedVideo.description,
+        url: selectedVideo.url,
+        duration: selectedVideo.duration,
+        exclusive: selectedVideo.exclusive
+      });
       this.editModal = true;
     }
-
   }
 
   /**
@@ -333,4 +312,5 @@ export class FitnessvideoComponent implements OnInit {
       this.router.navigate(['/player', video.id]);
     }
   }
+
 }
