@@ -96,18 +96,43 @@ export class DietsComponent implements OnInit {
       console.log(this.diets);
     });
   }
-
   calculate() {
+    const minHeight = 50; // Altura mínima en cm
+    const maxHeight = 250; // Altura máxima en cm
+    const minWeight = 3; // Peso mínimo en kg
+    const maxWeight = 300; // Peso máximo en kg
+  
+    // Verifica si la entrada contiene caracteres especiales
+    const specialCharPattern = /[^0-9.]/;
+  
     if (this.height && this.weight) {
-      if (isNaN(this.height) || isNaN(this.weight)) {
-        // Verifica si la entrada es un número
-        this.errorMessage =
-          'Por favor, introduce números válidos para la altura y el peso.';
+      // Asegurando que height y weight son tratados como cadenas
+      const heightStr = this.height.toString();
+      const weightStr = this.weight.toString();
+  
+      if (specialCharPattern.test(heightStr) || specialCharPattern.test(weightStr)) {
+        this.errorMessage = 'Por favor, introduce números válidos para la altura y el peso.';
         return; // Sale de la función si hay un error
       }
+  
+      if (isNaN(Number(this.height)) || isNaN(Number(this.weight))) {
+        this.errorMessage = 'Por favor, introduce números válidos para la altura y el peso.';
+        return; // Sale de la función si hay un error
+      }
+  
+      if (this.height < minHeight || this.height > maxHeight) {
+        this.errorMessage = `La altura debe estar entre ${minHeight} cm y ${maxHeight} cm.`;
+        return;
+      }
+  
+      if (this.weight < minWeight || this.weight > maxWeight) {
+        this.errorMessage = `El peso debe estar entre ${minWeight} kg y ${maxWeight} kg.`;
+        return;
+      }
+  
       const heightInMeters = this.height / 100;
       this.result = this.weight / (heightInMeters * heightInMeters);
-
+  
       // Determina el índice del div que debe parpadear según el resultado del IMC
       if (this.result < 18.5) {
         this.flashingIndex = 0;
@@ -124,8 +149,10 @@ export class DietsComponent implements OnInit {
         this.flashingIndex = null;
       }, 2500);
     } else {
-      this.errorMessage =
-        'Por favor, introduce valores para la altura y el peso.';
+      this.errorMessage = 'Por favor, introduce valores para la altura y el peso.';
     }
   }
+  
+
+  
 }
