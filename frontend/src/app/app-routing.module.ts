@@ -15,7 +15,6 @@ import { PricingComponent } from './components/pricing/pricing.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { ShippingAddressPageComponent } from './components/shipping-address-page/shipping-address-page.component';
 import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
-import { cartGuard } from './guards/cart.guard';
 import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -37,7 +36,7 @@ const routes: Routes = [
   {
     path: 'address-form',
     component: ShippingAddressPageComponent,
-    canActivate: [authGuard, cartGuard],
+    canActivate: [authGuard],
   },
   {
     path: 'order-summary',

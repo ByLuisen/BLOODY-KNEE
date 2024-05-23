@@ -69,7 +69,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/products', [ProductController::class, 'store']); // Añadir un producto
     Route::put('/products/{id}', [ProductController::class, 'update']); // Editar un producto
     Route::delete('/products/{id}', [ProductController::class, 'destroy']); // Eliminar un producto
-    Route::post('/cancel-order', [StripeController::class, 'cancelOrder']);
+    Route::put('/cancel-order', [OrderController::class, 'cancelOrder']);
     Route::put('comments/{commentId}', [CommentController::class, 'editComment']);
     Route::delete('comments/{commentId}', [CommentController::class, 'deleteComment']);
 
