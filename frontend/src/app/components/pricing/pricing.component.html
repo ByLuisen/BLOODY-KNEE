@@ -28,20 +28,23 @@
             <span>{{advantages}}</span>
           </li>
         </ul>
-        <a (click)='subscribeToQuote(quote.price_id)' *ngIf="quote.type != role && quote.type != 'Basic'" role="button"
-          class="mt-auto text-white bg-primary-500 shadow-lg shadow-primary-500/50 hover:bg-primary-600 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">
-          Obtener {{ quote.type }}</a>
-        <a *ngIf="(quote.type === 'Basic') && !(auth.user$ | async) as user" role="button"
-          (click)="auth.loginWithRedirect()"
-          class="mt-auto text-white bg-primary-500 shadow-lg shadow-primary-500/50 hover:bg-primary-600 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">
-          Registrarse</a>
-        <a *ngIf="(quote.type === 'Basic') && quote.type != role && (auth.user$ | async) as user" role="button"
-          (click)="getBasic()"
-          class="mt-auto text-white bg-primary-500 shadow-lg shadow-primary-500/50 hover:bg-primary-600 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">
-          Obtener Basic</a>
-        <a *ngIf="quote.type === role && (auth.user$ | async) as user" role="button"
-          class="mt-auto text-white bg-primary-500 shadow-lg shadow-primary-500/50 hover:bg-primary-600 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">
-          Cuota actual</a>
+        <div *ngIf="role != 'Admin'">
+          <a (click)='subscribeToQuote(quote.price_id)' *ngIf="quote.type != role && quote.type != 'Basic'"
+            role="button"
+            class="mt-auto text-white bg-primary-500 shadow-lg shadow-primary-500/50 hover:bg-primary-600 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">
+            Obtener {{ quote.type }}</a>
+          <a *ngIf="(quote.type === 'Basic') && !(auth.user$ | async) as user" role="button"
+            (click)="auth.loginWithRedirect()"
+            class="mt-auto text-white bg-primary-500 shadow-lg shadow-primary-500/50 hover:bg-primary-600 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">
+            Registrarse</a>
+          <a *ngIf="(quote.type === 'Basic') && quote.type != role && (auth.user$ | async) as user" role="button"
+            (click)="getBasic()"
+            class="mt-auto text-white bg-primary-500 shadow-lg shadow-primary-500/50 hover:bg-primary-600 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">
+            Obtener Basic</a>
+          <a *ngIf="quote.type === role && (auth.user$ | async) as user" role="button"
+            class="mt-auto text-white bg-primary-500 shadow-lg shadow-primary-500/50 hover:bg-primary-600 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">
+            Cuota actual</a>
+        </div>
       </div>
     </div>
   </div>
@@ -55,7 +58,7 @@
   <div tabindex="-1" class="relative w-full max-w-md bg-white rounded-2xl shadow">
     <!-- Modal content -->
     <div class="relative p-4 text-center bg-white rounded-2xl shadow dark:bg-gray-800 sm:p-5 border-2 border-gray-500">
-      <button type="button" (click)="openModal = false"
+      <button type="button" (click)="closeModal()"
         class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
         <svg aria-hidden="true" class="w-5 h-5" fill="red" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd"
@@ -73,12 +76,15 @@
         <span class="sr-only">Check icon</span>
       </div>
       <p class="text-lg font-semibold text-gray-900 dark:text-white font-sans">Suscripción adquirida con éxito!</p>
-      <p class="mb-4 font-sans"> Gracias por suscribirte. Tu suscripción <strong>{{ role }}</strong> ha sido activada y
-        ahora puedes disfrutar de
-        todos los beneficios exclusivos.
+
+      <p class="mb-4 font-sans" *ngIf="message == undefined; else adminMessage"> Gracias por suscribirte. Tu suscripción
+        <strong>{{ role }}</strong> ha sido activada
         ¡Disfruta de tu nueva suscripción!
       </p>
-      <button type="button" (click)="openModal = false"
+      <ng-template #adminMessage>
+        <p class="mb-4 font-sans">{{ message }}.</p>
+      </ng-template>
+      <button type="button" (click)="closeModal()"
         class="font-sans py-2 px-3 text-sm text-white rounded-lg bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-green-900">
         Atrás
       </button>

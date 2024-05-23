@@ -128,7 +128,9 @@
                   xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
                   <path d="M5.5 5.5L16.5 16.5M16.5 5.5L5.5 16.5" stroke="" stroke-width="1.6" stroke-linecap="round" />
                 </svg>
-                Cancelar pedido
+
+                <p *ngIf="role != 'Admin'">Cancelar pedido</p>
+                <p *ngIf="role == 'Admin'">Reembolsar pedido</p>
               </button>
             </div>
             <div class="py-6">
@@ -170,8 +172,9 @@
         </svg>
         <span class="sr-only">Check icon</span>
       </div>
-      <p class="text-lg font-semibold text-gray-900 dark:text-white font-sans">Tu pedido ha sido cancelado correctamente</p>
-      <p class="mb-4 font-sans">Tu pedido ha sido cancelado correctamente. El reembolso será procesado y se reflejará en tu cuenta
+      <p class="text-lg font-semibold text-gray-900 dark:text-white font-sans" *ngIf="role != 'Admin'">Tu pedido ha sido cancelado correctamente</p>
+      <p class="text-lg font-semibold text-gray-900 dark:text-white font-sans" *ngIf="role == 'Admin'">El pedido ha sido reembolsado correctamente</p>
+      <p class="mb-4 font-sans" *ngIf="role != 'Admin'">Tu pedido ha sido cancelado correctamente. El reembolso será procesado y se reflejará en tu cuenta
         lo antes posible. Gracias por tu paciencia.</p>
       <button type="button" (click)="openModal = false"
         class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-green-900">

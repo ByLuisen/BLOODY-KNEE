@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Responses\ApiResponse;
+use App\Models\Quote;
 use App\Models\User;
+use App\Models\UserSubscribeQuote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,7 +38,7 @@ class UserController extends Controller
             }
         } catch (\Exception $e) {
             // Manejar errores, loguear, etc.
-            return ApiResponse::error(null, 'El usuario ya existe');
+            return ApiResponse::error('El usuario ya existe');
         }
     }
 
@@ -57,25 +59,69 @@ class UserController extends Controller
      */
     public function updateRole(Request $request)
     {
-        // Find the user
-        $user = User::where('email', $request->email)->where('connection', $request->connection)->first();
+        try {
+            // If set the sub_id in the request
+            if ($request->sub_id) {
+                // Validate if an subscription exist with the same sub_id
+                $currentSubscription = UserSubscribeQuote::where('sub_id', $request->sub_id)->first();
+                if ($currentSubscription && $currentSubscription->status == 'Active') {
+                    return ApiResponse::success($currentSubscription->quote->type, 'Rol actualizado correctamente');
+                } elseif ($currentSubscription && $currentSubscription->status == 'Cancelled') {
+                    $currentSubscription = UserSubscribeQuote::where('status', 'Active')->first();
+                    return ApiResponse::success($currentSubscription->quote->type, 'Rol actualizado correctamente');
+                } elseif ($request->role == 'Basic') {
+                    $currentSubscription = UserSubscribeQuote::where('status', 'Active')->first();
+                    return ApiResponse::success($currentSubscription->quote->type, 'Rol actualizado correctamente');
+                }
+            }
 
-        $roles = $user->getRoleNames(); // Get all user roles
+            // Find the user
+            $user = User::where('email', $request->email)->where('connection', $request->connection)->first();
 
-        // If the user has the Admin role
-        if ($roles[0] == 'Admin') {
-            // Return the Admin role without modify
-            return ApiResponse::success('Admin', 'Eres Admin bobo');
+            $roles = $user->getRoleNames(); // Get all user roles
+
+            // If the user has the Admin role
+            if ($roles[0] == 'Admin') {
+                // Return the Admin role without modify
+                return ApiResponse::success('Admin', 'Eres Admin bobo');
+            }
+
+            // Remove all roles the user currently has
+            foreach ($roles as $rol) {
+                $user->removeRole($rol);
+            }
+
+            $user->assignRole($request->role); // Assign the new role to the user
+
+            // Find the quote
+            $quote = Quote::where('type', $request->role)->first();
+            // Get the active subscriptions
+            $activeSubscriptions = UserSubscribeQuote::where('user_id', $user->id)->where('status', 'Active')->get();
+
+            if ($activeSubscriptions) {
+                // Cancel the active subscriptions
+                foreach ($activeSubscriptions as $activeSubscription) {
+                    $stripe = new \Stripe\StripeClient(env('stripeSecretKey'));
+                    if ($activeSubscription->sub_id) {
+                        $stripe->subscriptions->cancel($activeSubscription->sub_id, []);
+                    }
+                    $activeSubscription->status = 'Cancelled';
+                    $activeSubscription->save();
+                }
+            }
+
+            // Create the new subscription
+            $subscription = UserSubscribeQuote::create([
+                'user_id' => $user->id,
+                'quote_id' => $quote->id,
+                'sub_id' => $request->sub_id ? $request->sub_id : null,
+                'status' => 'Active',
+            ]);
+
+            return ApiResponse::success($request->role, 'Rol actualizado correctamente');
+        } catch (\Exception $e) {
+            return ApiResponse::error('Error al actualizar el rol ' . $e->getMessage());
         }
-
-        // Remove all roles the user currently has
-        foreach ($roles as $rol) {
-            $user->removeRole($rol);
-        }
-
-        $user->assignRole($request->role); // Assign the new role to the user
-
-        return ApiResponse::success($request->role, 'Rol actualizado correctamente');
     }
 
     /**
@@ -127,7 +173,7 @@ class UserController extends Controller
 
             return ApiResponse::success($user, 'Dirección guardada correctamente');
         } else {
-            return ApiResponse::error(null, 'Usuario no encontrado');
+            return ApiResponse::error('Usuario no encontrado');
         }
     }
 }
