@@ -616,4 +616,48 @@ export class HttpService {
       })
     );
   }
+
+  saveAsFavorite(videoId: number): Observable<Response> {
+    const url = `${this.url}/save-as-favorite/${videoId}`;
+    return this.auth.idTokenClaims$.pipe(
+      switchMap((user) => {
+        // Get the email from the user object
+        const email = user ? user.email : '';
+
+        // Create the request body
+        const body = { email };
+
+        // Make the POST request
+        return this._http.post<Response>(url, body);
+      })
+    );
+  }
+
+
+  getFavoriteVideos(): Observable<Video[]> {
+    const url = `${this.url}/favorite-videos`;
+  
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return throwError('Usuario no autenticado');
+        }
+  
+        const body = {
+          email: user.email,
+          connection: user.sub?.split('|')[0],
+        };
+  
+        return this._http.post<{ data: Video[] }>(url, body).pipe(
+          map(response => response.data)
+        );
+      }),
+      catchError((error) => {
+        console.error('Error al obtener los vídeos favoritos:', error);
+        return throwError('Error al obtener los vídeos favoritos');
+      })
+    );
+  }
+  
+  
 }

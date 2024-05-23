@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_favorite_diets', function (Blueprint $table) {
+        Schema::create('user_favorite_videos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('diet_id');
+            $table->unsignedBigInteger('video_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
-            $table->foreign('diet_id')->references('id')->on('diets')->onDelete('cascade');
+            $table->foreign('video_id')->references('id')->on('videos')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_favorite_diets');
+        Schema::dropIfExists('user_favorite_videos');
     }
 };

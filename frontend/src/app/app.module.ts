@@ -14,7 +14,6 @@ import { ThaivideosComponent } from './components/thaivideos/thaivideos.componen
 import { PerfileMenuComponent } from './components/menus/profile-menu/profile-menu.component';
 import { ProfileMenuService } from './services/profile-menu-service.service';
 import { FavouriteVideosComponent } from './components/user-profile-views/favourite-videos/favourite-videos.component';
-import { LikedVideosComponent } from './components/user-profile-views/liked-videos/liked-videos.component';
 import { ProfileOrdersComponent } from './components/user-profile-views/profile-orders/profile-orders.component';
 import { BoxingvideosComponent } from './components/boxingvideos/boxingvideos.component';
 import { FitnessvideoComponent } from './components/fitnessvideo/fitnessvideo.component';
@@ -56,7 +55,6 @@ import { MerchandisingBannerComponent } from './components/merchandising-banner/
     MerchandisingComponent,
     PricingComponent,
     PerfileMenuComponent,
-    LikedVideosComponent,
     FavouriteVideosComponent,
     ProfileOrdersComponent,
     SearchbarComponent,
