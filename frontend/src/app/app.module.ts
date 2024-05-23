@@ -82,6 +82,7 @@ import { MerchandisingBannerComponent } from './components/merchandising-banner/
       clientId: environment.SPAClientID,
       authorizationParams: {
         redirect_uri: window.location.origin,
+        prompt: 'select_account'
       },
       cacheLocation: 'localstorage',
     }),
