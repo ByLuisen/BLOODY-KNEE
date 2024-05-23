@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
-import { loadStripe } from '@stripe/stripe-js';
-import { finalize, map, of, switchMap, tap } from 'rxjs';
+import { finalize, map, of, switchMap, tap, zip } from 'rxjs';
 import { Quote } from 'src/app/models/Quote';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -15,7 +14,9 @@ export class PricingComponent implements OnInit {
   quotes!: Quote[];
   arrayAdvantages!: any;
   loading: boolean = false;
+  sub_id!: string;
   role!: string;
+  openModal: boolean = false;
   constructor(
     private http: HttpService,
     public auth: AuthService,
@@ -23,10 +24,6 @@ export class PricingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.http.getRole().subscribe((response) => {
-      this.role = response;
-    });
-
     this.http.getQuotes().subscribe((quotes: any[]) => {
       this.quotes = quotes;
       this.arrayAdvantages = this.quotes.map((quote) =>
@@ -34,15 +31,41 @@ export class PricingComponent implements OnInit {
       );
     });
 
-    // Obtén los parámetros de la URL
     this.route.queryParams.subscribe((params) => {
       if (params['session_id'] && params['success']) {
-        this.http.getLineItems(params['session_id']).subscribe((data) => {
-          const subscriptionItem = data.data.line_items.data[0];
-          this.http.updateRole(subscriptionItem.description).subscribe();
+        this.loading = true;
+        zip(
+          this.http.getCheckoutSession(params['session_id']),
+          this.http.getLineItems(params['session_id'])
+        )
+          .pipe(
+            switchMap(([checkoutSession, lineItems]) => {
+              if (checkoutSession.data && lineItems.data) {
+                this.loading = false
+                // Procesamos los resultados de ambas llamadas
+                this.role = lineItems.data.line_items.data[0].description;
+                this.sub_id = checkoutSession.data.checkout_session.subscription;
+                console.log(this.role, this.sub_id);
+                this.openModal = true;
+                // Llamamos a makeOrder con los resultados de las dos llamadas
+                return this.http.updateRole(this.role, this.sub_id);
+              } else {
+                this.loading = false;
+                this.http.getRole().subscribe((response) => {
+                  this.role = response;
+                });
+                return of();
+              }
+            })
+          )
+          .subscribe();
+      } else {
+        this.http.getRole().subscribe((response) => {
+          this.role = response;
         });
       }
     });
+
     if (window.location.pathname == '/pricing') {
       document.getElementById('pricing_section')?.classList.add('fondo_bk');
     }

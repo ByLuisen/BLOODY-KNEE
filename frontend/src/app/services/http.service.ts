@@ -70,13 +70,14 @@ export class HttpService {
     );
   }
 
-  updateRole(role: string): Observable<any> {
+  updateRole(role: string, sub_id: string = ''): Observable<any> {
     const url = `${this.url}/update-role`;
     return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
         // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
         const body = {
           role: role,
+          sub_id: sub_id,
           email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
           connection: user ? user['sub'].split('|')[0] : '', // Obtén la conexión del usuario actual
         };

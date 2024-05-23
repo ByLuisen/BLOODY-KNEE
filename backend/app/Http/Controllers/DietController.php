@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DietResource; 
+use App\Http\Resources\DietResource;
 use Illuminate\Http\Request;
 use App\Models\Diet;
 use App\Http\Responses\ApiResponse;
 
 class DietController extends Controller
 {
+    /**
+     * Get all diets
+     */
     public function index()
     {
         try {
