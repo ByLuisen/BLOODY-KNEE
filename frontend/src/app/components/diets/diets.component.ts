@@ -266,49 +266,7 @@ export class DietsComponent implements OnInit {
     );
   }
 
-  // CREATION
-  // Envia el formulario de crear dieta
-  submitCreateDietForm() {
 
-    // Relleno newDiet con los datos de creationDietForm
-    this.newDiet.author = this.createDietForm.value.dietAuthor;
-    this.newDiet.content = this.createDietForm.value.dietContent;
-    this.newDiet.description = this.createDietForm.value.dietDescription;
-    this.newDiet.title = this.createDietForm.value.dietTitle;
-
-    // Llamar al método createDiet() del servicio HttpService para crear la dieta
-    this.http.createDiet(this.newDiet).subscribe(
-      (response) => {
-        console.log('Dieta creada correctamente:', response);
-        this.diets.push(response);
-        this.createDietForm.reset();
-      },
-      (error) => {
-        console.error('Error al crear el producto:', error);
-        console.log('Dieta a crear', this.newDiet);
-        console.log('Formulario creación de dieta', this.createDietForm.value);
-      }
-    );
-  }
-
-
-  /**
-   * Abre el modal para crear una nueva dieta
-   */
-  addDiet() {
-    if (!this.createModal) {
-      this.createModal = true;
-    }
-  }
-
-  /**
-   * Cierra el modal para crear una nueva dieta
-   */
-  closeCreateModal() {
-    if (this.createModal) {
-      this.createModal = false;
-    }
-  }
   // DELETE
 
   /**

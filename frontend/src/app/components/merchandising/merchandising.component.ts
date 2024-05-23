@@ -48,8 +48,6 @@ export class MerchandisingComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProductos();
-    this.getBrands();
-    this.getCategories();
     this.creationForm = new FormGroup({
       name: new FormControl('', [
         Validators.required,
@@ -89,35 +87,6 @@ export class MerchandisingComponent implements OnInit {
     this.getProductos();
   }
 
-  /**
-   * Fetches the list of brands from the server.
-   */
-  getBrands(): void {
-    this.http.getBrands().subscribe(
-      (brands) => {
-        this.brands = brands;
-        console.log(brands)
-      },
-      (error) => {
-        console.error('Error al obtener las marcas:', error);
-      }
-    );
-  }
-
-  /**
-   * Fetches the list of categories from the server.
-   */
-  getCategories(): void {
-    this.http.getCategories().subscribe(
-      (categories) => {
-        this.categories = categories;
-        console.log(categories)
-      },
-      (error) => {
-        console.error('Error al obtener las categorias:', error);
-      }
-    );
-  }
 
   /**
    * Fetches the list of products from the server.
@@ -273,8 +242,6 @@ export class MerchandisingComponent implements OnInit {
    * @param productId The ID of the product to edit.
    */
   openEditModal(productId: number) {
-    this.getBrands();
-    this.getCategories();
     const selectedProduct = this.productos.find(producto => producto.id === productId);
     if (selectedProduct) {
       this.editedProduct = { ...selectedProduct } as Product;

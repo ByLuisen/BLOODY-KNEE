@@ -24,52 +24,22 @@ export class ThaivideosComponent implements OnInit {
   role!: string;
   searchTerm: string = '';
   loading: boolean = false;
-
   // Admin mode variable
   adminModeActivated: boolean = false;
-
   // Modal for create a video form
   createModal: boolean = false;
   editModal: boolean = false;
   deleteModal: boolean = false;
-
   // Variable para almacenar el video que se está editando
   editedVideo: Video = new Video;
   // Selected video to delete
   selectedVideo: Video | null = null;
-
   // Formulario de creación del video
   createVideoForm!: FormGroup;
+  // Formulario de editar video
+  editVideoForm!: FormGroup;
 
-
-  constructor(private http: HttpService, private router: Router, private auth: AuthService) {
-
-    this.createVideoForm = new FormGroup({
-      videoTitle: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9\s]*$/) // Texto y numeros
-      ]),
-      videoCoach: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z\s]*$/) // Texto
-      ]),
-      videoDescription: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9\s.ñÑ]*$/) // String,ñ
-      ]),
-      videoUrl: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^(https?:\/\/)?(www\.)?[a-zA-Z0-9]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,5}([/?#].*)?$/)
-      ]),
-      videoDuration: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^[0-9\s:.]*$/), // String
-      ]),
-      videoExclusive: new FormControl('', [
-        Validators.required
-      ]),
-    })
-  }
+  constructor(private http: HttpService, private router: Router, private auth: AuthService) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -126,6 +96,37 @@ export class ThaivideosComponent implements OnInit {
         })
       )
       .subscribe();
+    // Inicializa el formulario de edición con las validaciones requeridas
+    this.editVideoForm = new FormGroup({
+      title: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/),
+        Validators.maxLength(20),
+        Validators.minLength(7)
+      ]), // Título requerido
+      coach: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]+$/),
+        Validators.minLength(5),
+        Validators.maxLength(150)
+      ]),
+      description: new FormControl('', [
+        Validators.required,
+        Validators.minLength(20),
+        Validators.maxLength(1000)
+      ]),
+      url: new FormControl('', [
+        Validators.required,
+        Validators.minLength(35),
+        Validators.pattern(/^https:\/\/player\.vimeo\.com\/video\/\d+(\?.*)?$/)
+      ]),
+      duration: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9:]+$/),
+        Validators.maxLength(6)
+      ]),
+      exclusive: new FormControl('', []),
+    });
   }
 
   openModal() {
@@ -179,6 +180,7 @@ export class ThaivideosComponent implements OnInit {
   toggleAdminMode() {
     this.adminModeActivated = !this.adminModeActivated;
   }
+
   /**
    *
    * @param video
@@ -186,10 +188,18 @@ export class ThaivideosComponent implements OnInit {
   editVideo(videoId: number) {
     const selectedVideo = this.todos.find(video => video.id === videoId)
     if (selectedVideo) {
-      this.editedVideo = selectedVideo; // Asignar directamente el video seleccionado
+      this.editedVideo = selectedVideo;
+      // Actualizar los valores del formulario con los valores de la dieta seleccionada
+      this.editVideoForm.patchValue({
+        title: selectedVideo.title,
+        coach: selectedVideo.coach,
+        description: selectedVideo.description,
+        url: selectedVideo.url,
+        duration: selectedVideo.duration,
+        exclusive: selectedVideo.exclusive
+      });
       this.editModal = true;
     }
-
   }
 
   /**
@@ -215,24 +225,17 @@ export class ThaivideosComponent implements OnInit {
   }
 
   /**
-    *
-    */
-  submitCreateVideoForm() {
-    if (this.createVideoForm.valid) {
-      const newVideo = {
-        title: this.createVideoForm.value.videoTitle,
-        coach: this.createVideoForm.value.videoCoach,
-        description: this.createVideoForm.value.videoDescription,
-        url: this.createVideoForm.value.videoUrl,
-        duration: this.createVideoForm.value.videoDuration,
-        exclusive: this.createVideoForm.value.videoExclusive
-      };
-    }
-  }
-  /**
    *
    */
   submitEditVideoForm() {
+    // Actualizar editedVideo con los valores del formulario
+    this.editedVideo.title = this.editVideoForm.get('title')?.value;
+    this.editedVideo.coach = this.editVideoForm.get('coach')?.value;
+    this.editedVideo.description = this.editVideoForm.get('description')?.value;
+    this.editedVideo.url = this.editVideoForm.get('url')?.value;
+    this.editedVideo.duration = this.editVideoForm.get('duration')?.value;
+    this.editedVideo.exclusive = this.editVideoForm.get('exclusive')?.value;
+
     this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
       (updatedVideo) => {
         console.log("Video actualizado exitosamente", updatedVideo);

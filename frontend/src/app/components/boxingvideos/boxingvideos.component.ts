@@ -31,6 +31,7 @@ export class BoxingvideosComponent implements OnInit {
   editedVideo: Video = new Video();  // Video being edited
   selectedVideo: Video | null = null;  // Video selected for deletion
   createVideoForm!: FormGroup;  // Form for creating a new video
+  editVideoForm!: FormGroup; // Formulario de editar video
 
   constructor(private http: HttpService, private router: Router, private auth: AuthService) {
     this.editForm = new FormGroup({
@@ -38,32 +39,36 @@ export class BoxingvideosComponent implements OnInit {
       coach: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
     });
-
-    this.createVideoForm = new FormGroup({
-      videoTitle: new FormControl('', [
+    this.editVideoForm = new FormGroup({
+      title: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9\s]*$/) // Texto y numeros
-      ]),
-      videoCoach: new FormControl('', [
+        Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/),
+        Validators.maxLength(20),
+        Validators.minLength(7)
+      ]), // Título requerido
+      coach: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z\s]*$/) // Texto
+        Validators.pattern(/^[a-zA-Z0-9\s]+$/),
+        Validators.minLength(5),
+        Validators.maxLength(150)
       ]),
-      videoDescription: new FormControl('', [
+      description: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9\s.ñÑ]*$/) // String,ñ
+        Validators.minLength(20),
+        Validators.maxLength(1000)
       ]),
-      videoUrl: new FormControl('', [
+      url: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^(https?:\/\/)?(www\.)?[a-zA-Z0-9]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,5}([/?#].*)?$/)
+        Validators.minLength(35),
+        Validators.pattern(/^https:\/\/player\.vimeo\.com\/video\/\d+(\?.*)?$/)
       ]),
-      videoDuration: new FormControl('', [
+      duration: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[0-9\s:.]*$/), // String
+        Validators.pattern(/^[0-9:]+$/),
+        Validators.maxLength(6)
       ]),
-      videoExclusive: new FormControl('', [
-        Validators.required
-      ]),
-    })
+      exclusive: new FormControl('', []),
+    });
   }
 
   /**
@@ -157,15 +162,15 @@ export class BoxingvideosComponent implements OnInit {
    * @param video The selected video
    */
   selectVideo(video: Video) {
-    // Check if video is exclusive and user role permits access
     if (video.exclusive && this.role != 'Standard' && this.role != 'Premium' && this.role != 'Admin') {
-      // Open modal if access is restricted
       this.openModal();
+      // Abre el modal si el video es premium y el usuario no tiene un rol premium
     } else {
-      // Navigate to video player if access is permitted
       this.router.navigate(['/player', video.id]);
+      // Navega al componente de reproductor si el usuario tiene permiso para ver el video
     }
   }
+
 
   /**
    * Handle change in filtered items
@@ -176,16 +181,24 @@ export class BoxingvideosComponent implements OnInit {
   }
 
   /**
-   * Open edit modal for selected video
-   * @param videoId The ID of the video to edit
+   *
+   * @param video
    */
   editVideo(videoId: number) {
     const selectedVideo = this.todos.find(video => video.id === videoId)
     if (selectedVideo) {
-      this.editedVideo = selectedVideo; // Asignar directamente el video seleccionado
+      this.editedVideo = selectedVideo;
+      // Actualizar los valores del formulario con los valores de la dieta seleccionada
+      this.editVideoForm.patchValue({
+        title: selectedVideo.title,
+        coach: selectedVideo.coach,
+        description: selectedVideo.description,
+        url: selectedVideo.url,
+        duration: selectedVideo.duration,
+        exclusive: selectedVideo.exclusive
+      });
       this.editModal = true;
     }
-
   }
 
   /**
