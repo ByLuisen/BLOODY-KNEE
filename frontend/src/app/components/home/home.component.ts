@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
         this.role = 'Basic';
       }
     });
+    console.log(this.role)
   }
 
   destacados: Video[] = [];

@@ -49,7 +49,7 @@
   <div class="mt-10">
     <h1 class="text-center">TI<span class="text-red-600">POS</span></h1>
     <!-- Button to activate admin mode -->
-    <div class="flex flex-col justify-center items-center mb-4 mt-4" *ngIf="role == 'admin'">
+    <div class="flex flex-col justify-center items-center mb-4 mt-4" *ngIf="role == 'Admin'">
       <div class="w-2/4 h-auto bg-red-600 rounded-full">
         <p class="my-2 mx-2 text-3xl text-white">HERRAMIENTAS DE ADMINISTRACIÓN</p>
         <div class="flex flex-row my-3 justify-center">
@@ -80,19 +80,6 @@
 
     <div *ngFor="let diet of diets">
       <!-- delete or edit buttons -->
-      <div class="flex-row mt-10">
-        <button (click)="openDeleteModal(diet)" *ngIf="deleteAdminMode == true"
-          class="w-auto h-auto mx-2 my-2 border border-red-600 text-red-600 rounded-full">
-          <p class="px-2 py-2 flex justify-center items-center"> <img src="../../../assets/img/svg/bx-trash.svg" alt="">
-          </p>
-        </button>
-        <button (click)="openEditModal(diet.id)" *ngIf="editAdminMode == true"
-          class="w-auto h-auto mx-2 my-2 border border-lime-600 text-lime-600 rounded-full">
-          <p class="px-2 py-2 flex justify-center items-center"> <img src="../../../assets/img/svg/bx-edit.svg" alt=""
-              class="fill-black">
-          </p>
-        </button>
-      </div>
       <div class="TIPES text-justify mb-5">
         <div class="border-b-4">
           <h2 class="text-xl"><b>{{diet.title}}</b></h2>
@@ -111,6 +98,19 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="flex-row mt-10">
+        <button (click)="openDeleteModal(diet)" *ngIf="deleteAdminMode == true"
+          class="w-auto h-auto mx-2 my-2 border border-red-600 text-red-600 rounded-full">
+          <p class="px-2 py-2 flex justify-center items-center"> <img src="../../../assets/img/svg/bx-trash.svg" alt="">
+          </p>
+        </button>
+        <button (click)="openEditModal(diet.id)" *ngIf="editAdminMode == true"
+          class="w-auto h-auto mx-2 my-2 border border-lime-600 text-lime-600 rounded-full">
+          <p class="px-2 py-2 flex justify-center items-center"> <img src="../../../assets/img/svg/bx-edit.svg" alt=""
+              class="fill-black">
+          </p>
+        </button>
       </div>
     </div>
     <!-- MODALS SECTION -->
@@ -209,7 +209,8 @@
           <div class="mb-4">
             <label for="dietContent" class="block text-black">Imagen de la Dieta:</label>
             <div class="items-center justify-center">
-              <input type="file" id="dietContent" name="dietContent" accept="image/*" (change)="handleImageUpload($event)"
+              <input type="file" id="dietContent" name="dietContent" accept="image/*"
+                (change)="handleImageUpload($event)"
                 class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
                 formControlName="dietContent">
             </div>
