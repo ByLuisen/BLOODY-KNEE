@@ -67,11 +67,6 @@
           <!-- Botones -->
           <div class="flex flex-row my-3 justify-center">
             <button
-              class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300"
-              (click)="addDiet()">Agregar
-              dieta
-            </button>
-            <button
               class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-yellow-500 border border-solid border-yellow-500 hover:scale-125 transition-transform duration-300"
               (click)="activateEditMode()">Editar
               dieta
@@ -103,8 +98,8 @@
             </div>
           </div>
         </div>
-        <svg *ngIf="editAdminMode" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#6AA328' class="w-9 mx-2"
-          (click)="openEditModal(diet.id)">
+        <svg *ngIf="editAdminMode" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#fff'
+          class="w-9 mx-2 mt-3" (click)="openEditModal(diet.id)">
           <path
             d="m7 17.013 4.413-.015 9.632-9.54c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.756-.756-2.075-.752-2.825-.003L7 12.583v4.43zM18.045 4.458l1.589 1.583-1.597 1.582-1.586-1.585 1.594-1.58zM9 13.417l6.03-5.973 1.586 1.586-6.029 5.971L9 15.006v-1.589z">
           </path>
@@ -113,8 +108,8 @@
           </path>
         </svg>
 
-        <svg *ngIf="deleteAdminMode" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#DC2626' class="w-9 mx-2"
-          (click)="openDeleteModal(diet)">
+        <svg *ngIf="deleteAdminMode" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#fff'
+          class="w-9 mx-2 mt-3" (click)="openDeleteModal(diet)">
           <path
             d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z">
           </path>
@@ -172,96 +167,7 @@
       <img src="../../../assets/img/bot4.webp" alt="Chatbot Toggle">
     </button>
   </div>
-
   <!-- CONFIRM DELETE MODAL -->
-
-  <!-- CREATE MODAL -->
-  <div *ngIf="createModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
-    <div class="bg-white rounded-lg p-6 w-2/3 mx-auto">
-      <h2 class="text-xl font-semibold mb-4">Crear Dieta</h2>
-      <form [formGroup]="createDietForm" (submit)="submitCreateDietForm()">
-        <!-- Title -->
-        <div class="mb-4">
-          <label for="dietTitle" class="block text-black">Título de la Dieta:</label>
-          <input type="text" id="dietTitle" name="dietTitle" formControlName="dietTitle"
-            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
-          <!-- Error requerido -->
-          <span
-            *ngIf="createDietForm.get('dietTitle')?.hasError('required') && createDietForm.get('dietTitle')?.touched"
-            class="text-red-500">Campo
-            obligatorio</span>
-          <!-- invalid format error -->
-          <span *ngIf="createDietForm.get('dietTitle')!.hasError('pattern')&& createDietForm.get('dietTitle')?.dirty"
-            class="text-red-500">Formato
-            incorrecto</span>
-          <!-- max length -->
-          <span *ngIf="createDietForm.get('dietTitle')!.hasError('maxLength') && createDietForm.get('dietTitle')?.dirty"
-            class="text-red-500">Formato
-            incorrecto</span>
-        </div>
-        <!-- Description -->
-        <div class="mb-4">
-          <label for="dietDescription" class="block text-black">Descripción de la Dieta:</label>
-          <textarea id="dietDescription" name="dietDescription" formControlName="dietDescription"
-            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
-            </textarea>
-          <!-- required error -->
-          <span *ngIf="createDietForm.get('dietDescription')!.hasError('required')" class="text-red-500">Campo
-            obligatorio</span>
-          <!-- invalid format error -->
-          <span *ngIf="createDietForm.get('dietDescription')!.hasError('pattern')" class="text-red-500">Formato
-            incorrecto</span>
-        </div>
-        <!-- Content -->
-        <div class="mb-4">
-          <label for="dietContent" class="block text-black">Contenido de la Dieta:</label>
-          <input id="dietContent" name="dietContent" formControlName="dietContent"
-            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
-            placeholder="Este campo se establecerá automaticamente" readonly>
-          <!-- Error requerido -->
-          <span
-            *ngIf="createDietForm.get('dietContent')?.hasError('required') && createDietForm.get('dietContent')?.touched"
-            class="text-red-500">Campo
-            obligatorio</span>
-        </div>
-        <!-- Upload image -->
-        <div class="mb-4">
-          <label for="dietContent" class="block text-black">Imagen de la Dieta:</label>
-          <div class="items-center justify-center">
-            <input type="file" id="dietContent" name="dietContent" accept="image/*" (change)="handleImageUpload($event)"
-              class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700"
-              formControlName="dietContent">
-          </div>
-        </div>
-        <!-- Author -->
-        <div class="mb-4">
-          <label for="dietAuthor" class="block text-black">Autor de la Dieta:</label>
-          <input type="text" id="dietAuthor" name="dietAuthor" formControlName="dietAuthor"
-            class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
-          <!-- required error -->
-          <!-- Error requerido -->
-          <span
-            *ngIf="createDietForm.get('dietAuthor')?.hasError('required') && createDietForm.get('dietAuthor')?.touched"
-            class="text-red-500">Campo
-            obligatorio</span>
-          <!-- invalid format error -->
-          <span *ngIf="createDietForm.get('dietAuthor')!.hasError('pattern') && createDietForm.get('dietAuthor')?.dirty"
-            class="text-red-500">Formato
-            incorrecto</span>
-        </div>
-        <!-- Botones de acción -->
-        <div class="flex justify-center">
-          <button type="button" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2"
-            (click)="closeCreateModal()">Cancelar</button>
-          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar</button>
-          <!-- <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg"
-              [disabled]="createDietForm.invalid">Guardar</button> -->
-        </div>
-      </form>
-    </div>
-  </div>
-  <!-- END CREATE MODAL -->
-  <!-- Modal para confirmar eliminación de producto -->
   <div *ngIf="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
     <div class="bg-white rounded-lg p-6 max-w-md mx-auto">
       <h2 *ngIf="selectedDiet !== null" class="text-xl font-semibold mb-4">Eliminar <b class="text-red-600">
@@ -279,7 +185,6 @@
     </div>
   </div>
   <!-- END DELETE MODAL -->
-  <!-- END MODAL SECTION -->
 
   <div>
     <button (click)="openPopup()"
