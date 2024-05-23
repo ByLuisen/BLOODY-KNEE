@@ -31,6 +31,7 @@ export class HttpService {
   initUser(): void {
     this.auth.user$.subscribe((user) => {
       if (user) {
+        console.log(user)
         this.addNewUserAndRole(user).subscribe();
         if (this.cookie.check('cart')) {
           this.storeCartInDDBB(user).subscribe((response) => {
