@@ -58,7 +58,7 @@ export class MerchandisingComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'Admin'; // TODO cambiar a "Basic"
+        this.role = 'Basic';
       }
     });
 

@@ -73,7 +73,7 @@ export class DietsComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'admin';
+        this.role = 'Basic';
       }
     });
   }
