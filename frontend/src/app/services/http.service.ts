@@ -6,16 +6,12 @@ import { catchError, map, take, tap } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
 import { Diet } from '../models/Diet';
-import { environment } from 'src/environments/environment.development';
 import { AuthService, User } from '@auth0/auth0-angular';
-import { Role } from '../models/Role';
-import { ConditionalExpr } from '@angular/compiler';
 import { switchMap } from 'rxjs/operators';
 import { Product } from '../models/Product';
 import { Comment } from '../models/Comment';
 
 import { CookieService } from 'ngx-cookie-service';
-import { FormGroup } from '@angular/forms';
 import { Order } from '../models/Order';
 
 @Injectable({
@@ -103,7 +99,7 @@ export class HttpService {
     return this._http.post(url, body);
   }
 
-  getCartFromDDBB(): Observable<Product[]> {
+  getCartFromDDBB(): Observable<any> {
     const url = `${this.url}/get-cart`;
     return this.auth.user$.pipe(
       switchMap((user) => {
@@ -112,9 +108,7 @@ export class HttpService {
           connection: user ? user.sub?.split('|')[0] : '', // Obtén la conexión del usuario actual
         };
         // Realiza la solicitud PUT al servidor con el cuerpo construido
-        return this._http
-          .post<{ data: Product[] }>(url, body)
-          .pipe(map((response) => response.data));
+        return this._http.post(url, body).pipe(map((response) => response));
       })
     );
   }
@@ -610,19 +604,15 @@ export class HttpService {
     );
   }
 
-  cancelOrder(checkout_session: any, line_items: any): Observable<Order> {
-    const url = `${this.url}/make-order`;
-    return this.auth.user$.pipe(
-      switchMap((user) => {
-        const body = {
-          checkout_session: checkout_session,
-          line_items: line_items,
-          email: user ? user.email : '',
-          connection: user ? user.sub?.split('|')[0] : '',
-        };
-        return this._http
-          .post<{ data: Order }>(url, body)
-          .pipe(map((response) => response.data));
+  cancelOrder(order: Order): Observable<any> {
+    const url = `${this.url}/cancel-order`;
+    const body = {
+      order: order,
+    };
+    return this._http.put(url, body).pipe(
+      catchError((error) => {
+        console.error('Error al cancelar el pedido:', error);
+        return of(null);
       })
     );
   }

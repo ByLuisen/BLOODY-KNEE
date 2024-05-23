@@ -31,23 +31,41 @@ class CartController extends Controller
         foreach ($request->cart as $productData) {
             $product = Product::find($productData['id']);
 
-            // Verificar si el producto ya está en el carrito
-            $cartProduct = CartStoreProduct::where('cart_id', $cart->id)
-                ->where('product_id', $product->id)
-                ->first();
+            if ($product && $productData['quantity'] > 0 && $product->stock > 0) {
+                // Verificar si el producto ya está en el carrito
+                $cartProduct = CartStoreProduct::where('cart_id', $cart->id)
+                    ->where('product_id', $product->id)
+                    ->first();
 
-            if ($cartProduct) {
-                // Si el producto ya está en el carrito, actualiza la cantidad
-                $cartProduct->quantity += $productData['quantity'];
-                $cartProduct->save();
+                if ($cartProduct) {
+                    // Si el producto ya está en el carrito, actualiza la cantidad
+                    $cartProduct->quantity += $productData['quantity'];
+                    // Validate if the quantity of the product exceeds the stock quantity set the stock of the product as the quantity
+                    if ($cartProduct->quantity > $product->stock) {
+                        $cartProduct->quantity = $product->stock;
+                    }
+                    $cartProduct->save();
+                } else {
+                    // Si el producto no está en el carrito, agrégalo
+                    $cartProduct = new CartStoreProduct();
+                    $cartProduct->cart_id = $cart->id;
+                    $cartProduct->product_id = $product->id;
+                    $cartProduct->quantity = $productData['quantity'];
+                    // Validate if the quantity of the product exceeds the stock quantity set the stock of the product as the quantity
+                    if ($cartProduct->quantity > $product->stock) {
+                        $cartProduct->quantity = $product->stock;
+                    }
+                    $cartProduct->save();
+                }
             } else {
-                // Si el producto no está en el carrito, añádelo
-                $cartProduct = new CartStoreProduct();
-                $cartProduct->cart_id = $cart->id;
-                $cartProduct->product_id = $product->id;
-                $cartProduct->quantity = $productData['quantity'];
+                // Si el producto existe, ya está en el carrito y la cantidad es 0 o el stock es 0, eliminarlo del carrito
+                $cartProduct = CartStoreProduct::where('cart_id', $cart->id)
+                    ->where('product_id', $product->id)
+                    ->first();
 
-                $cartProduct->save();
+                if ($cartProduct) {
+                    $cartProduct->delete();
+                }
             }
         }
 
@@ -57,7 +75,9 @@ class CartController extends Controller
     public function getCartProducts(Request $request)
     {
         // Obtener el usuario y su carrito asociado
-        $user = User::where('email', $request->email)->where('connection', $request->connection)->first();
+        $user = User::where('email', $request->email)
+            ->where('connection', $request->connection)
+            ->first();
         $cart = $user->cart;
 
         if (!$cart) {
@@ -67,14 +87,52 @@ class CartController extends Controller
             $cart->save();
         }
 
-        // Obtener los productos en el carrito con información adicional, ordenados por added_date en orden descendente
+        // Obtener los productos en el carrito con información adicional, ordenados por updated_at en orden descendente
         $cartProducts = CartStoreProduct::where('cart_id', $cart->id)
             ->orderBy('updated_at', 'desc')
             ->with('product') // Cargar la relación 'product' para obtener información sobre los productos
             ->get();
 
+        $updatedCartProducts = [];
+        $removeProductIds = [];
+
+        foreach ($cartProducts as $cartProduct) {
+            if ($cartProduct->product->stock <= 0 || $cartProduct->quantity <= 0) {
+                // Si el producto no tiene stock o la cantidad es menor o igual a 0, marcarlo para eliminación
+                $removeProductIds[] = $cartProduct->id;
+            } elseif ($cartProduct->quantity > $cartProduct->product->stock) {
+                // Si la cantidad del producto excede el stock disponible, ajustar la cantidad
+                $cartProduct->quantity = $cartProduct->product->stock;
+                $cartProduct->save();
+                $updatedCartProducts[] = $cartProduct;
+            }
+        }
+
+        // Eliminar los productos marcados
+        if (!empty($removeProductIds)) {
+            CartStoreProduct::whereIn('id', $removeProductIds)->delete();
+            // Obtener los productos en el carrito con información adicional, ordenados por updated_at en orden descendente
+            $cartProducts = CartStoreProduct::where('cart_id', $cart->id)
+                ->orderBy('updated_at', 'desc')
+                ->with('product') // Cargar la relación 'product' para obtener información sobre los productos
+                ->get();
+            return ApiResponse::success(CartProductResource::collection($cartProducts), 'Productos del carrito actualizados correctamente.');
+        }
+
+        if (!empty($updatedCartProducts)) {
+            // Obtener los productos en el carrito con información adicional, ordenados por updated_at en orden descendente
+            $cartProducts = CartStoreProduct::where('cart_id', $cart->id)
+                ->orderBy('updated_at', 'desc')
+                ->with('product') // Cargar la relación 'product' para obtener información sobre los productos
+                ->get();
+            // Hay productos actualizados, devolverlos
+            return ApiResponse::success(CartProductResource::collection($cartProducts), 'Productos del carrito actualizados correctamente.');
+        }
+
+        // No hay productos actualizados, devolver los productos originales
         return ApiResponse::success(CartProductResource::collection($cartProducts), 'Productos del carrito obtenidos correctamente');
     }
+
 
     public function removeProductFromCart(Request $request)
     {
@@ -98,7 +156,7 @@ class CartController extends Controller
 
     public function addProductToCart(Request $request)
     {
-        // Obtener el ID del producto y el ID del usuario del cuerpo de la solicitud
+        // Obtener el ID del producto y la cantidad del cuerpo de la solicitud
         $productId = $request->product['id'];
         $productQuantity = $request->product['quantity'];
         $userEmail = $request->email;
@@ -115,15 +173,45 @@ class CartController extends Controller
             $cart->save();
         }
 
+        // Obtener el producto y verificar si existe
+        $product = Product::find($productId);
+        if (!$product) {
+            return ApiResponse::error('Producto no encontrado', 404);
+        }
+
+        // Verificar si hay suficiente stock disponible
+        if ($product->stock <= 0 || $productQuantity <= 0) {
+            return ApiResponse::error('El producto no está disponible en stock', 400);
+        }
+
+        if ($productQuantity > $product->stock) {
+            // Si la cantidad solicitada excede el stock disponible, ajustarla al stock disponible
+            $productQuantity = $product->stock;
+        }
+
         // Verificar si el producto ya está en el carrito
         $existingProduct = $cart->products()->where('product_id', $productId)->first();
 
         if ($existingProduct) {
-            // Increment the quantity product if the product exist in the cart
-            $existingProduct->pivot->increment('quantity', $productQuantity);
+            // Calcular la nueva cantidad
+            $newQuantity = $existingProduct->pivot->quantity + $productQuantity;
+
+            // Verificar que la nueva cantidad no exceda el stock disponible
+            if ($newQuantity > $product->stock) {
+                $newQuantity = $product->stock;
+                // Actualizar la cantidad del producto en la tabla pivot
+                $existingProduct->pivot->quantity = $newQuantity;
+                $existingProduct->pivot->save();
+
+                return ApiResponse::success(null, 'Has superado la cantidad de stock de este producto');
+            }
+
+            // Actualizar la cantidad del producto en la tabla pivot
+            $existingProduct->pivot->quantity = $newQuantity;
+            $existingProduct->pivot->save();
         } else {
-            // Si el producto no está en el carrito, agrégalo
-            $cart->products()->attach($productId, ['quantity' => $productQuantity]);
+            // Si el producto no está en el carrito, agregarlo con la cantidad correcta
+            $cart->products()->attach($productId, ['quantity' => min($productQuantity, $product->stock)]);
         }
 
         return ApiResponse::success(null, 'Producto agregado al carrito con éxito');

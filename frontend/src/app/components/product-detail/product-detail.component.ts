@@ -144,25 +144,39 @@ export class ProductDetailComponent implements OnInit {
 
     if (this.product.stock <= 0) {
       this.outStockAlert = true;
+    } else {
+      this.auth.isAuthenticated$.pipe(take(1)).subscribe((isAuthenticated) => {
+        if (isAuthenticated) {
+          const product = new Product();
+          product.id = this.productId;
+          product.quantity = this.getQuantity();
+          this.http.addProductToCart(product).subscribe((response) => {
+            const { message } = response;
+            if (message == 'Producto agregado al carrito con éxito') {
+              // Show added succesfully notification for 7 seconds
+              this.added = true;
+              setTimeout(() => {
+                this.added = false;
+              }, 7000);
+            } else if (
+              message == 'Has superado la cantidad de stock de este producto'
+            ) {
+              // Show quantity alert notification for 7 seconds
+              this.alertQuantity = true;
+              setTimeout(() => {
+                this.alertQuantity = false;
+              }, 7000);
+            }
+          });
+        } else {
+          this.saveProductInACookie();
+        }
+      });
     }
-    this.auth.isAuthenticated$.pipe(take(1)).subscribe((isAuthenticated) => {
-      if (isAuthenticated) {
-        const product = new Product();
-        product.id = this.productId;
-        product.quantity = this.getQuantity();
-        this.http.addProductToCart(product).subscribe(() => {
-          this.added = true;
-          setTimeout(() => {
-            this.added = false;
-          }, 7000);
-        });
-      } else {
-        this.saveProductInACookie();
-      }
-    });
   }
 
   async loginOrModal(): Promise<void> {
+    const quantity = this.getQuantity();
     // Update the product for the stock
     await this.getProducto();
     if (this.product.stock > 0) {
@@ -175,7 +189,11 @@ export class ProductDetailComponent implements OnInit {
             return of(null); // Emite un valor nulo si ya está autenticado
           }),
           switchMap(() => {
-            this.openModal = true;
+            if (quantity > this.product.stock) {
+              this.outStockAlert = true;
+            } else {
+              this.openModal = true;
+            }
             return of(null);
           })
         )
@@ -220,6 +238,7 @@ export class ProductDetailComponent implements OnInit {
           cart[existingProductIndex].quantity = this.product.stock;
           // Show laert quantity notification
           if (this.product.stock > 0) {
+            // Show quantity alert notification for 7 seconds
             this.alertQuantity = true;
             setTimeout(() => {
               this.alertQuantity = false;
@@ -227,7 +246,7 @@ export class ProductDetailComponent implements OnInit {
           }
         } else {
           if (this.product.stock > 0) {
-            // Show added succesfully notification
+            // Show added succesfully notification for 7 seconds
             this.added = true;
             setTimeout(() => {
               this.added = false;
@@ -240,7 +259,7 @@ export class ProductDetailComponent implements OnInit {
         // Si el producto no está en el carrito, agregarlo
         cart.push(productToAdd);
         if (this.product.stock > 0) {
-          // Show added succesfully notification
+          // Show added succesfully notification for 7 seconds
           this.added = true;
           setTimeout(() => {
             this.added = false;
@@ -261,7 +280,7 @@ export class ProductDetailComponent implements OnInit {
     } else {
       if (this.product.stock > 0) {
         this.cookie.set('cart', JSON.stringify([productToAdd]), 365, '/'); // Convert the array to JSON and save it in the cookie
-        // Show added succesfully notification
+        // Show added succesfully notification for 7 seconds
         this.added = true;
         setTimeout(() => {
           this.added = false;
@@ -270,18 +289,19 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  getQuantity(): number {
-    // Get the quantity product selector
-    const selectElement = document.getElementById(
-      'quantity'
-    ) as HTMLSelectElement;
-    // Parse to integer the quantity
-    return parseInt(selectElement.value);
+  getQuantity(): number | any {
+    if (this.product.stock > 0) {
+      // Get the quantity product selector
+      const selectElement = document.getElementById(
+        'quantity'
+      ) as HTMLSelectElement;
+      // Parse to integer the quantity
+      return parseInt(selectElement.value);
+    }
   }
 
-  sendShippingAddress(): void {
+  async sendShippingAddress(): Promise<void> {
     if (this.shippingAddress.valid) {
-      this.loading = true;
       // Obtener todos los datos del formulario
       const shippingData = Object.values(this.shippingAddress.value).map(
         (value: any) => value.trim()
@@ -297,25 +317,37 @@ export class ProductDetailComponent implements OnInit {
 
       this.http.storeUserAddress(shippingAddress).subscribe();
 
-      this.product.quantity = this.getQuantity();
+      const quantity = this.getQuantity();
 
-      this.http
-        .checkout([this.product])
-        .pipe(
-          tap((response) => {
-            if (response) {
-              window.location.href = response.data.checkout_url;
+      await this.getProducto();
+
+      if(this.product.stock == 0) {
+        this.outStockAlert = true;
+        this.openModal = false;
+      }
+      else if (quantity > this.product.stock) {
+        this.outStockAlert = true;
+      } else {
+        this.loading = true;
+        this.product.quantity = this.getQuantity();
+        this.http
+          .checkout([this.product])
+          .pipe(
+            tap((response) => {
+              if (response) {
+                window.location.href = response.data.checkout_url;
+              }
+            }),
+            finalize(() => (this.loading = false))
+          )
+          .subscribe(
+            () => {},
+            (error) => {
+              console.error('Error al iniciar la sesión de pago:', error);
+              // Manejar el error en tu aplicación
             }
-          }),
-          finalize(() => (this.loading = false))
-        )
-        .subscribe(
-          () => {},
-          (error) => {
-            console.error('Error al iniciar la sesión de pago:', error);
-            // Manejar el error en tu aplicación
-          }
-        );
+          );
+      }
     } else {
       // Marcar todos los controles del formulario como tocados para mostrar los errores
       Object.values(this.shippingAddress.controls).forEach((control) => {
