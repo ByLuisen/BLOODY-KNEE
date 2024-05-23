@@ -8,16 +8,32 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./profile-orders.component.css'],
 })
 export class ProfileOrdersComponent implements OnInit {
+  loading: boolean = false;
   orders!: Order[];
+  openModal: boolean = false;
 
   constructor(private http: HttpService) {}
 
   ngOnInit(): void {
+    this.loading = true;
     this.http.getOrders().subscribe((orders) => {
+      this.loading = false;
       this.orders = orders;
       console.log(orders);
     });
   }
 
-  cancelOrder(): void {}
+  cancelOrder(order: Order): void {
+    this.http.cancelOrder(order).subscribe((response) => {
+      if (response) {
+        // Search the index of the order parametre
+        const orderIndex = this.orders.findIndex((o) => o.id === order.id);
+        if (orderIndex !== -1) {
+          // Change the status order to canceled
+          this.orders[orderIndex].status = 'Cancelado';
+        }
+        this.openModal = true;
+      }
+    });
+  }
 }

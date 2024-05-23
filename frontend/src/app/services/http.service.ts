@@ -2,20 +2,16 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, take, tap } from 'rxjs/operators';
 import { Quote } from '../models/Quote';
 import { Video } from '../models/Video';
 import { Diet } from '../models/Diet';
-import { environment } from 'src/environments/environment.development';
 import { AuthService, User } from '@auth0/auth0-angular';
-import { Role } from '../models/Role';
-import { ConditionalExpr } from '@angular/compiler';
 import { switchMap } from 'rxjs/operators';
 import { Product } from '../models/Product';
 import { Comment } from '../models/Comment';
 
 import { CookieService } from 'ngx-cookie-service';
-import { FormGroup } from '@angular/forms';
 import { Order } from '../models/Order';
 import { Brand } from '../models/Brand';
 import { Category } from '../models/Category';
@@ -32,15 +28,16 @@ export class HttpService {
     private _http: HttpClient,
     private auth: AuthService,
     private cookie: CookieService
-  ) { }
+  ) {}
 
   initUser(): void {
     this.auth.user$.subscribe((user) => {
       if (user) {
         this.addNewUserAndRole(user).subscribe();
         if (this.cookie.check('cart')) {
-          this.storeCartInDDBB(user).subscribe(() => {
+          this.storeCartInDDBB(user).subscribe((response) => {
             this.cookie.delete('cart', '/');
+            console.log(response);
           });
         }
       }
@@ -100,11 +97,11 @@ export class HttpService {
       user: user,
       cart: JSON.parse(this.cookie.get('cart')),
     };
-
+    console.log(body);
     return this._http.post(url, body);
   }
 
-  getCartFromDDBB(): Observable<Product[]> {
+  getCartFromDDBB(): Observable<any> {
     const url = `${this.url}/get-cart`;
     return this.auth.user$.pipe(
       switchMap((user) => {
@@ -113,27 +110,31 @@ export class HttpService {
           connection: user ? user.sub?.split('|')[0] : '', // Obtén la conexión del usuario actual
         };
         // Realiza la solicitud PUT al servidor con el cuerpo construido
-        return this._http
-          .post<{ data: Product[] }>(url, body)
-          .pipe(map((response) => response.data));
+        return this._http.post(url, body).pipe(map((response) => response));
       })
     );
   }
 
   addProductToCart(product: Product): Observable<any> {
     const url = `${this.url}/add-product-to-cart`;
-    return this.auth.user$.pipe(
-      switchMap((user) => {
-        if (user && user.sub) {
-          const email = user.email;
-          const connection = user.sub.split('|')[0]; // Obtiene la conexión del usuario actual
-          const body = { product, email, connection };
-          console.log(body);
-          // Realiza la solicitud POST al servidor con el cuerpo construido
-          return this._http.post(url, body).pipe(map((response) => response));
+    return this.auth.isAuthenticated$.pipe(
+      take(1),
+      switchMap((isAuthenticated) => {
+        if (isAuthenticated) {
+          return this.auth.user$.pipe(
+            take(1),
+            switchMap((user) => {
+              if (user && user.sub) {
+                const email = user.email;
+                const connection = user.sub.split('|')[0];
+                const body = { product, email, connection };
+                return this._http.post(url, body);
+              }
+              return of(null); // No hay usuario autenticado o no hay sub
+            })
+          );
         } else {
-          // Si el usuario no está autenticado o no tiene sub, devuelve un Observable vacío
-          return of([]);
+          return of(null); // No está autenticado
         }
       })
     );
@@ -649,7 +650,6 @@ export class HttpService {
     );
   }
 
-
   getOrders(): Observable<Order[]> {
     const url = `${this.url}/get-orders`;
     return this.auth.user$.pipe(
@@ -665,20 +665,60 @@ export class HttpService {
     );
   }
 
-  cancelOrder(checkout_session: any, line_items: any): Observable<Order> {
-    const url = `${this.url}/make-order`;
-    return this.auth.user$.pipe(
-      switchMap((user) => {
-        const body = {
-          checkout_session: checkout_session,
-          line_items: line_items,
-          email: user ? user.email : '',
-          connection: user ? user.sub?.split('|')[0] : '',
-        };
-        return this._http
-          .post<{ data: Order }>(url, body)
-          .pipe(map((response) => response.data));
+  cancelOrder(order: Order): Observable<any> {
+    const url = `${this.url}/cancel-order`;
+    const body = {
+      order: order,
+    };
+    return this._http.put(url, body).pipe(
+      catchError((error) => {
+        console.error('Error al cancelar el pedido:', error);
+        return of(null);
       })
     );
   }
+
+  saveAsFavorite(videoId: number): Observable<Response> {
+    const url = `${this.url}/save-as-favorite/${videoId}`;
+    return this.auth.idTokenClaims$.pipe(
+      switchMap((user) => {
+        // Get the email from the user object
+        const email = user ? user.email : '';
+
+        // Create the request body
+        const body = { email };
+
+        // Make the POST request
+        return this._http.post<Response>(url, body);
+      })
+    );
+  }
+
+
+  getFavoriteVideos(): Observable<Video[]> {
+    const url = `${this.url}/favorite-videos`;
+  
+    return this.auth.user$.pipe(
+      switchMap((user) => {
+        if (!user) {
+          return throwError('Usuario no autenticado');
+        }
+  
+        const body = {
+          email: user.email,
+          connection: user.sub?.split('|')[0],
+        };
+  
+        return this._http.post<{ data: Video[] }>(url, body).pipe(
+          map(response => response.data)
+        );
+      }),
+      catchError((error) => {
+        console.error('Error al obtener los vídeos favoritos:', error);
+        return throwError('Error al obtener los vídeos favoritos');
+      })
+    );
+  }
+  
+  
 }

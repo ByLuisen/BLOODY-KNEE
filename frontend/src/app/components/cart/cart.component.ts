@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { CookieService } from 'ngx-cookie-service';
@@ -16,135 +17,204 @@ export class CartComponent {
   products: Product[] = []; // Array to hold cart products
   cart!: any[]; // Array to hold cart items
   loading: boolean = false; // Flag to indicate loading state
+  updated: boolean = false;
 
   constructor(
     private auth: AuthService, // Instance of AuthService
     private http: HttpService, // Instance of HttpService
     private cookie: CookieService, // Instance of CookieService
-    private router: Router // Instance of Router
-  ) { }
+    private router: Router, // Instance of Router
+    @Inject(DOCUMENT) public document: Document
+  ) {}
 
   // Function to toggle cart visibility
-  toggleCart() {
-    // Check if user is authenticated
-    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
-      if (isAuthenticated) {
-        // Perform actions if user is authenticated
-        this.getProductsFromBBDD();
-      } else {
-        // Retrieve products from cookie if user is not authenticated
-        this.getProductsFromACookie();
-      }
+  async openCart(): Promise<void> {
+    this.cartOpen = true;
+
+    return new Promise<void>((resolve, reject) => {
+      this.auth.isAuthenticated$.subscribe(async (isAuthenticated) => {
+        try {
+          if (isAuthenticated) {
+            // Perform actions if user is authenticated
+            await this.getProductsFromBBDD();
+          } else {
+            // Retrieve products from cookie if user is not authenticated
+            await this.getProductsFromACookie();
+          }
+
+          resolve(); // Resolve the promise after toggling cart and getting products
+        } catch (error) {
+          console.error(error);
+          reject(error); // Reject the promise if there's an error
+        }
+      });
     });
-    // Toggle cart visibility
-    this.cartOpen = !this.cartOpen;
   }
 
   // Function to retrieve products from a cookie
-  getProductsFromACookie(): void {
-    // Verify if the cart cookie exists
-    if (this.cookie.check('cart')) {
-      this.loading = true;// Set loading flag to true
-      // Parse the cart cookie value
-      this.cart = JSON.parse(this.cookie.get('cart'));
-      // Obtener solo los IDs de los productos
-      const ids = this.cart.map((product: any) => product.id);
-      this.http
-        .getProductsById(ids)
-        .pipe(
-          switchMap((products: Product[]) => {
-            this.products = products
-              .map((product) => {
-                const cartItem = this.cart.find(
-                  (cart) => cart.id === product.id
-                );
-                if (cartItem) {
-                  product.quantity = cartItem.quantity;
-                  product.added_date = cartItem.added_date;
-                }
-                return product;
-              })
-              .sort((a, b) => {
-                // Ordena por fecha de forma descendente (más reciente primero)
+  getProductsFromACookie(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (this.cookie.check('cart')) {
+        this.loading = true; // Set loading flag to true
+
+        // Parse the cart cookie value
+        this.cart = JSON.parse(this.cookie.get('cart'));
+        const ids = this.cart.map((product: any) => product.id);
+
+        this.http
+          .getProductsById(ids)
+          .pipe(
+            switchMap((products: Product[]) => {
+              const updatedProducts = products
+                .map((product) => {
+                  const cartItem = this.cart.find(
+                    (cart) => cart.id === product.id
+                  );
+                  if (cartItem) {
+                    product.quantity = cartItem.quantity;
+                    if (product.quantity > product.stock) {
+                      cartItem.quantity = product.stock;
+                      product.quantity = product.stock;
+                      // Show updated successfully cart notification for 7 seconds
+                      this.updated = true;
+                      setTimeout(() => {
+                        this.updated = false;
+                      }, 10000);
+                    }
+                    product.added_date = cartItem.added_date;
+
+                    if (product.stock === 0) {
+                      const cartIndex = this.cart.findIndex(
+                        (p) => p.id === product.id
+                      );
+                      if (cartIndex !== -1) {
+                        this.cart.splice(cartIndex, 1);
+                      }
+                      return null;
+                    }
+                  }
+                  return product;
+                })
+                .filter((product): product is Product => product !== null);
+
+              this.products = updatedProducts.sort((a, b) => {
                 return (
                   new Date(b.added_date).getTime() -
                   new Date(a.added_date).getTime()
                 );
               });
-            return of(products);
+
+              if (this.products.length === 0) {
+                this.cookie.delete('cart', '/');
+              } else {
+                this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+              }
+
+              return of(this.products);
+            }),
+            catchError((error) => {
+              console.error('Error al obtener los productos:', error);
+              return of([]);
+            }),
+            finalize(() => {
+              this.loading = false;
+              resolve(); // Resolve the promise after completion
+            })
+          )
+          .subscribe();
+      } else {
+        resolve(); // Resolve immediately if no cart cookie
+      }
+    });
+  }
+
+  // Function to get products from the database
+  getProductsFromBBDD(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.loading = true;
+      this.http
+        .getCartFromDDBB()
+        .pipe(
+          switchMap((response: any) => {
+            const { message, data: products } = response;
+            this.products = products;
+            if (
+              message == 'Productos del carrito actualizados correctamente.'
+            ) {
+              // Show updated successfully cart notification for 7 seconds
+              this.updated = true;
+              setTimeout(() => {
+                this.updated = false;
+              }, 10000);
+            }
+            resolve(); // Resolve the promise after completion
+
+            return of((this.loading = false));
           }),
           catchError((error) => {
             console.error('Error al obtener los productos:', error);
-            return of([]); // Devolver un observable vacío o un valor por defecto
-          }),
-          finalize(() => {
-            this.loading = false;// Set loading flag to false after completion
+            reject(error); // Reject the promise if there's an error
+            return of([]);
           })
         )
         .subscribe();
-    }
-  }
-
-  getProductsFromBBDD(): void {
-    this.loading = true;
-    this.http
-      .getCartFromDDBB()
-      .pipe(
-        switchMap((products: Product[]) => {
-          this.products = products;
-          console.log('Productos obtenidos:', this.products);
-          return of((this.loading = false));
-        })
-      )
-      .subscribe();
+    });
   }
 
   /**
    * Function to delete a product from the cart
    * @param index
    */
-  deleteProduct(index: number): void {
-    if (this.auth.isAuthenticated$) {
-      this.http.deleteProductCart(this.products[index].id).subscribe();
-      // Eliminar el producto del array products
-      this.products.splice(index, 1);
-    } else {
-      // Eliminar el producto del array products
-      this.products.splice(index, 1);
+  deleteProduct(productId: number): void {
+    this.auth.isAuthenticated$.subscribe((logged) => {
+      const productIndex = this.products.findIndex(
+        (product) => product.id === productId
+      );
 
-      // Eliminar el producto del array cart
-      this.cart.splice(index, 1);
+      if (productIndex !== -1) {
+        if (logged) {
+          this.http
+            .deleteProductCart(this.products[productIndex].id)
+            .subscribe(() => {
+              // Eliminar el producto del array products
+              this.products.splice(productIndex, 1);
+            });
+        } else {
+          // Eliminar el producto del array products
+          this.products.splice(productIndex, 1);
+          // Eliminar el producto del array cart
+          const cartIndex = this.cart.findIndex(
+            (cartItem) => cartItem.id === productId
+          );
 
-      // Verificar si todavía hay productos en el carrito
-      if (this.cart.length === 0) {
-        // Si no hay productos en el carrito, eliminar la cookie
-        this.cookie.delete('cart', '/');
-      } else {
-        // Si todavía hay productos en el carrito, actualizar la cookie
-        this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+          if (cartIndex !== -1) {
+            this.cart.splice(cartIndex, 1);
+          }
+
+          // Verificar si todavía hay productos en el carrito
+          if (this.cart.length === 0) {
+            // Si no hay productos en el carrito, eliminar la cookie
+            this.cookie.delete('cart', '/');
+          } else {
+            // Si todavía hay productos en el carrito, actualizar la cookie
+            this.cookie.set('cart', JSON.stringify(this.cart), 365, '/');
+          }
+        }
       }
-    }
+    });
   }
   /**
    * Function to calculate the total number of products in the cart
    * @returns
    */
   calculateTotalProducts(): number {
-    if (this.auth.isAuthenticated$) {
-      // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
-      const totalProducts = this.products.reduce(
-        (total, product) => total + product.quantity,
-        0
-      );
-      return totalProducts;
-    } else {
-      // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
-      const totalProducts = this.cart.reduce(
-        (total, product) => total + product.quantity,
-        0
-      );
-      return totalProducts;
-    }
+    let total: number = 0;
+    // Usamos el método reduce para sumar todas las cantidades de los productos en el carrito
+    total = this.products.reduce(
+      (total, product) => total + product.quantity,
+      0
+    );
+    return total;
   }
 
   /**
@@ -152,17 +222,13 @@ export class CartComponent {
    * @returns
    */
   calculateTotalAmount(): number {
-    if (this.auth.isAuthenticated$) {
-      // Si el usuario está autenticado, calcular el precio total utilizando this.products
-      return this.products
-        .map((product) => product.price * product.quantity)
-        .reduce((total, current) => total + current, 0);
-    } else {
-      // Si el usuario no está autenticado, calcular el precio total utilizando this.cart
-      return this.products
-        .map((product, index) => product.price * this.cart[index].quantity)
-        .reduce((total, current) => total + current, 0);
-    }
+    let total: number = 0;
+    // Si el usuario está autenticado, calcular el precio total utilizando this.products
+    total = this.products
+      .map((product) => product.price * product.quantity)
+      .reduce((total, current) => total + current, 0);
+    // Redondea el total a dos decimales
+    return parseFloat(total.toFixed(2));
   }
 
   /**
@@ -170,6 +236,7 @@ export class CartComponent {
    */
   closeCart() {
     this.cartOpen = false;
+    this.updated = false;
   }
 
   /**
@@ -183,28 +250,34 @@ export class CartComponent {
   /**
    * Function to handle login or address form submission
    */
-  loginOrAdressForm(): void {
-
-    // Check if user is authenticated
-    this.auth.isAuthenticated$
-      .pipe(
-        switchMap((logged) => {
-          if (!logged) {
-            return this.auth.loginWithPopup();// Redirect to login if not authenticated
+  async loginOrAdressForm(): Promise<void> {
+    // Update the cart to validate the product stock
+    await this.openCart();
+    if (!this.updated) {
+      // Check if user is authenticated
+      this.auth.isAuthenticated$
+        .pipe(
+          switchMap((logged) => {
+            if (!logged) {
+              return this.auth.loginWithPopup(); // Redirect to login if not authenticated
+            }
+            return of(logged); // Emit null if already authenticated
+          }),
+          switchMap((logged) => {
+            if (logged) {
+              this.loading = true;
+              this.router.navigate(['/address-form']); // Navigate to address form
+            }
+            return of(null); // Emit null
+          })
+        )
+        .subscribe(
+          () => {}, // Do nothing on success
+          (error) => {
+            console.error(error);
+            // Handle error in your application
           }
-          return of(null); // Emit null if already authenticated
-        }),
-        switchMap(() => {
-          this.router.navigate(['/address-form']); // Navigate to address form
-          return of(null); // Emit null
-        })
-      )
-      .subscribe(
-        () => { },// Do nothing on success
-        (error) => {
-          console.error(error);
-          // Handle error in your application
-        }
-      );
+        );
+    }
   }
 }

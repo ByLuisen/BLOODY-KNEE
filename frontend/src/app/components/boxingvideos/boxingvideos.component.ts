@@ -138,13 +138,14 @@ export class BoxingvideosComponent implements OnInit {
           this.filteredItems = [...this.todos];
           return videos;
         }),
-
+       
         // Set loading flag to false after all requests are completed
         finalize(() => (this.loading = false))
       )
-
+   
       // Subscribe to the observable
       .subscribe();
+
   }
 
   /**

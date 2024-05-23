@@ -1,7 +1,9 @@
 export class Product {
   private _id: number;
   private _brandId: number;
+  private _brand: string;
   private _categoryId: number;
+  private _category: string;
   private _name: string;
   private _description: string;
   private _price: number;
@@ -15,7 +17,9 @@ export class Product {
   constructor(
     id: number = 0,
     brandId: number = 0,
+    brand: string = '',
     categoryId: number = 0,
+    category: string = '',
     name: string = '',
     description: string = '',
     price: number = 0,
@@ -28,7 +32,9 @@ export class Product {
   ) {
     this._id = id;
     this._brandId = brandId;
+    this._brand = brand;
     this._categoryId = categoryId;
+    this._category = category;
     this._name = name;
     this._description = description;
     this._price = price;
@@ -46,6 +52,12 @@ export class Product {
   }
   get brandId(): number {
     return this._brandId;
+  }
+  get brand(): string {
+    return this._brand;
+  }
+  get category(): string {
+    return this._category;
   }
   get categoryId(): number {
     return this._categoryId;
@@ -86,8 +98,14 @@ export class Product {
   set brandId(brandId: number) {
     this._brandId = brandId;
   }
+  set brand(brand: string) {
+    this._brand = brand;
+  }
   set categoryId(categoryId: number) {
     this._categoryId = categoryId;
+  }
+  set category(category: string) {
+    this._category = category;
   }
   set name(name: string) {
     this._name = name;
@@ -123,7 +141,9 @@ export class Product {
     return {
       id: this._id,
       brandId: this._brandId,
+      brand: this._brand,
       categoryId: this._categoryId,
+      category: this._category,
       name: this._name,
       description: this._description,
       price: this._price,
