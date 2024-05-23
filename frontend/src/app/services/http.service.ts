@@ -33,12 +33,10 @@ export class HttpService {
   initUser(): void {
     this.auth.user$.subscribe((user) => {
       if (user) {
-        console.log(user)
         this.addNewUserAndRole(user).subscribe();
         if (this.cookie.check('cart')) {
           this.storeCartInDDBB(user).subscribe((response) => {
             this.cookie.delete('cart', '/');
-            console.log(response);
           });
         }
       }
@@ -111,7 +109,6 @@ export class HttpService {
       user: user,
       cart: JSON.parse(this.cookie.get('cart')),
     };
-    console.log(body);
     return this._http.post(url, body);
   }
 
@@ -184,7 +181,6 @@ export class HttpService {
           email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
           connection: user ? user.sub?.split('|')[0] : '', // Obtén la conexión del usuario actual
         };
-        console.log(body);
         // Realiza la solicitud PUT al servidor con el cuerpo construido
         return this._http.post(url, body).pipe(map((response) => response));
       })
@@ -244,7 +240,6 @@ export class HttpService {
             // Actualizar las visitas del video
             this.updateVideoVisits(id).subscribe(
               () => {
-                console.log('Visitas actualizadas');
               },
               (error) => {
                 console.error('Error al actualizar las visitas', error);
@@ -305,13 +300,11 @@ export class HttpService {
     const url = `${this.url}/updateLikes/${videoId}`;
     return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
-        console.log(user);
         // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
         const body = {
           email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
           connection: user ? user['sub'].split('|')[0] : '', // Obtén la conexión del usuario actual
         };
-        console.log(body);
 
         // Realiza la solicitud PUT al servidor con el cuerpo construido
         return this._http.put(url, body);
@@ -328,13 +321,11 @@ export class HttpService {
     const url = `${this.url}/updateDislikes/${videoId}`;
     return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
-        console.log(user);
         // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
         const body = {
           email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
           connection: user ? user['sub'].split('|')[0] : '', // Obtén la conexión del usuario actual
         };
-        console.log(body);
 
         // Realiza la solicitud PUT al servidor con el cuerpo construido
         return this._http.put(url, body);
@@ -353,7 +344,6 @@ export class HttpService {
     return this.auth.user$.pipe(
       switchMap((user) => {
         const body = { email: user ? user.email : '' };
-        console.log(body);
         // Realiza una solicitud PUT al servidor con el cuerpo que incluye el usuario
         return this._http.put(url, body);
       })
@@ -574,7 +564,6 @@ export class HttpService {
     const url = `${this.url}/comments`;
     return this.auth.idTokenClaims$.pipe(
       switchMap((user) => {
-        console.log(user);
         // Construye el cuerpo de la solicitud con el correo electrónico y la conexión
         const body = {
           email: user ? user.email : '', // Obtén el correo electrónico del usuario actual
@@ -582,7 +571,6 @@ export class HttpService {
           video_id: videoId,
           comment: comment,
         };
-        console.log(body);
         return this._http.post(url, body).pipe(
           catchError((error) => {
             // Manejar errores aquí

@@ -128,7 +128,6 @@ export class DietsComponent implements OnInit {
     this.http.getDiets().subscribe((diets: Diet[]) => {
       this.diets = diets;
       this.loading = false
-      console.log(this.diets);
     });
   }
   calculate() {
@@ -198,7 +197,6 @@ export class DietsComponent implements OnInit {
     } else {
       this.editAdminMode = false;
     }
-    console.log("editAdminMode=" + this.editAdminMode);
   }
   activateDeleteMode() {
     if (!this.deleteAdminMode) {
@@ -207,7 +205,6 @@ export class DietsComponent implements OnInit {
     } else {
       this.deleteAdminMode = false;
     }
-    console.log("deleteAdminMode=" + this.deleteAdminMode);
   }
 
   /**
@@ -252,7 +249,6 @@ export class DietsComponent implements OnInit {
     // Llamar al servicio para actualizar la dieta en el servidor
     this.http.updateDiet(this.editedDiet.id, this.editedDiet).subscribe(
       (updatedDiet) => {
-        console.log("Dieta actualizada exitosamente:", updatedDiet);
         // Actualizar la dieta en la lista local
         const index = this.diets.findIndex(diet => diet.id === updatedDiet.id);
         if (index !== -1) {
@@ -279,14 +275,11 @@ export class DietsComponent implements OnInit {
     // Llamar al método createDiet() del servicio HttpService para crear la dieta
     this.http.createDiet(this.newDiet).subscribe(
       (response) => {
-        console.log('Dieta creada correctamente:', response);
         this.diets.push(response);
         this.createDietForm.reset();
       },
       (error) => {
         console.error('Error al crear el producto:', error);
-        console.log('Dieta a crear', this.newDiet);
-        console.log('Formulario creación de dieta', this.createDietForm.value);
       }
     );
   }

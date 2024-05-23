@@ -222,6 +222,7 @@
             -webkit-font-smoothing: antialiased;
         }
     </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet">
     <style>
         @import"https://fonts.googleapis.com/css2?family=Aclonica&display=swap";
 
@@ -556,8 +557,8 @@
             font-family: Roboto, Helvetica Neue, sans-serif
         }
     </style>
-    <link rel="stylesheet" href="styles.2e69064f7d16359f.css" media="print" onload="this.media='all'"><noscript>
-        <link rel="stylesheet" href="styles.2e69064f7d16359f.css">
+    <link rel="stylesheet" href="styles.1c24f4ae26f92dfc.css" media="print" onload="this.media='all'"><noscript>
+        <link rel="stylesheet" href="styles.1c24f4ae26f92dfc.css">
     </noscript>
 </head>
 
@@ -567,7 +568,7 @@
     <script src="runtime.89bfad0fe920d2c9.js" type="module"></script>
     <script src="polyfills.f42e8324c5c7cbb0.js" type="module"></script>
     <script src="scripts.85a3dc3291b06442.js" defer></script>
-    <script src="main.6d4f2164e3258b8e.js" type="module"></script>
+    <script src="main.55c1d10771e43d6d.js" type="module"></script>
 </body>
 
 </html>

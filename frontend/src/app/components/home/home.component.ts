@@ -63,7 +63,6 @@ export class HomeComponent implements OnInit {
   getDestacados(): void {
     this.http.getVideos().subscribe(
       (videos) => {
-        console.log('Videos destacados obtenidos:', videos);
         this.destacados = videos;
         this.videosAleatorios = this.getRandomVideos(this.destacados, 6);
       },

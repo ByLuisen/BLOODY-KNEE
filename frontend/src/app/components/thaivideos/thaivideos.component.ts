@@ -82,8 +82,6 @@ export class ThaivideosComponent implements OnInit {
         switchMap((videos) => {
           this.videosSaco = videos;
           this.todos = this.todos.concat(videos);
-          console.log('videosSaco:', this.videosSaco);
-          console.log('todos:', this.todos);
           this.filteredItems = [...this.todos];
           return of(videos);
         }),
@@ -93,8 +91,6 @@ export class ThaivideosComponent implements OnInit {
         tap((videos) => {
           this.videosPareja = videos;
           this.todos = this.todos.concat(videos);
-          console.log('videosPareja:', this.videosPareja);
-          console.log('todos:', this.todos);
           this.filteredItems = [...this.todos];
           return of(videos);
         }),
@@ -104,8 +100,6 @@ export class ThaivideosComponent implements OnInit {
         tap((videos) => {
           this.videosConEquipamiento = videos;
           this.todos = this.todos.concat(videos);
-          console.log('videosConEquipamiento:', this.videosConEquipamiento);
-          console.log('todos:', this.todos);
           this.filteredItems = [...this.todos];
           return of(videos);
         }),
@@ -115,14 +109,11 @@ export class ThaivideosComponent implements OnInit {
         tap((videos) => {
           this.videosSinEquipamiento = videos;
           this.todos = this.todos.concat(videos);
-          console.log('videosSinEquipamiento:', this.videosSinEquipamiento);
-          console.log('todos:', this.todos);
           this.filteredItems = [...this.todos];
           return videos;
         }),
         finalize(() => {
           this.loading = false;
-          console.log('Final todos:', this.todos);
         })
       )
       .subscribe();
@@ -198,11 +189,9 @@ export class ThaivideosComponent implements OnInit {
    */
   deleteVideo(video: Video) {
     // Implement logic to delete the video
-    console.log('Eliminando video:', video);
 
     this.http.destroyVideo(video.id).subscribe(
       () => {
-        console.log('Video eliminado exitosamente');
         // Remove the video from the local list if necessary
         this.filteredItems = this.filteredItems.filter(
           (item) => item.id !== video.id
@@ -235,7 +224,6 @@ export class ThaivideosComponent implements OnInit {
   submitEditVideoForm() {
     this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
       (updatedVideo) => {
-        console.log("Video actualizado exitosamente", updatedVideo);
         //Actualizo el video en lista local
         const index = this.todos.findIndex(video => video.id === updatedVideo.id);
         if (index !== -1) {

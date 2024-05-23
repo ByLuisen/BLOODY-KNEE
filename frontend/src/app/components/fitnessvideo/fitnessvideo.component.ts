@@ -181,7 +181,6 @@ export class FitnessvideoComponent implements OnInit {
   submitEditVideoForm() {
     this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
       (updatedVideo) => {
-        console.log("Video actualizado exitosamente", updatedVideo);
         //Actualizo el video en lista local
         const index = this.todos.findIndex(video => video.id === updatedVideo.id);
         if (index !== -1) {
@@ -255,7 +254,6 @@ export class FitnessvideoComponent implements OnInit {
   submitEditForm() {
     this.http.updateVideo(this.editedVideo.id, this.editedVideo).subscribe(
       (updatedVideo) => {
-        console.log("Video actualizado exitosamente", updatedVideo);
         //Actualizo el video en lista local
         const index = this.todos.findIndex(video => video.id === updatedVideo.id);
         if (index !== -1) {
@@ -284,11 +282,9 @@ export class FitnessvideoComponent implements OnInit {
    */
   deleteVideo(video: Video) {
     // Implement logic to delete the video
-    console.log('Eliminando video:', video);
 
     this.http.destroyVideo(video.id).subscribe(
       () => {
-        console.log('Video eliminado exitosamente');
         // Remove the video from the local list if necessary
         this.filteredItems = this.filteredItems.filter(
           (item) => item.id !== video.id

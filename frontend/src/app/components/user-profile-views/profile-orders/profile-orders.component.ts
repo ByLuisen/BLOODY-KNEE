@@ -23,7 +23,6 @@ export class ProfileOrdersComponent implements OnInit {
     this.http.getOrders().subscribe((orders) => {
       this.loading = false;
       this.orders = orders;
-      console.log(orders);
     });
   }
 

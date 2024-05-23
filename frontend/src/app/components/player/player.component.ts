@@ -57,7 +57,6 @@ export class PlayerComponent implements OnInit {
         this.auth.idTokenClaims$.subscribe((claims) => {
           if (claims && claims.email) {
             this.userEmail = claims.email; // Almacenar el correo electrónico en la variable
-            console.log('User Email:', this.userEmail); // Verificar el correo electrónico en la consola
           }
         });
       }
@@ -113,7 +112,6 @@ export class PlayerComponent implements OnInit {
   getCommentsByVideoId(videoId: number): void {
     this.http.getCommentById(videoId).subscribe(
       (comments: Comment[]) => {
-        console.log('Comentarios obtenidos:', comments);
         this.comments = comments;
         this.loadInitialComments();
 
@@ -130,7 +128,6 @@ export class PlayerComponent implements OnInit {
       if (isAuthenticated) {
         this.http.addComment(this.videoId, comment).subscribe(
           () => {
-            console.log('Comentario agregado correctamente');
             // Actualizar la lista de comentarios después de agregar uno nuevo
             this.getCommentsByVideoId(this.videoId);
             this.countAndUpdateComments(this.videoId); // Llamar a la función countAndUpdateComments
@@ -143,7 +140,6 @@ export class PlayerComponent implements OnInit {
           }
         );
       } else {
-        console.log('El usuario debe estar autenticado para agregar un comentario.');
         this.auth.loginWithPopup();
         // Aquí podrías mostrar un mensaje al usuario indicando que necesita iniciar sesión para agregar un comentario
       }
@@ -178,7 +174,6 @@ export class PlayerComponent implements OnInit {
       if (isAuthenticated) {
         this.http.updateLikes(videoId).subscribe(
           (response) => {
-            console.log(response.message);
             if (response.message === 'Likes actualizados correctamente') {
               this.UpdateLikeOpenModal();
 
@@ -219,7 +214,6 @@ export class PlayerComponent implements OnInit {
       if (isAuthenticated) {
         this.http.updateDislikes(videoId).subscribe(
           (response) => {
-            console.log(response.message);
             if (response.message === 'Dislike registrado correctamente') {
               this.UpdateDislikeOpenModal();
 
@@ -258,7 +252,6 @@ export class PlayerComponent implements OnInit {
   getVideo(): void {
     this.http.getVideoById(this.videoId).subscribe(
       (video) => {
-        console.log('Video obtenido:', video);
         this.video = video;
         this.cdr.detectChanges();
         // this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.video.url);
@@ -275,7 +268,6 @@ export class PlayerComponent implements OnInit {
   getDestacados(): void {
     this.http.getVideos().subscribe(
       (videos) => {
-        console.log('Videos destacados obtenidos:', videos);
         this.destacados = videos;
         this.loadingPlayer = false;
         this.videosAleatorios = this.getRandomVideos(this.destacados, 7);
@@ -409,7 +401,6 @@ export class PlayerComponent implements OnInit {
   deleteComment(commentId: number): void {
     this.http.deleteComment(commentId).subscribe(
       () => {
-        console.log('Comentario eliminado correctamente');
         this.getCommentsByVideoId(this.videoId);
         this.countAndUpdateComments(this.videoId); // Llamar a la función countAndUpdateComments
       },
@@ -428,7 +419,6 @@ export class PlayerComponent implements OnInit {
   saveEditedComment(commentId: number, editedText: string): void {
     this.http.editComment(commentId, editedText).subscribe(
       () => {
-        console.log('Comentario editado correctamente');
         // Update the comment locally in the comments list
         const editedCommentIndex = this.comments.findIndex(comment => comment.id === commentId);
         if (editedCommentIndex !== -1) {
@@ -450,7 +440,6 @@ export class PlayerComponent implements OnInit {
   countAndUpdateComments(videoId: number): void {
     this.http.countAndUpdateComments(videoId).subscribe(
       () => {
-        console.log('Conteo de comentarios actualizado correctamente');
         // Aquí puedes realizar otras acciones después de actualizar el conteo de comentarios, si es necesario
       },
       (error) => {
@@ -464,8 +453,6 @@ export class PlayerComponent implements OnInit {
       if (isAuthenticated) {
         this.http.saveAsFavorite(videoId).subscribe(
           (response) => {
-            console.log('Video guardado como favorito correctamente', response);
-            console.log('Guardando video como favorito:', videoId); // Verifica que este mensaje se imprima en la consola al hacer clic en el botón
             // Aquí puedes realizar otras acciones después de que el video se guarde como favorito
             this.SaveOpenModal();
 
@@ -488,7 +475,6 @@ export class PlayerComponent implements OnInit {
           }
         );
       } else {
-        console.log('El usuario debe estar autenticado para agregar un comentario.');
         this.auth.loginWithPopup();
         // Aquí podrías mostrar un mensaje al usuario indicando que necesita iniciar sesión para agregar un comentario
       }
