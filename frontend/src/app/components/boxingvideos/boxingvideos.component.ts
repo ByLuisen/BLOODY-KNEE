@@ -59,7 +59,7 @@ export class BoxingvideosComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'admin';
+        this.role = 'Admin';
       }
     });
 
@@ -138,11 +138,11 @@ export class BoxingvideosComponent implements OnInit {
           this.filteredItems = [...this.todos];
           return videos;
         }),
-       
+
         // Set loading flag to false after all requests are completed
         finalize(() => (this.loading = false))
       )
-   
+
       // Subscribe to the observable
       .subscribe();
 
@@ -153,7 +153,9 @@ export class BoxingvideosComponent implements OnInit {
    */
   toggleAdminMode() {
     this.adminModeActivated = !this.adminModeActivated;
+    console.log("adminModeActivated: " + this.adminModeActivated);
   }
+
 
   /**
    * Open modal dialog

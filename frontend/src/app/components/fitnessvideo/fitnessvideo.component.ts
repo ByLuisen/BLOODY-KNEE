@@ -49,7 +49,7 @@ export class FitnessvideoComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'admin';
+        this.role = 'Admin';
       }
     });
 
@@ -122,6 +122,10 @@ export class FitnessvideoComponent implements OnInit {
     // Remueve la clase que evita el scroll del body
   }
 
+  /**
+   * Select a video to play
+   * @param video The selected video
+   */
   selectVideo(video: Video) {
     if (video.exclusive && this.role != 'Standard' && this.role != 'Premium') {
       this.openModal();
@@ -135,7 +139,10 @@ export class FitnessvideoComponent implements OnInit {
   onFilteredItemsChanged(filteredItems: Video[]) {
     this.filteredItems = filteredItems;
   }
-
+  /**
+   *
+   * @param type
+   */
   filterVideos(type: string) {
     this.selectedType = type;
 
@@ -170,7 +177,28 @@ export class FitnessvideoComponent implements OnInit {
       this.editedVideo = selectedVideo; // Asignar directamente el video seleccionado
       this.editModal = true;
     }
+  }
 
+  /**
+   * Delete a video
+   * @param video The video to delete
+   */
+  deleteVideo(video: Video) {
+    // Implement logic to delete the video
+    console.log('Eliminando video:', video);
+
+    this.http.destroyVideo(video.id).subscribe(
+      () => {
+        console.log('Video eliminado exitosamente');
+        // Remove the video from the local list if necessary
+        this.filteredItems = this.filteredItems.filter(
+          (item) => item.id !== video.id
+        );
+      },
+      (error) => {
+        console.error('Error deleting video:', error);
+      }
+    );
   }
 
   /**
@@ -201,12 +229,11 @@ export class FitnessvideoComponent implements OnInit {
     )
   }
 
-
   /**
- * Busca el video que se seleccione por ID para mostrar el modal
- *
- * @param video
- */
+   * Busca el video que se seleccione por ID para mostrar el modal
+   *
+   * @param video
+   */
   openDeleteModal(video: Video) {
     this.selectedVideo = video;
     this.deleteModal = true;

@@ -60,27 +60,18 @@
       <!-- Button to activate admin mode -->
       <div class="flex flex-col justify-center items-center mb-4 mt-4" *ngIf="role == 'admin'">
         <div class="w-2/4 h-auto bg-red-600 rounded-full">
-          <p class="my-2 mx-2 text-3xl text-white">HERRAMIENTAS DE ADMINISTRACIÓN</p>F
+          <p class="my-2 mx-2 text-3xl text-white">HERRAMIENTAS DE ADMINISTRACIÓN</p>
           <div class="flex flex-row my-3 justify-center">
             <button
               class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300">Agregar
               dieta
-              <span
-                class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Añade
-                un nuevo tipo de dieta</span>
             </button>
             <button
-              class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-yellow-500 border border-solid border-yellow-500 hover:scale-125 transition-transform duration-300">Editar
-              dieta
-              <span
-                class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
-                una dieta para editar sus datos</span></button>
+              class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-yellow-500 border border-solid border-yellow-500 hover:scale-125 transition-transform duration-300"
+              (click)="activateEditMode()">Editar dieta</button>
             <button
-              class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-red-500 border border-solid border-red-500 hover:scale-125 transition-transform duration-300">Eliminar
-              dieta
-              <span
-                class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
-                una dieta para eliminarla</span></button>
+              class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-red-500 border border-solid border-red-500 hover:scale-125 transition-transform duration-300"
+              (click)="activateDeleteMode()">Eliminar dieta</button>
           </div>
         </div>
       </div>
@@ -104,18 +95,25 @@
           </div>
         </div>
         <div class="flex-row mt-10">
-          <button (click)="openDeleteModal(diet)" *ngIf="deleteAdminMode == true"
-            class="w-auto h-auto mx-2 my-2 border border-red-600 text-red-600 rounded-full">
-            <p class="px-2 py-2 flex justify-center items-center"> <img src="../../../assets/img/svg/bx-trash.svg"
-                alt="">
-            </p>
-          </button>
-          <button (click)="openEditModal(diet.id)" *ngIf="editAdminMode == true"
-            class="w-auto h-auto mx-2 my-2 border border-lime-600 text-lime-600 rounded-full">
-            <p class="px-2 py-2 flex justify-center items-center"> <img src="../../../assets/img/svg/bx-edit.svg" alt=""
-                class="fill-black">
-            </p>
-          </button>
+          <!--  -->
+          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#DC2626' class="w-9 mx-2"
+            (click)="openDeleteModal(diet)" *ngIf="deleteAdminMode == true">
+            <path
+              d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z">
+            </path>
+            <path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+          </svg>
+          <!--  -->
+          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#6AA328' class="w-9 mx-2"
+            (click)="openEditModal(diet.id)" *ngIf="editAdminMode == true">
+            <path
+              d="m7 17.013 4.413-.015 9.632-9.54c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.756-.756-2.075-.752-2.825-.003L7 12.583v4.43zM18.045 4.458l1.589 1.583-1.597 1.582-1.586-1.585 1.594-1.58zM9 13.417l6.03-5.973 1.586 1.586-6.029 5.971L9 15.006v-1.589z">
+            </path>
+            <path
+              d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2z">
+            </path>
+          </svg>
+          <!--  -->
         </div>
       </div>
 

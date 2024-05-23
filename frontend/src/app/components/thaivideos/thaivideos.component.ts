@@ -50,7 +50,7 @@ export class ThaivideosComponent implements OnInit {
           this.role = role.data;
         });
       } else {
-        this.role = 'admin';
+        this.role = 'Admin';
       }
     });
 
@@ -199,9 +199,28 @@ export class ThaivideosComponent implements OnInit {
 
   }
 
+  /**
+   * Delete a video
+   * @param video The video to delete
+   */
   deleteVideo(video: Video) {
+    // Implement logic to delete the video
     console.log('Eliminando video:', video);
+
+    this.http.destroyVideo(video.id).subscribe(
+      () => {
+        console.log('Video eliminado exitosamente');
+        // Remove the video from the local list if necessary
+        this.filteredItems = this.filteredItems.filter(
+          (item) => item.id !== video.id
+        );
+      },
+      (error) => {
+        console.error('Error deleting video:', error);
+      }
+    );
   }
+
   /**
     *
     */

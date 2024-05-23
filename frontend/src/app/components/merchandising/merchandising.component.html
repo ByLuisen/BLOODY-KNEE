@@ -30,7 +30,7 @@
     <!-- end filter section -->
 
     <!-- Button to activate admin mode -->
-    <div class="flex flex-col justify-center items-center mb-4 mt-4" *ngIf="role == 'admin'">
+    <div class="flex flex-col justify-center items-center mb-4 mt-4" *ngIf="role == 'Admin'">
       <div class="w-2/4 h-auto bg-red-600 rounded-full">
         <p class="my-2 mx-2 text-3xl text-white">HERRAMIENTAS DE ADMINISTRACIÓN</p>
         <div *ngIf="infoAdmin!=''" class="text-2xl text-red-600 bg-white w-full rounded-md">
@@ -40,22 +40,13 @@
           <button
             class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-green-500 border border-solid border-green-500 hover:scale-125 transition-transform duration-300"
             (click)="addProduct()">Agregar producto
-            <span
-              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Añade
-              un nuevo producto a la tienda</span>
           </button>
           <button
             class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-yellow-500 border border-solid border-yellow-500 hover:scale-125 transition-transform duration-300"
-            (click)="editProduct()">Editar producto
-            <span
-              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
-              un producto para editar sus datos</span></button>
+            (click)="editProduct()">Editar producto</button>
           <button
             class="bg-white rounded-full w-52 mx-3 px-1 py-1 text-red-500 border border-solid border-red-500 hover:scale-125 transition-transform duration-300"
-            (click)="deleteProduct()">Eliminar producto
-            <span
-              class="w-44 group-hover:inline-block absolute top-full left-1/2 transform -translate-x-1/2 -mt-1/2 bg-white text-gray-400 text-xs px-2 py-1 rounded-md shadow-md">Selecciona
-              un producto para eliminarlo</span></button>
+            (click)="deleteProduct()">Eliminar producto</button>
         </div>
       </div>
     </div>
@@ -76,19 +67,19 @@
           <!-- Brand -->
           <div class="mb-4">
             <label for="brand_id" class="block text-black">Marca:</label>
-            <select id="brand_id" name="brand_id" [(ngModel)]="editedProduct.brandId"
+            <select id="brand_id" name="brand_id" [(ngModel)]="editedProduct.brand"
               class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
-              <option *ngFor="let brand of brands" [ngValue]="brand.id" [selected]="brand.id === editedProduct.brandId">
+              <option *ngFor="let brand of brands" [selected]="brand.name === editedProduct.brand">
                 {{ brand.name }}</option>
             </select>
           </div>
           <!-- Category -->
           <div class="mb-4">
             <label for="category_id" class="block text-black">Categoría:</label>
-            <select id="category_id" name="category_id" [(ngModel)]="editedProduct.categoryId"
+            <select id="category_id" name="category_id" [(ngModel)]="editedProduct.category"
               class="border-gray-300 border w-full rounded-lg px-4 py-2 text-center text-red-700">
-              <option *ngFor="let category of categories" [ngValue]="category.id"
-                [selected]="category.id === editedProduct.categoryId">{{ category.name }}</option>
+              <option *ngFor="let category of categories" [ngValue]="editedProduct.category"
+                [selected]="category.name === editedProduct.category">{{ category.name }}</option>
             </select>
           </div>
 
