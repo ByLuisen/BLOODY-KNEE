@@ -4,6 +4,9 @@ import { catchError, finalize, of, switchMap } from 'rxjs';
 import { Product } from 'src/app/models/Product';
 import { HttpService } from 'src/app/services/http.service';
 import { AuthService } from '@auth0/auth0-angular';
+import { Brand } from 'src/app/models/Brand';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Category } from 'src/app/models/Category';
 
 @Component({
   selector: 'app-merchandising',
@@ -11,47 +14,114 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./merchandising.component.css'],
 })
 export class MerchandisingComponent implements OnInit {
-  // Array para almacenar todos los productos
   productos: Product[] = [];
-  // Boolean para controlar los filtros de stock
   mostrarEnStock: boolean = false;
   mostrarFueraDeStock: boolean = false;
-  // Variable para almacenar el precio máximo seleccionado
   precioMaximo: number = 150;
   loading: boolean = false;
-
-  // Variable para simular el role del usuario
   role!: string;
-
-  // Modos para los admins
   editAdminMode: boolean = false;
   deleteAdminMode: boolean = false;
-  // createAdminMode: boolean = false;
-
-  // Modos para los modales
   editModal: boolean = false;
   deleteModal: boolean = false;
   createModal: boolean = false;
-
-  // Variable para almacenar el producto que se está editando
-  editedProduct: Product = new Product; // Asegúrate de inicializarlo con las propiedades correctas del tipo Product
-
-  // Mensaje para informar al admin
+  editedProduct: Product = new Product;
+  newProduct: Product = new Product;
   infoAdmin: string = "";
-
-  // variable para almacenar la ID del producto seleccionado para eliminar
   selectedProduct: Product | null = null;
+  brands: Brand[] = [];
+  categories: Category[] = [];
+  creationForm!: FormGroup;
+  archivos: any = [];
 
+  /**
+   * Constructor to inject services.
+   *
+   * @param http HttpService for making HTTP requests.
+   * @param router Router for navigation.
+   * @param auth AuthService for authentication.
+   */
   constructor(private http: HttpService, private router: Router, private auth: AuthService) { }
+
+  // ViewChild to reference the price range input element.
   @ViewChild('priceRangeInput') priceRangeInput!: ElementRef;
 
   ngOnInit(): void {
+    this.getProductos();
+    this.getBrands();
+    this.getCategories();
+    this.creationForm = new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]*$/)
+      ]),
+      brandId: new FormControl('', [
+        Validators.required,
+      ]),
+      categoryId: new FormControl('', [
+        Validators.required,
+      ]),
+      description: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s]*$/)
+      ]),
+      price: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^(?:[5-9]|[1-9][0-9]|1[0-9]{2}|200)$/)
+      ]),
+      url1: new FormControl('', [
+        Validators.required,
+      ]),
+      url2: new FormControl('', [
+        Validators.required,
+      ]),
+      url3: new FormControl('', [
+        Validators.required,
+      ]),
+      stock: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9\s]*$/)
+      ])
+    })
     this.http.getRole().subscribe((response) => {
       this.role = response
     });
     this.getProductos();
   }
 
+  /**
+   * Fetches the list of brands from the server.
+   */
+  getBrands(): void {
+    this.http.getBrands().subscribe(
+      (brands) => {
+        this.brands = brands;
+        console.log(brands)
+      },
+      (error) => {
+        console.error('Error al obtener las marcas:', error);
+      }
+    );
+  }
+
+  /**
+   * Fetches the list of categories from the server.
+   */
+  getCategories(): void {
+    this.http.getCategories().subscribe(
+      (categories) => {
+        this.categories = categories;
+        console.log(categories)
+      },
+      (error) => {
+        console.error('Error al obtener las categorias:', error);
+      }
+    );
+  }
+
+  /**
+   * Fetches the list of products from the server.
+   */
   getProductos(): void {
     this.loading = true;
     this.http
@@ -59,16 +129,14 @@ export class MerchandisingComponent implements OnInit {
       .pipe(
         switchMap((products) => {
           this.productos = products;
-          // Calcular precio mínimo y máximo
+
           const precios = this.productos.map((producto) => producto.price);
           const precioMinimo = Math.min(...precios);
           const precioMaximo = Math.max(...precios);
 
-          // Establecer los valores iniciales del rango de precios
           this.priceRangeInput.nativeElement.min = precioMinimo;
           this.priceRangeInput.nativeElement.max = precioMaximo;
 
-          // Asignar el valor inicial del rango de precios
           this.precioMaximo = precioMaximo;
           return of(products);
         }),
@@ -82,28 +150,34 @@ export class MerchandisingComponent implements OnInit {
   }
 
   /**
-   *
-   */
+    * Updates the maximum price filter when the price range input changes.
+    */
   onPriceChange() {
     this.precioMaximo = parseInt(this.priceRangeInput.nativeElement.value);
   }
 
-  // Metodos para filtrar los productos
+  /**
+   * Counts the number of in-stock products.
+   *
+   * @returns Number of in-stock products.
+   */
   contarProductosEnStock(): number {
     return this.productos.filter((producto) => producto.stock > 0).length;
   }
 
   /**
-   *
-   * @returns
-   */
+  * Counts the number of out-of-stock products.
+  *
+  * @returns Number of out-of-stock products.
+  */
   contarProductosFueraDeStock(): number {
     return this.productos.filter((producto) => producto.stock === 0).length;
   }
 
   /**
+   * Filters the products based on the selected filters.
    *
-   * @returns
+   * @returns Array of filtered products.
    */
   productosFiltrados(): Product[] {
     let productosFiltrados: Product[] = [];
@@ -124,7 +198,6 @@ export class MerchandisingComponent implements OnInit {
         );
       }
     }
-
     // Filtrar por rango de precio
     productosFiltrados = productosFiltrados.filter(
       (producto) => producto.price <= this.precioMaximo
@@ -133,8 +206,9 @@ export class MerchandisingComponent implements OnInit {
     return productosFiltrados;
   }
   /**
+   * Navigates to the product details or opens modals for editing or deleting.
    *
-   * @param product
+   * @param product The product to view details of or edit/delete.
    */
   verDetallesProducto(product: Product) {
     if (this.editAdminMode) {
@@ -147,8 +221,11 @@ export class MerchandisingComponent implements OnInit {
   }
 
 
-  // Método para manejar el clic en el botón de editar producto
+  /**
+   * Toggles edit admin mode.
+   */
   editProduct(): void {
+    this.deleteAdminMode = false;
     if (!this.editAdminMode) {
       this.editAdminMode = true;
       this.infoAdmin = "SELECCIONA EL PRODUCTO A EDITAR";
@@ -159,20 +236,14 @@ export class MerchandisingComponent implements OnInit {
     console.log("editAdminMode=" + this.editAdminMode);
   }
 
-  // Método para manejar el clic en el botón de agregar producto
-  addProduct(): void {
-    if (!this.createModal) {
-      this.createModal = true;
-    } else {
-      this.createModal = false;
-    }
-    console.log("createAdminMode=" + this.createModal);
-  }
-
-  // Método para manejar el clic en el botón de eliminar producto
+  /**
+   * Toggles edit admin mode.
+   */
   deleteProduct(): void {
+    this.editAdminMode = false;
     if (!this.deleteAdminMode) {
       this.deleteAdminMode = true;
+
       this.infoAdmin = "SELECCIONA EL PRODUCTO A ELIMINAR";
     } else {
       this.deleteAdminMode = false;
@@ -180,55 +251,104 @@ export class MerchandisingComponent implements OnInit {
     }
     console.log("deleteAdminMode=" + this.deleteAdminMode);
   }
+  /**
+   * Toggles create product modal.
+   */
+  addProduct(): void {
+    if (!this.createModal) {
+      this.createModal = true;
+      this.deleteAdminMode = false;
+
+    } else {
+      this.createModal = false;
+    }
+    console.log("createAdminMode=" + this.createModal);
+  }
+
+
 
   /**
-   * Abre un formulario en modal para editar los datos del producto
+   * Opens the edit modal for the selected product.
    *
-   * @param productId
+   * @param productId The ID of the product to edit.
    */
   openEditModal(productId: number) {
+    this.getBrands();
+    this.getCategories();
     const selectedProduct = this.productos.find(producto => producto.id === productId);
     if (selectedProduct) {
-      this.editedProduct = { ...selectedProduct } as Product; // Clonar el producto seleccionado para evitar modificar el original directamente
+      this.editedProduct = { ...selectedProduct } as Product;
+      console.log('Producto editado:', this.editedProduct);
       this.editModal = true;
     }
   }
 
   /**
-   * Cierra el modal con el formulario para editar producto
+   * Opens the edit modal for the selected product.
    *
+   * @param productId The ID of the product to edit.
+   */
+  getBrandNameById(brandId: number): string {
+    const brand = this.brands.find(brand => brand.id === brandId);
+    return brand ? brand.name : ''; // Devolver el nombre de la marca si se encuentra, de lo contrario, cadena vacía
+  }
+
+  /**
+   * Closes the edit modal.
    */
   closeEditModal() {
-    // Limpia el producto editado y cierra el modal
     this.editedProduct = new Product();
     this.editModal = false;
   }
 
   /**
-   *
+   * Submits the edit product form and updates the product.
    */
   submitEditProductForm() {
-    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(() => {
-      this.closeEditModal();
-      this.getProductos();
-    });
+    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(
+      response => {
+        console.log('Producto actualizado correctamente', response);
+        this.closeEditModal();
+      },
+      error => {
+        console.error('Error al actualizar el producto', error);
+      }
+    );
   }
 
   /**
-   *
+   * Submits the edit product form and updates the product.
    */
   submitCreateProductForm() {
-    this.http.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(() => {
-      this.closeEditModal();
-      this.getProductos();
-    });
+    this.newProduct.name = this.creationForm.value.name;
+    this.newProduct.categoryId = this.creationForm.value.categoryId;
+    this.newProduct.brandId = this.creationForm.value.brandId;
+    this.newProduct.description = this.creationForm.value.description;
+    this.newProduct.price = this.creationForm.value.price;
+    this.newProduct.url_img1 = this.creationForm.value.url1;
+    this.newProduct.url_img2 = this.creationForm.value.url2;
+    this.newProduct.url_img3 = this.creationForm.value.url3;
+    this.newProduct.quantity = this.creationForm.value.stock;
+    this.newProduct.stock = this.creationForm.value.stock;
+
+    this.http.addProduct(this.newProduct).subscribe(
+      (response) => {
+        console.log('Producto creado:', response);
+        this.productos.push(response);
+        this.creationForm.reset();
+      },
+      (error) => {
+        console.error('Error al crear el producto:', error);
+        console.log('Producto', this.newProduct);
+        console.log('Formulario creación', this.creationForm.value);
+      }
+    );
   }
 
-
   /**
-   * Busca el producto que se seleccione por ID para mostrar el modal
+   * Opens the delete modal for the selected product.
    *
-   * @param productId
+   * @param product The product to delete.
    */
   openDeleteModal(product: Product) {
     this.selectedProduct = product;
@@ -236,29 +356,72 @@ export class MerchandisingComponent implements OnInit {
   }
 
   /**
-   * Cancela
+   * Cancels the delete operation and closes the delete modal.
    */
   cancelDelete() {
     this.selectedProduct = null;
     this.deleteModal = false;
   }
 
+  /**
+   * Confirms the deletion of the selected product.
+   */
   confirmDelete() {
     if (this.selectedProduct !== null) {
       this.http.deleteProduct(this.selectedProduct.id).subscribe(() => {
-        // Eliminar el producto de la lista después de la eliminación exitosa
         this.productos = this.productos.filter(producto => producto.id !== this.selectedProduct!.id);
-        // Restablecer la variable selectedProduct
         this.selectedProduct = null;
-        // Cerrar el modal después de la eliminación
         this.deleteModal = false;
       });
     }
   }
 
-  // CREATE PRODUCT MODAL
+  /**
+   * Closes the create modal.
+   */
   closeCreateModal() {
     this.createModal = false;
   }
 
+  /**
+   * Handles the image upload for the first image URL.
+   *
+   * @param event The file input change event.
+   */
+  handleImageUpload1(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const fileName = input.files[0].name;
+      this.archivos.push(input.files[0])
+      this.creationForm.patchValue({ url1: fileName });
+    }
+  }
+
+  /**
+   * Handles the image upload for the second image URL.
+   *
+   * @param event The file input change event.
+   */
+  handleImageUpload2(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const fileName = input.files[0].name;
+      this.archivos.push(input.files[0])
+      this.creationForm.patchValue({ url2: fileName });
+    }
+  }
+
+  /**
+   * Handles the image upload for the third image URL.
+   *
+   * @param event The file input change event.
+   */
+  handleImageUpload3(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const fileName = input.files[0].name;
+      this.archivos.push(input.files[0])
+      this.creationForm.patchValue({ url3: fileName });
+    }
+  }
 }

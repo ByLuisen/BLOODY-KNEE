@@ -16,7 +16,6 @@ class QuoteController extends Controller
     {
         try {
             $quotes = Quote::get();
-
             return ApiResponse::success(QuoteResource::collection($quotes), 'Lista de quotas obtenida correctamente');
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage());

@@ -75,7 +75,7 @@ import { CookiePopupComponent } from './components/cookie-popup/cookie-popup.com
     FormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
 
   providers: [

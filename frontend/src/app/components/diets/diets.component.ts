@@ -3,6 +3,7 @@ import { OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http.service';
 import { Diet } from 'src/app/models/Diet';
 import { AuthService } from '@auth0/auth0-angular';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-diets',
@@ -21,16 +22,57 @@ export class DietsComponent implements OnInit {
   errorMessage: string | null = null;
   role: string | null = null;
   // Mensaje para informar al admin
+
+  // Modos para los admins
+  editAdminMode: boolean = false;
+  deleteAdminMode: boolean = false;
+
+  // Para los modales
+  editModal: boolean = false;
+  deleteModal: boolean = false;
+  createModal: boolean = false
+
+  // Almacenar la dieta que se está editando
+  editedDiet: Diet = new Diet;
+
+  // Selected diet to delete
+  selectedDiet: Diet | null = null;
+
+  // Formulario de creación de dieta
+  createDietForm!: FormGroup;
+  newDiet: Diet = new Diet();
   infoAdmin: string = '';
   loading: boolean = false;
+  editDietForm!: FormGroup;
 
-  constructor(private http: HttpService, private auth: AuthService) {}
+  constructor(private http: HttpService, private auth: AuthService) { }
 
   ngOnInit(): void {
+
+    this.getDietData();
     this.http.getRole().subscribe((response) => {
       this.role = response
     });
     this.getDietData();
+    // Inicializa el formulario de edición con las validaciones requeridas
+    this.editDietForm = new FormGroup({
+      title: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s]+$/),
+        Validators.maxLength(20),
+        Validators.minLength(7)
+      ]), // Título requerido
+      description: new FormControl('', [
+        Validators.required,
+        Validators.minLength(20),
+        Validators.maxLength(1000)
+      ]),
+      content: new FormControl('', Validators.required), // Contenido requerido
+      author: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/)
+      ]),
+    });
   }
 
   openPopup() {
@@ -59,13 +101,13 @@ export class DietsComponent implements OnInit {
       url,
       '_blank',
       'toolbar=yes,scrollbars=yes,resizable=yes,top=' +
-        topPosition +
-        ',left=' +
-        leftPosition +
-        ',width=' +
-        width +
-        ',height=' +
-        height
+      topPosition +
+      ',left=' +
+      leftPosition +
+      ',width=' +
+      width +
+      ',height=' +
+      height
     );
   }
 
@@ -146,6 +188,160 @@ export class DietsComponent implements OnInit {
     }
   }
 
+  // Para los admins...
+
+  // Clic en el botón de editar dieta
+  activateEditMode(): void {
+    if (!this.editAdminMode) {
+      this.editAdminMode = true;
+      this.deleteAdminMode = false;
+    } else {
+      this.editAdminMode = false;
+    }
+    console.log("editAdminMode=" + this.editAdminMode);
+  }
+  activateDeleteMode() {
+    if (!this.deleteAdminMode) {
+      this.deleteAdminMode = true;
+      this.editAdminMode = false;
+    } else {
+      this.deleteAdminMode = false;
+    }
+    console.log("deleteAdminMode=" + this.deleteAdminMode);
+  }
+
+  /**
+   * Abre un formulario en modal para editar los datos del producto
+   *
+   * @param dietId
+   */
+  openEditModal(dietId: number) {
+    const selectedDiet = this.diets.find(diet => diet.id === dietId);
+    if (selectedDiet) {
+      this.editedDiet = selectedDiet; // Asignar directamente la dieta seleccionada
+
+      // Actualizar los valores del formulario con los valores de la dieta seleccionada
+      this.editDietForm.patchValue({
+        title: selectedDiet.title,
+        description: selectedDiet.description,
+        content: selectedDiet.content,
+        author: selectedDiet.author
+      });
+
+      this.editModal = true;
+    }
+  }
+
+
+  closeEditModal() {
+    // Limpia el producto editado y cierra el modal
+    this.editedDiet = new Diet();
+    this.editModal = false;
+  }
+
+  /**
+   *
+   */
+  submitEditDietForm() {
+    // Actualizar editedDiet con los valores del formulario
+    this.editedDiet.title = this.editDietForm.get('title')?.value;
+    this.editedDiet.description = this.editDietForm.get('description')?.value;
+    this.editedDiet.content = this.editDietForm.get('content')?.value;
+    this.editedDiet.author = this.editDietForm.get('author')?.value;
+
+    // Llamar al servicio para actualizar la dieta en el servidor
+    this.http.updateDiet(this.editedDiet.id, this.editedDiet).subscribe(
+      (updatedDiet) => {
+        console.log("Dieta actualizada exitosamente:", updatedDiet);
+        // Actualizar la dieta en la lista local
+        const index = this.diets.findIndex(diet => diet.id === updatedDiet.id);
+        if (index !== -1) {
+          this.diets[index] = updatedDiet;
+        }
+        this.closeEditModal();
+      },
+      (error) => {
+        console.error("Error al actualizar la dieta:", error);
+      }
+    );
+  }
+
+  // CREATION
+  // Envia el formulario de crear dieta
+  submitCreateDietForm() {
+
+    // Relleno newDiet con los datos de creationDietForm
+    this.newDiet.author = this.createDietForm.value.dietAuthor;
+    this.newDiet.content = this.createDietForm.value.dietContent;
+    this.newDiet.description = this.createDietForm.value.dietDescription;
+    this.newDiet.title = this.createDietForm.value.dietTitle;
+
+    // Llamar al método createDiet() del servicio HttpService para crear la dieta
+    this.http.createDiet(this.newDiet).subscribe(
+      (response) => {
+        console.log('Dieta creada correctamente:', response);
+        this.diets.push(response);
+        this.createDietForm.reset();
+      },
+      (error) => {
+        console.error('Error al crear el producto:', error);
+        console.log('Dieta a crear', this.newDiet);
+        console.log('Formulario creación de dieta', this.createDietForm.value);
+      }
+    );
+  }
+
+
+  /**
+   * Abre el modal para crear una nueva dieta
+   */
+  addDiet() {
+    if (!this.createModal) {
+      this.createModal = true;
+    }
+  }
+
+  /**
+   * Cierra el modal para crear una nueva dieta
+   */
+  closeCreateModal() {
+    if (this.createModal) {
+      this.createModal = false;
+    }
+  }
+  // DELETE
+
+  /**
+   * Busca la dieta que se seleccione por ID para mostrar el modal
+   *
+   * @param productId
+   */
+  openDeleteModal(diet: Diet) {
+    this.selectedDiet = diet;
+    this.deleteModal = true;
+  }
+
+  cancelDelete() {
+    this.selectedDiet = null;
+    this.deleteModal = false;
+  }
+
+  confirmDelete() {
+    if (this.selectedDiet !== null) {
+      this.http.deleteDiet(this.selectedDiet.id).subscribe(() => {
+        this.diets = this.diets.filter(diet => diet.id !== this.selectedDiet!.id);
+        this.selectedDiet = null;
+        this.deleteModal = false;
+      });
+    }
+  }
+  // Imagen
+  handleImageUpload(event: any) {
+    const file = event.target.files[0]; // Obtiene el archivo seleccionado
+    if (file) {
+      this.editedDiet.content = file.name; // Establece el nombre del archivo como contenido de la dieta
+    }
+  }
 
 
 }

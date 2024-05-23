@@ -34,4 +34,14 @@ class Video extends Model
     {
         return $this->belongsToMany(User::class, 'user_visit_videos')->withTimestamps();
     }
+
+    protected $fillable = [
+        'id',
+        'title',
+        'coach',
+        'description',
+        'url',
+        'duration',
+        'exclusive',
+    ];
 }
